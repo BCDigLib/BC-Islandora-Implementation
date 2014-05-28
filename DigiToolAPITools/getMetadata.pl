@@ -3,6 +3,8 @@
 use strict;
 use SOAP::Lite;
 use FileHandle;
+use LWP::Simple;
+use XML::XPath;
 use XML::LibXSLT;
 use XML::LibXML;
 
@@ -45,7 +47,7 @@ sub main {
           -> encoding('UTF-8')         
           -> digitalEntityCall($general, $newdeCall)
           -> result;   
-	    
+
 	my $parser = XML::LibXML->new();
 	my $xslt = XML::LibXSLT->new();
 	
@@ -64,6 +66,21 @@ sub main {
 	
 	print $deFH $xsltStyle->output_as_bytes($result);
 	
+	# Get Object
+	my $url = 'http://dcollections.bc.edu/webclient/DeliveryManager?pid=' . $pid;
+	my $digitalObject = get $url;
+	
+	my $xp = XML::XPath->new( xml => $digitalEntity );
+	my $extension = $xp->findvalue('/xb:digital_entity_result/xb:digital_entity/stream_ref/file_extension');
+	
+	my $objFile = $deOutput . '\\' . $pid . '.' . $extension;
+		
+	my $objFH = new FileHandle();
+	
+	$objFH->open("> $objFile");
+	$objFH->binmode();	
+
+	print $objFH $digitalObject;
     }
 }
 #-----------------------------------------------------------------------------
