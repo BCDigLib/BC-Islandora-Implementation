@@ -3,7 +3,6 @@
 use strict;
 use SOAP::Lite;
 use FileHandle;
-use Getopt::Long;
 use XML::LibXSLT;
 use XML::LibXML;
 
@@ -32,8 +31,6 @@ sub main {
         -> proxy($dxproxy)
 	-> digitalEntitySearch($general, $deQuery)
         -> result;
-	
-    my $count = 0;
     
     while ( $result =~ /pid>(\d+)\</g) {
 	
