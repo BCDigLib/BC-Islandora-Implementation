@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xb:x_queries xmlns:xb="http://com/exlibris/digitool/repository/api/xmlbeans">
+    <x_query type="xql" set_name="SET1">
+        <x_select from_answer="0" to_answer="5000">
+            <element>pid</element>
+        </x_select>
+        <!-- Sample Query -->
+        <x_where from="HDeControl">
+            <x_condition>
+                <type>contains</type>
+                <element>series</element>
+                <value>faculty publication highlights</value>
+            </x_condition> 
+            <x_condition>
+                <type>contains</type>
+                <element>usagetype</element>
+                <value>VIEW_MAIN</value>
+            </x_condition>
+        </x_where>
+    </x_query>
+</xb:x_queries>

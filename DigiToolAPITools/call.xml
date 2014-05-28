@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xb:digital_entity_call xmlns:xb="http://com/exlibris/digitool/repository/api/xmlbeans"
+    xmlns:de="http://com/exlibris/digitool/repository/api/xmlbeans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://com/exlibris/digitool/repository/api/xmlbeans
+C:\dlib_projects\j3_1\digitool\home\system\xsd\exlibris_digital_entity_v1.0.xsd">
+    <xb:digital_entity>
+            <pid>#####</pid>
+    </xb:digital_entity>
+    <command>retrieve</command>
+</xb:digital_entity_call>
