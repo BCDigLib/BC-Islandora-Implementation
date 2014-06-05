@@ -17,7 +17,9 @@ sub main {
 	if scalar(@ARGV) != 3;
 	
     my ($query, $deOutput, $mdType) =  @ARGV;
-	
+    
+    $mdType = lc $mdType;
+    
     my $xslStylesheet = 'extractMDfromCDATA.xsl';
     my $general = readXML('general.xml');
     my $deQuery = readXML($query);
@@ -73,14 +75,16 @@ sub main {
 	my $xp = XML::XPath->new( xml => $digitalEntity );
 	my $extension = $xp->findvalue('/xb:digital_entity_result/xb:digital_entity/stream_ref/file_extension');
 	
-	my $objFile = $deOutput . '\\' . $pid . '.' . $extension;
+	if ($extension ne 'undefined') {
+	    my $objFile = $deOutput . '\\' . $pid . '.' . $extension;
 		
-	my $objFH = new FileHandle();
+	    my $objFH = new FileHandle();
 	
-	$objFH->open("> $objFile");
-	$objFH->binmode();	
+	    $objFH->open("> $objFile");
+	    $objFH->binmode();	
 
-	print $objFH $digitalObject;
+	    print $objFH $digitalObject;
+	}
     }
 }
 #-----------------------------------------------------------------------------
