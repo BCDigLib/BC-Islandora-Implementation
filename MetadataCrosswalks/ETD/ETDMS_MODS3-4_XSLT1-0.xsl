@@ -336,11 +336,29 @@
             <xsl:variable name="length" select="string-length(.)"/>
             <xsl:choose>
                 <xsl:when test="substring(.,$length) = '.'">
-                    <xsl:value-of
-                        select="concat(substring-before(substring(.,1,string-length(.)-1),'&amp;'),'and',substring-after(substring(.,1,string-length(.)-1),'&amp;'))"
-                    />
+                    <xsl:choose>
+                        <xsl:when test="contains(.,'&amp;')">
+                            <xsl:value-of
+                                select="concat(substring-before(substring(.,1,string-length(.)-1),'&amp;'),'and',substring-after(substring(.,1,string-length(.)-1),'&amp;'))"/>                       
+                        </xsl:when>
+                        <xsl:otherwise> 
+                            <xsl:value-of
+                                select="substring(.,1,string-length(.)-1)"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+ 
                 </xsl:when>
                 <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="contains(.,'&amp;')">
+                            <xsl:value-of
+                                select="concat(substring-before(.,'&amp;'),'and',substring-after(.,'&amp;'))"
+                            />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="."/>
+                        </xsl:otherwise>
+                    </xsl:choose>
                     <xsl:value-of
                         select="concat(substring-before(.,'&amp;'),'and',substring-after(.,'&amp;'))"
                     />
