@@ -158,11 +158,17 @@
                 <xsl:attribute name="type">family</xsl:attribute>
                 <xsl:value-of select="substring-after(.,', ')"/>
             </xsl:element>
+            <!--Betsy moved display form up so it is before role-->
+            <xsl:element name="mods:displayForm">
+                <xsl:value-of select="."/>
+            </xsl:element>
             <xsl:element name="mods:role">
                 <xsl:element name="mods:roleTerm">
                     <xsl:attribute name="authority">marcrelator</xsl:attribute>
                     <xsl:attribute name="type">text</xsl:attribute>
-                    <xsl:text>author</xsl:text>
+                    <!--Betsy uppercased the first letter of the marcrelator term author  
+                           in order to match the format of the marc relator list.-->
+                    <xsl:text>Author</xsl:text>
                 </xsl:element>
                 <xsl:element name="mods:roleTerm">
                     <xsl:attribute name="authority">marcrelator</xsl:attribute>
@@ -170,9 +176,7 @@
                     <xsl:text>aut</xsl:text>
                 </xsl:element>
             </xsl:element>
-            <xsl:element name="mods:displayForm">
-                <xsl:value-of select="."/>
-            </xsl:element>
+
         </xsl:element>
     </xsl:template>
     <xsl:template match="subject">
@@ -204,6 +208,10 @@
                     <xsl:attribute name="type">family</xsl:attribute>
                     <xsl:value-of select="substring-after(.,', ')"/>
                 </xsl:element>
+                <!-- Betsy moved up display form so it would appear before the relator codes-->
+                <xsl:element name="mods:displayForm">
+                    <xsl:value-of select="."/>
+                </xsl:element>
                 <xsl:element name="mods:role">
                     <xsl:element name="mods:roleTerm">
                         <xsl:attribute name="authority">marcrelator</xsl:attribute>
@@ -216,13 +224,17 @@
                         <xsl:text>ths</xsl:text>
                     </xsl:element>
                 </xsl:element>
-                <xsl:element name="mods:displayForm">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+
             </xsl:element>
         </xsl:if>
     </xsl:template>
     <xsl:template match="date">
+        <!-- Betsy added an attributeless date for MODS display.
+            Still need this in Islandora?-->
+        <xsl:element name="mods:dateIssued">
+            <xsl:apply-templates/>
+        </xsl:element>
+
         <xsl:element name="mods:dateIssued">
             <xsl:attribute name="encoding">w3cdtf</xsl:attribute>
             <xsl:attribute name="keyDate">yes</xsl:attribute>
@@ -247,10 +259,10 @@
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">marcgt</xsl:attribute>
                     <xsl:text>thesis</xsl:text>
-                </xsl:element>                
+                </xsl:element>
             </xsl:when>
-        </xsl:choose>        
-    </xsl:template>  
+        </xsl:choose>
+    </xsl:template>
     <xsl:template match="format">
         <xsl:element name="mods:physicalDescription">
             <xsl:element name="mods:internetMediaType">
@@ -259,7 +271,9 @@
         </xsl:element>
     </xsl:template>
     <xsl:template match="identifier">
-        <xsl:choose>
+        <!-- Betsy commented out text of identifier template.  DGI will be getting handles
+            not from etd-ms xml, but from digital entity xml.-->
+        <!-- <xsl:choose>
             <xsl:when test="starts-with(text(), 'http://hdl')">
                 <xsl:element name="mods:location">
                     <xsl:element name="mods:url">
@@ -267,7 +281,7 @@
                     </xsl:element>
                 </xsl:element>
             </xsl:when>
-        </xsl:choose>
+        </xsl:choose>-->
     </xsl:template>
     <xsl:template match="language">
         <xsl:element name="mods:language">
@@ -317,8 +331,22 @@
         </xsl:if>
     </xsl:template>
     <xsl:template match="grantor">
+        <!--Betsy adds logic to remove final stop and to translate & to and-->
         <xsl:element name="etdms:grantor">
-            <xsl:apply-templates/>
+            <xsl:variable name="length" select="string-length(.)"/>
+            <xsl:choose>
+                <xsl:when test="substring(.,$length) = '.'">
+                    <xsl:value-of
+                        select="concat(substring-before(substring(.,1,string-length(.)-1),'&amp;'),'and',substring-after(substring(.,1,string-length(.)-1),'&amp;'))"
+                    />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of
+                        select="concat(substring-before(.,'&amp;'),'and',substring-after(.,'&amp;'))"
+                    />
+                </xsl:otherwise>
+            </xsl:choose>
+
         </xsl:element>
     </xsl:template>
 </xsl:stylesheet>
