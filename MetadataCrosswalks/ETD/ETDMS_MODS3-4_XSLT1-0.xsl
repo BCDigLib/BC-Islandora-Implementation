@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:etd="http://www.ndltd.org/standards/metadata/etdms/1.1/"
+    xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.1/"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
     <!--
@@ -30,16 +30,6 @@
         
     -->
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
-    <xsl:include href="inc/dcmiType.xsl"/>
-    <xsl:include href="inc/mimeType.xsl"/>
-    <xsl:include href="inc/csdgm.xsl"/>
-    <xsl:include href="inc/forms.xsl"/>
-    <xsl:include href="inc/iso3166-1.xsl"/>
-    <xsl:include href="inc/iso639-2.xsl"/>
-    <!-- Do you have a Handle server?  If so, specify the base URI below including the trailing slash a la: http://hdl.loc.gov/ -->
-    <xsl:variable name="handleServer">
-        <xsl:text>http://hdl.loc.gov/</xsl:text>
-    </xsl:variable>
     <xsl:template match="/">
         <xsl:apply-templates/>
     </xsl:template>
@@ -67,7 +57,7 @@
         </mods:mods>
     </xsl:template>
     <xsl:template match="degree">
-        <xsl:element name="etd:degree">
+        <xsl:element name="etdms:degree">
             <xsl:apply-templates select="name"/>
             <xsl:apply-templates select="level"/>
             <xsl:apply-templates select="discipline"/>
@@ -310,24 +300,24 @@
         </xsl:element>
     </xsl:template>
     <xsl:template match="name">
-        <xsl:element name="etd:name">
+        <xsl:element name="etdms:name">
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
     <xsl:template match="level">
-        <xsl:element name="etd:level">
+        <xsl:element name="etdms:level">
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
     <xsl:template match="discipline">
         <xsl:if test=". != ''">
-            <xsl:element name="etd:discipline">
+            <xsl:element name="etdms:discipline">
                 <xsl:apply-templates/>
             </xsl:element>
         </xsl:if>
     </xsl:template>
     <xsl:template match="grantor">
-        <xsl:element name="etd:grantor">
+        <xsl:element name="etdms:grantor">
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
