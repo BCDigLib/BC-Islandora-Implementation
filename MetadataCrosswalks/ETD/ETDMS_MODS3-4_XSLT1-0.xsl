@@ -3,32 +3,11 @@
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.1/"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
-    <!--
-        Version 1.1 2012-08-12 WS  
-        Upgraded to MODS 3.4
-        
-        Version 1.0 2006-11-01 cred@loc.gov
-        
-        This stylesheet will transform simple Dublin Core (DC) expressed in either OAI DC [1] or SRU DC [2] schemata to MODS 
-        version 3.2.
-        
-        Reasonable attempts have been made to automatically detect and process the textual content of DC elements for the purposes 
-        of outputting to MODS.  Because MODS is more granular and expressive than simple DC, transforming a given DC element to the 
-        proper MODS element(s) is difficult and may result in imprecise or incorrect tagging.  Undoubtedly local customizations will 
-        have to be made by those who utilize this stylesheet in order to achieve deisred results.  No attempt has been made to 
-        ignore empty DC elements.  If your DC contains empty elements, they should either be removed, or local customization to 
-        detect the existence of text for each element will have to be added to this stylesheet.
-        
-        MODS also often encourages content adhering to various data value standards.  The contents of some of the more widely used value 
-        standards, such as IANA MIME types, ISO 3166-1, ISO 639-2, etc., have been added into the stylesheet to facilitate proper 
-        mapping of simple DC to the proper MODS elements.  A crude attempt at detecting the contents of DC identifiers and outputting them
-        to the proper MODS elements has been made as well.  Common persistent identifier schemes, standard numbers, etc., have been included.
-        To truly detect these efficiently, XSL/XPath 2.0 or XQuery may be needed in order to utilize regular expressions.
-        
-        [1] http://www.openarchives.org/OAI/openarchivesprotocol.html#MetadataNamespaces
-        [2] http://www.loc.gov/standards/sru/record-schemas.html
-        
-    -->
+    <!-- Spring 2014: Brian adapted the DC to MODS 3.4 stylesheet on the LC site to support the 
+        conversion of our etd-ms metadata to MODS.  This stylesheet will be called as our 
+        digital entities exports are migrated to Islandora by DGI.
+        -->
+    <!-- June 2014:  Betsy made updates to stylesheet as noted in comments-->
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
     <xsl:template match="/">
         <xsl:apply-templates/>
@@ -40,16 +19,20 @@
             <xsl:apply-templates select="title"/>
             <xsl:apply-templates select="creator"/>
             <xsl:apply-templates select="contributor"/>
+            <!--All dissertations being migrated are text, Betsy added the required Type of Resource element as a constant value-->
+            <xsl:element name="mods:typeOfResource">text</xsl:element>
             <xsl:apply-templates select="type"/>
             <xsl:element name="mods:originInfo">
                 <xsl:apply-templates select="publisher"/>
                 <xsl:apply-templates select="date"/>
+                <!--Betsy added issuance=monographic-->
+                <xsl:element name="mods:issuance">monographic</xsl:element>
             </xsl:element>
+            <xsl:apply-templates select="language"/>
+            <xsl:apply-templates select="format"/>
             <xsl:apply-templates select="description"/>
             <xsl:apply-templates select="subject"/>
-            <xsl:apply-templates select="format"/>
             <xsl:apply-templates select="identifier"/>
-            <xsl:apply-templates select="language"/>
             <xsl:apply-templates select="accessRights"/>
             <xsl:element name="mods:extension">
                 <xsl:apply-templates select="degree"/>
@@ -158,7 +141,7 @@
                 <xsl:attribute name="type">family</xsl:attribute>
                 <xsl:value-of select="substring-after(.,', ')"/>
             </xsl:element>
-            <!--Betsy moved display form up so it is before role-->
+            <!--Betsy moved mods:displayForm up so it appears before before mods:role-->
             <xsl:element name="mods:displayForm">
                 <xsl:value-of select="."/>
             </xsl:element>
@@ -242,29 +225,36 @@
         </xsl:element>
     </xsl:template>
     <xsl:template match="type">
+        <!-- Betsy added an authority attribute with ndltd as the value to the organization's recommended "Electronic Thesis
+            or Dissertation" genre element-->
+        <!-- Betsy added the type attribute with value workType to each genre element-->
         <xsl:choose>
-            <xsl:when test="starts-with(., 'Electronic')">
-                <xsl:element name="mods:genre">
-                    <xsl:value-of select="."/>
-                </xsl:element>
-            </xsl:when>
             <xsl:when test=".='text'">
-                <xsl:element name="mods:typeOfResource">
-                    <xsl:value-of select="."/>
-                </xsl:element>
+
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">dct</xsl:attribute>
+                    <xsl:attribute name="type">workType</xsl:attribute>
                     <xsl:value-of select="."/>
                 </xsl:element>
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">marcgt</xsl:attribute>
+                    <xsl:attribute name="type">workType</xsl:attribute>
                     <xsl:text>thesis</xsl:text>
+                </xsl:element>
+            </xsl:when>
+            <xsl:when test="starts-with(., 'Electronic')">
+                <xsl:element name="mods:genre">
+                    <xsl:attribute name="authority">ndltd</xsl:attribute>
+                    <xsl:attribute name="type">workType</xsl:attribute>
+                    <xsl:value-of select="."/>
                 </xsl:element>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
     <xsl:template match="format">
         <xsl:element name="mods:physicalDescription">
+            <!--Betsy added mods:form=electronic-->
+            <xsl:element name="mods:form">electronic</xsl:element>
             <xsl:element name="mods:internetMediaType">
                 <xsl:text>application/pdf</xsl:text>
             </xsl:element>
@@ -284,6 +274,7 @@
         </xsl:choose>-->
     </xsl:template>
     <xsl:template match="language">
+        <!--Betsy added iso authority for language code-->
         <xsl:element name="mods:language">
             <xsl:choose>
                 <xsl:when test=". = 'English'">
@@ -291,6 +282,7 @@
                         <xsl:attribute name="type">
                             <xsl:text>code</xsl:text>
                         </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
                         <xsl:text>eng</xsl:text>
                     </xsl:element>
                 </xsl:when>
@@ -325,8 +317,18 @@
     </xsl:template>
     <xsl:template match="discipline">
         <xsl:if test=". != ''">
+            <!--Betsy adds logic to change ampersand in discipline to and-->
             <xsl:element name="etdms:discipline">
-                <xsl:apply-templates/>
+                <xsl:choose>
+                    <xsl:when test="contains(.,'&amp;')">
+                        <xsl:value-of
+                            select="concat(substring-before(.,'&amp;'),'and',substring-after(.,'&amp;'))"
+                        />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:element>
         </xsl:if>
     </xsl:template>
@@ -341,14 +343,14 @@
                         <!-- and includes an ampersand-->
                         <xsl:when test="contains(.,'&amp;')">
                             <xsl:value-of
-                                select="concat(substring-before(substring(.,1,string-length(.)-1),'&amp;'),'and',substring-after(substring(.,1,string-length(.)-1),'&amp;'))"/>                       
+                                select="concat(substring-before(substring(.,1,string-length(.)-1),'&amp;'),'and',substring-after(substring(.,1,string-length(.)-1),'&amp;'))"
+                            />
                         </xsl:when>
-                        <xsl:otherwise> 
-                            <xsl:value-of
-                                select="substring(.,1,string-length(.)-1)"/>
+                        <xsl:otherwise>
+                            <xsl:value-of select="substring(.,1,string-length(.)-1)"/>
                         </xsl:otherwise>
                     </xsl:choose>
- 
+
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:choose>
