@@ -57,7 +57,7 @@
                     <xsl:choose>
                         <xsl:when test="contains(.,':')">
                             <xsl:element name="mods:title">
-                                <xsl:value-of select="substring-before(., ':')"/>
+                                <xsl:value-of select="substring(substring-before(., ':'),3)"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
                                 <xsl:value-of select="substring-after(., ': ')"/>
@@ -77,7 +77,7 @@
                     <xsl:choose>
                         <xsl:when test="contains(.,':')">
                             <xsl:element name="mods:title">
-                                <xsl:value-of select="substring-before(., ':')"/>
+                                <xsl:value-of select="substring(substring-before(., ':'),4)"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
                                 <xsl:value-of select="substring-after(., ': ')"/>
@@ -97,7 +97,7 @@
                     <xsl:choose>
                         <xsl:when test="contains(.,':')">
                             <xsl:element name="mods:title">
-                                <xsl:value-of select="substring-before(., ':')"/>
+                                <xsl:value-of select="substring(substring-before(., ':'),5)"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
                                 <xsl:value-of select="substring-after(., ': ')"/>
