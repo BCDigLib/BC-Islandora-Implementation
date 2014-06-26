@@ -66,7 +66,7 @@ sub main {
 	$deFH->open("> $file");
 	$deFH->binmode(':utf8');
 	
-	print $deFH $xsltStyle->output_as_bytes($result);
+	print $deFH $xsltStyle->output_as_chars($result);
 	
 	# Get Object
 	my $url = 'http://dcollections.bc.edu/webclient/DeliveryManager?pid=' . $pid;
