@@ -70,7 +70,7 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
-                <xsl:when test="starts-with(.,'An ')">
+                <xsl:when test="starts-with(.,'An ' or 'La ')">
                     <xsl:element name="mods:nonSort">
                         <xsl:value-of select="substring(.,1,3)"/>
                     </xsl:element>
@@ -306,7 +306,7 @@
             </xsl:choose>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="accessRights">
+    <xsl:template match="rights">
         <xsl:element name="mods:accessCondition">
             <xsl:attribute name="type">
                 <xsl:text>use and reproduction</xsl:text>
@@ -334,6 +334,31 @@
                             select="concat(substring-before(.,'&amp;'),'and',substring-after(.,'&amp;'))"
                         />
                     </xsl:when>
+                    <xsl:when test="(. ='Counseling and Developmental Psychology and Research Methods') or (. ='Counseling, Developmental Psychology and Research Methods')">
+                        <xsl:text>Counseling, Developmental Psychology, and Research Methods</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="(.='Counseling, Development, and Educational Psychology') or (. ='Counseling, Developmental and Educational Psychology') or (. ='Counseling, Developmental and Educational Psychology ')">
+                        <xsl:text>Counseling, Developmental, and Educational Psychology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Education Administration'">
+                        <xsl:text>Educational Administration</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Education Administration and Higher Education'">
+                        <xsl:text>Educational Administration and Higher Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Department of Educational Leadership and Higher Education'">
+                        <xsl:text>Educational Leadership and Higher Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Educational Research, Measurement and Evaluation'">
+                        <xsl:text>Educational Research, Measurement, and Evaluation</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="(.='Teacher Education, Special Education, and Curriculum and Instruction') or (.='Teacher Education, Curriculum and Instruction') or (. ='Teacher Education, Special Education and Curriculum and Instruction') or (. ='Teacher Education, Special Education, and Curriculum andInstruction') or (. ='Teacher Education, Special Education, Curriculum and Instruction') or (.='Teacher Education/Special Education, Curriculum and Instruction')">
+                        <xsl:text>Teacher Education, Special Education, Curriculum and Instruction</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Theology and Education'">
+                        <xsl:text>Theology</xsl:text>
+                    </xsl:when>
+                
                     <xsl:otherwise>
                         <xsl:value-of select="."/>
                     </xsl:otherwise>
