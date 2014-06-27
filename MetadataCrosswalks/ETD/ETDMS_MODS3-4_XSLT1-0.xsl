@@ -60,7 +60,7 @@
                                 <xsl:value-of select="substring(substring-before(., ':'),3)"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="substring-after(., ': ')"/>
+                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
@@ -80,7 +80,7 @@
                                 <xsl:value-of select="substring(substring-before(., ':'),4)"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="substring-after(., ': ')"/>
+                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
@@ -100,7 +100,7 @@
                                 <xsl:value-of select="substring(substring-before(., ':'),5)"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="substring-after(., ': ')"/>
+                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
@@ -117,7 +117,7 @@
                                 <xsl:value-of select="substring-before(., ':')"/>
                             </xsl:element>
                             <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="substring-after(., ': ')"/>
+                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
                             </xsl:element>
                         </xsl:when>
                         <xsl:otherwise>
