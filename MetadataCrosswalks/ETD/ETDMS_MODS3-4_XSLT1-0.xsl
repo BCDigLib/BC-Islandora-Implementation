@@ -229,7 +229,7 @@
             or Dissertation" genre element-->
         <!-- Betsy added the type attribute with value workType to each genre element-->
         <xsl:choose>
-            <xsl:when test=".='text'">
+            <xsl:when test="(.='text') or (.='Text')">
 
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">dct</xsl:attribute>
