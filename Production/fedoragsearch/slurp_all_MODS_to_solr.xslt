@@ -80,6 +80,18 @@
         <xsl:value-of select="@type"/>
         <xsl:text>_</xsl:text>
       </xsl:if>
+      <xsl:if test="@usage">
+            <xsl:value-of select="@usage"/>
+            <xsl:text>_</xsl:text>
+      </xsl:if>
+      <xsl:if test="@authority='ndltd'">
+          <xsl:value-of select="@authority='ndltd'"/>
+            <xsl:text>_</xsl:text>
+      </xsl:if>
+      <xsl:if test="@authority='marcgt'">
+          <xsl:value-of select="@authority='marcgt'"/>
+          <xsl:text>_</xsl:text>
+      </xsl:if>
     </xsl:variable>
 
     <xsl:variable name="textValue">
