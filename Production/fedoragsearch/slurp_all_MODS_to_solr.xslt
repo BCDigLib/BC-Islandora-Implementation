@@ -85,11 +85,11 @@
             <xsl:text>_</xsl:text>
       </xsl:if>
       <xsl:if test="@authority='ndltd'">
-          <xsl:value-of select="@authority='ndltd'"/>
+          <xsl:value-of select="@authority"/>
             <xsl:text>_</xsl:text>
       </xsl:if>
       <xsl:if test="@authority='marcgt'">
-          <xsl:value-of select="@authority='marcgt'"/>
+          <xsl:value-of select="@authority"/>
           <xsl:text>_</xsl:text>
       </xsl:if>
     </xsl:variable>
