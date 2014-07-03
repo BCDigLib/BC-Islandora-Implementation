@@ -33,7 +33,7 @@
             <xsl:apply-templates select="description"/>
             <xsl:apply-templates select="subject"/>
             <xsl:apply-templates select="identifier"/>
-            <xsl:apply-templates select="accessRights"/>
+            <xsl:apply-templates select="rights"/>
             <xsl:element name="mods:extension">
                 <xsl:apply-templates select="degree"/>
             </xsl:element>
@@ -49,6 +49,7 @@
     </xsl:template>
     <xsl:template match="title">
         <xsl:element name="mods:titleInfo">
+            <xsl:attribute name="usage">primary</xsl:attribute>
             <xsl:choose>
                 <xsl:when test="starts-with(.,'A ')">
                     <xsl:element name="mods:nonSort">
@@ -133,6 +134,7 @@
     <xsl:template match="creator">
         <xsl:element name="mods:name">
             <xsl:attribute name="type">personal</xsl:attribute>
+            <xsl:attribute name="usage">primary</xsl:attribute>
             <xsl:element name="mods:namePart">
                 <xsl:attribute name="type">given</xsl:attribute>
                 <xsl:value-of select="substring-before(.,',')"/>
@@ -227,25 +229,25 @@
     <xsl:template match="type">
         <!-- Betsy added an authority attribute with ndltd as the value to the organization's recommended "Electronic Thesis
             or Dissertation" genre element-->
-        <!-- Betsy added the type attribute with value workType to each genre element-->
+        <!-- Betsy added the type attribute with value work type to each genre element-->
         <xsl:choose>
             <xsl:when test="(.='text') or (.='Text')">
 
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">dct</xsl:attribute>
-                    <xsl:attribute name="type">workType</xsl:attribute>
-                    <xsl:value-of select="."/>
+                    <xsl:attribute name="type">work type</xsl:attribute>
+                    <xsl:text>Text</xsl:text>a
                 </xsl:element>
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">marcgt</xsl:attribute>
-                    <xsl:attribute name="type">workType</xsl:attribute>
+                    <xsl:attribute name="type">work type</xsl:attribute>
                     <xsl:text>thesis</xsl:text>
                 </xsl:element>
             </xsl:when>
             <xsl:when test="starts-with(., 'Electronic')">
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">ndltd</xsl:attribute>
-                    <xsl:attribute name="type">workType</xsl:attribute>
+                    <xsl:attribute name="type">work type</xsl:attribute>
                     <xsl:value-of select="."/>
                 </xsl:element>
             </xsl:when>
