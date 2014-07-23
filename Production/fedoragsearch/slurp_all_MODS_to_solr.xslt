@@ -76,9 +76,8 @@
         <xsl:value-of select="@authority"/>
         <xsl:text>_</xsl:text>
       </xsl:if>
-      <xsl:if test="@authority='marcgt'">
-        <xsl:value-of select="@authority"/>
-        <xsl:text>_</xsl:text>
+        <xsl:if test="@authority='marcgt' or @authority='local'">
+        <xsl:text>marcgtorlocal_</xsl:text>
       </xsl:if>
     </xsl:variable>
     <xsl:variable name="textValue">
