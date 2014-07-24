@@ -34,7 +34,7 @@
             <xsl:apply-templates select="mods:recordInfo"/>
         </mods:mods>
     </xsl:template>
-    
+
     <xsl:template match="mods:relatedItem">
         <xsl:element name="mods:relatedItem">
             <xsl:copy-of select="attribute::node()"/>
@@ -58,28 +58,37 @@
             <xsl:apply-templates select="mods:part"/>
             <!--mods:extension not used in relatedItem-->
             <xsl:apply-templates select="mods:recordInfo"/>
-            
+
         </xsl:element>
-        
+
     </xsl:template>
 
     <xsl:template match="mods:recordInfo">
-        <xsl:element name="mods:extension">
-            <xsl:element name="mods:recordInfo">
-                <xsl:copy-of select="mods:recordContentSource"/>
-                <xsl:if test="mods:recordOrigin">
-                    <xsl:element name="mods:recordContentSource">
-                        <xsl:attribute name="type">naf</xsl:attribute>
-                        <xsl:value-of select="."/>
-                    </xsl:element>
-                </xsl:if>
-                <xsl:copy-of select="mods:recordCreationDate"/>
-                <xsl:copy-of select="mods:recordChangeDate"/>
-                <xsl:copy-of select="mods:recordIdentifier"/>
-                <xsl:copy-of select="mods:languageOfCataloging"/>
-
+        <xsl:element name="mods:recordInfo">
+            <xsl:element name="mods:recordContentSource">
+                <xsl:attribute name="authority">marcorg</xsl:attribute>
+                <xsl:choose>
+                    <xsl:when test="mods:recordContentSource='BXM'">
+                        <xsl:text>MChB</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="mods:recordContentSource"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:element>
+            <xsl:if test="mods:recordOrigin">
+                <xsl:element name="mods:recordContentSource">
+                    <xsl:attribute name="authority">naf</xsl:attribute>
+                    <xsl:value-of select="mods:recordOrigin"/>
+                </xsl:element>
+            </xsl:if>
+            <xsl:copy-of select="mods:recordCreationDate"/>
+            <xsl:copy-of select="mods:recordChangeDate"/>
+            <xsl:copy-of select="mods:recordIdentifier"/>
+            <xsl:copy-of select="mods:languageOfCataloging"/>
+
         </xsl:element>
+
     </xsl:template>
 
 
@@ -93,7 +102,7 @@
 
     <xsl:template match="mods:part">
         <xsl:copy-of select="."/>
-        
+
     </xsl:template>
     <xsl:template match="mods:accessCondition">
         <xsl:element name="mods:accessCondition">
@@ -153,7 +162,7 @@
                     </xsl:element>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:element name="mods:digitailOrigin">
+                    <xsl:element name="mods:digitalOrigin">
                         <xsl:text>reformatted digital</xsl:text>
                     </xsl:element>
                 </xsl:otherwise>
@@ -221,7 +230,6 @@
             <xsl:copy-of select="mods:dateIssued"/>
             <xsl:copy-of select="mods:dateCreated"/>
             <xsl:copy-of select="mods:copyrightDate"/>
-            <xsl:copy-of select="mods:publisher"/>
             <xsl:copy-of select="mods:edition"/>
             <xsl:copy-of select="mods:issuance"/>
         </xsl:element>
@@ -250,6 +258,18 @@
     </xsl:template>
     <xsl:template match="mods:titleInfo">
         <xsl:choose>
+            <xsl:when test="(starts-with(child::mods:title, '['))">
+                <xsl:element name="mods:titleInfo">
+                    <xsl:attribute name="supplied">yes</xsl:attribute>
+                    <xsl:attribute name="usage">primary</xsl:attribute>
+                    <xsl:element name="mods:title">
+                        <xsl:value-of select="translate(mods:title,'[]', '')"/>
+                    </xsl:element>
+                    <xsl:copy-of select="mods:subTitle"/>
+                    <xsl:copy-of select="mods:partNumber"/>
+                    <xsl:copy-of select="mods:partName"/>
+                </xsl:element>
+            </xsl:when>
             <xsl:when test="not(@*)">
                 <xsl:element name="mods:titleInfo">
                     <xsl:attribute name="usage">primary</xsl:attribute>
@@ -262,6 +282,13 @@
                     <xsl:attribute name="nameTitleGroup">
                         <xsl:value-of select="@nameTitleGroup"/>
                     </xsl:attribute>
+                    <xsl:copy-of select="child::node()"/>
+                </xsl:element>
+            </xsl:when>
+            <xsl:when test="@supplied">
+                <xsl:element name="mods:titleInfo">
+                    <xsl:attribute name="usage">primary</xsl:attribute>
+                    <xsl:attribute name="supplied">yes</xsl:attribute>
                     <xsl:copy-of select="child::node()"/>
                 </xsl:element>
             </xsl:when>
@@ -310,56 +337,49 @@
                     <xsl:copy-of select="mods:namePart"/>
                     <xsl:copy-of select="mods:displayForm"/>
                     <xsl:copy-of select="mods:affiliation"/>
-                    <xsl:choose>  
-                        
+                    <xsl:choose>
+
                         <xsl:when test="count(mods:role[1]/mods:roleTerm)=2">
                             <xsl:copy-of select="mods:role"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:for-each select="mods:role">
-                            <xsl:element name="mods:role">
-                                <xsl:element name="mods:roleTerm">
-                                    <xsl:attribute name="type">text</xsl:attribute>
-                                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                                    <xsl:value-of select="mods:roleTerm"/>
+                                <xsl:element name="mods:role">
+                                    <xsl:element name="mods:roleTerm">
+                                        <xsl:attribute name="type">text</xsl:attribute>
+                                        <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                                        <xsl:value-of select="mods:roleTerm"/>
+                                    </xsl:element>
+                                    <xsl:element name="mods:roleTerm">
+                                        <xsl:attribute name="type">code</xsl:attribute>
+                                        <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                                        <xsl:if test="mods:roleTerm='Associated name'">asn</xsl:if>
+                                        <xsl:if test="child::mods:roleTerm='Author'">aut</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Contributor'">ctb</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Creator'">cre</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Editor'">edt</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Funder'">fnd</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Honoree'">hnr</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Issuing body'">isb</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Organizer'">org</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Other'">oth</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Project director'">pdr</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Publisher'">pbl</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Publishing Director'"
+                                            >pbd</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Researcher'">res</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Sponsor'">spn</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Transcriber'">trc</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Translator'">trl</xsl:if>
+                                    </xsl:element>
                                 </xsl:element>
-                                <xsl:element name="mods:roleTerm">
-                                    <xsl:attribute name="type">code</xsl:attribute>
-                                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                                    <xsl:if test="mods:roleTerm='Associated name'"
-                                        >asn</xsl:if>
-                                    <xsl:if test="child::mods:roleTerm='Author'"
-                                        >aut</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Contributor'"
-                                        >ctb</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Creator'">cre</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Editor'">edt</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Funder'">fnd</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Honoree'">hnr</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Issuing body'"
-                                        >isb</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Organizer'"
-                                        >org</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Other'"
-                                        >oth</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Project director'"
-                                        >pdr</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Publisher'">pbl</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Publishing Director'">pbd</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Researcher'">res</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Sponsor'">spn</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Transcriber'"
-                                        >trc</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Translator'">trl</xsl:if>
-                                </xsl:element>
-                            </xsl:element>
                             </xsl:for-each>
                         </xsl:otherwise>
                     </xsl:choose>
                     <xsl:copy-of select="mods:description"/>
                 </xsl:element>
             </xsl:when>
-           <xsl:otherwise>
+            <xsl:otherwise>
                 <xsl:element name="mods:name">
                     <xsl:attribute name="type">
                         <xsl:value-of select="@type"/>
@@ -384,45 +404,38 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:for-each select="mods:role">
-                            <xsl:element name="mods:role">
-                                <xsl:element name="mods:roleTerm">
-                                    <xsl:attribute name="type">text</xsl:attribute>
-                                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                                    <xsl:value-of select="mods:roleTerm"/>
+                                <xsl:element name="mods:role">
+                                    <xsl:element name="mods:roleTerm">
+                                        <xsl:attribute name="type">text</xsl:attribute>
+                                        <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                                        <xsl:value-of select="mods:roleTerm"/>
+                                    </xsl:element>
+                                    <xsl:element name="mods:roleTerm">
+                                        <xsl:attribute name="type">code</xsl:attribute>
+                                        <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                                        <xsl:if test="mods:roleTerm='Associated name'">asn</xsl:if>
+                                        <xsl:if test="child::mods:roleTerm='Author'">aut</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Contributor'">ctb</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Creator'">cre</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Editor'">edt</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Funder'">fnd</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Honoree'">hnr</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Issuing body'">isb</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Organizer'">org</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Other'">oth</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Project director'">pdr</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Publisher'">pbl</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Publishing Director'"
+                                            >pbd</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Researcher'">res</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Sponsor'">spn</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Transcriber'">trc</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Translator'">trl</xsl:if>
+                                    </xsl:element>
                                 </xsl:element>
-                                <xsl:element name="mods:roleTerm">
-                                    <xsl:attribute name="type">code</xsl:attribute>
-                                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                                    <xsl:if test="mods:roleTerm='Associated name'"
-                                        >asn</xsl:if>
-                                    <xsl:if test="child::mods:roleTerm='Author'"
-                                        >aut</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Contributor'"
-                                        >ctb</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Creator'">cre</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Editor'">edt</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Funder'">fnd</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Honoree'">hnr</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Issuing body'"
-                                        >isb</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Organizer'"
-                                        >org</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Other'"
-                                        >oth</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Project director'"
-                                        >pdr</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Publisher'">pbl</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Publishing Director'">pbd</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Researcher'">res</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Sponsor'">spn</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Transcriber'"
-                                        >trc</xsl:if>
-                                    <xsl:if test="mods:roleTerm='Translator'">trl</xsl:if>                                 
-                                </xsl:element>
-                            </xsl:element>
                             </xsl:for-each>
                         </xsl:otherwise>
-                       
+
                     </xsl:choose>
                     <xsl:copy-of select="mods:description"/>
                 </xsl:element>
