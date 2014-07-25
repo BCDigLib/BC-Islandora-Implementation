@@ -5,6 +5,8 @@
 
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
+    <xsl:key name="distinctAffiliations" match="mods:name/mods:affiliation" use="."/>
+
     <xsl:template match="/">
         <xsl:apply-templates/>
     </xsl:template>
@@ -24,6 +26,7 @@
             <!--mods:targetAudience not used in IR-->
             <xsl:apply-templates select="mods:note"/>
             <xsl:apply-templates select="mods:subject"/>
+            <xsl:call-template name="bcdept"/>
             <xsl:apply-templates select="mods:classification"/>
             <xsl:apply-templates select="mods:relatedItem"/>
             <xsl:apply-templates select="mods:identifier"/>
@@ -33,6 +36,148 @@
             <xsl:apply-templates select="mods:extension"/>
             <xsl:apply-templates select="mods:recordInfo"/>
         </mods:mods>
+    </xsl:template>
+
+    <xsl:template name="bcdept">
+
+
+        <xsl:for-each
+            select="mods:name/mods:affiliation[generate-id() = generate-id(key('distinctAffiliations', .)[1])]">
+
+
+
+            <xsl:if test=".='Dept. of Biology, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Biology</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Business Law, Carroll School of Management'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Business Law</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Chemistry, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Chemistry</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Classical Studies, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Classical Studies</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Economics, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Economics</xsl:element>
+            </xsl:if>
+            <xsl:if
+                test=".='Dept. of Counseling, Developmental, and Educational Psychology, Lynch School of Education'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+
+            <xsl:if
+                test=".='Dept. of Educational Administration and Higher Education, Lynch School of Education'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if
+                test=".='Dept. of Educational Research, Measurement and Evaluation, Lynch School of Education'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if
+                test=".='Dept. of Teacher Education, Special Education, Curriculum and Instruction, Lynch School of Education'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+
+            <xsl:if test=".='Dept. of English, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>English</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Finance, Carroll School of Management'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Finance</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of History, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>History</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Marketing, Carroll School of Management'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Marketing</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Adult Health, Connell School of Nursing'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Nursing</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Maternal/Child Health Nursing, Connell School of Nursing'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Nursing</xsl:element>
+            </xsl:if>
+            <xsl:if
+                test=".='Dept. of Operations and Strategic Management, Carroll School of Management'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Operations and Strategic Managemememt</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Organization Studies, Carroll School of Management'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Organization Studies</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Philosophy, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Philosophy</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Physics, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Physics</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Psychology, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Psychology</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Romance Languages &amp; Literatures, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Romance Languages and Literatures</xsl:element>
+            </xsl:if>
+            <xsl:if
+                test=".='Dept. of Slavic &amp; Eastern Languages and Literatures, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Slavic and Eastern Language and
+                    Literatures</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Slavic and Eastern Languages, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Slavic and Eastern Language and
+                    Literatures</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Graduate School of Social Work'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Social Work</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Graduate School of Social Work, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Social Work</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Sociology, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Sociology</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Dept. of Theology, Boston College'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Theology</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='Boston College. School of Theology and Ministry'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Theology and Ministry</xsl:element>
+            </xsl:if>
+            <xsl:if test=".='School of Theology and Ministry'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Theology and Ministry</xsl:element>
+            </xsl:if>
+
+
+
+        </xsl:for-each>
+
+
     </xsl:template>
 
     <xsl:template match="mods:relatedItem">
