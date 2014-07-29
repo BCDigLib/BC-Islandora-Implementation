@@ -15,7 +15,7 @@
     <xsl:template match="thesis">
         <mods:mods version="3.4" xmlns:mods="http://www.loc.gov/mods/v3"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.ndltd.org/standards/metadata/etdms/1-0/etdms.xsd">
+            xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.ndltd.org/standards/metadata/etdms/1.0/ http://www.ndltd.org/standards/metadata/etdms/1-0/etdms.xsd">
             <xsl:apply-templates select="title"/>
             <xsl:apply-templates select="creator"/>
             <xsl:apply-templates select="contributor"/>
@@ -32,12 +32,38 @@
             <xsl:apply-templates select="format"/>
             <xsl:apply-templates select="description"/>
             <xsl:apply-templates select="subject"/>
+            <xsl:call-template name="classification"/>
             <xsl:apply-templates select="identifier"/>
             <xsl:apply-templates select="rights"/>
             <xsl:element name="mods:extension">
                 <xsl:apply-templates select="degree"/>
             </xsl:element>
+            <xsl:call-template name="recordInfo"/>
         </mods:mods>
+    </xsl:template>
+    <xsl:template name="recordInfo">
+        <xsl:element name="mods:recordInfo">
+            <xsl:element name="mods:recordContentSource">
+                <xsl:attribute name="authority">marcorg</xsl:attribute>
+                <xsl:text>MChB</xsl:text>
+            </xsl:element>
+            <xsl:element name="mods:recordOrigin"
+                >Most grad thesis records are created by transforming ProQuest supplied xml and editing as needed.</xsl:element>
+
+            <xsl:element name="mods:languageOfCataloging">
+                <xsl:element name="mods:languageTerm">
+                    <xsl:attribute name="type">text</xsl:attribute>
+                    <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                    <xsl:text>English</xsl:text>
+                </xsl:element>
+                <xsl:element name="mods:languageTerm">
+                    <xsl:attribute name="type">code</xsl:attribute>
+                    <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                    <xsl:text>eng</xsl:text>
+                </xsl:element>
+            </xsl:element>
+        </xsl:element>
+
     </xsl:template>
     <xsl:template match="degree">
         <xsl:element name="etdms:degree">
@@ -236,11 +262,12 @@
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">dct</xsl:attribute>
                     <xsl:attribute name="type">work type</xsl:attribute>
-                    <xsl:text>Text</xsl:text>a
+                    <xsl:text>Text</xsl:text>
                 </xsl:element>
                 <xsl:element name="mods:genre">
                     <xsl:attribute name="authority">marcgt</xsl:attribute>
                     <xsl:attribute name="type">work type</xsl:attribute>
+                    <xsl:attribute name="usage">primary</xsl:attribute>
                     <xsl:text>thesis</xsl:text>
                 </xsl:element>
             </xsl:when>
@@ -256,11 +283,14 @@
     <xsl:template match="format">
         <xsl:element name="mods:physicalDescription">
             <!--Betsy added mods:form=electronic-->
-            <xsl:element name="mods:form">electronic</xsl:element>
+            <xsl:element name="mods:form">
+                <xsl:attribute name="authority">marcform</xsl:attribute>
+                <xsl:text>electronic</xsl:text>
+            </xsl:element>
             <xsl:element name="mods:internetMediaType">
                 <xsl:text>application/pdf</xsl:text>
             </xsl:element>
-            <xsl:variable name="date" select="preceding-sibling::date"></xsl:variable>
+            <xsl:variable name="date" select="preceding-sibling::date"/>
             <xsl:choose>
                 <xsl:when test="$date > '2008'">
                     <xsl:element name="mods:digitalOrigin">born digital</xsl:element>
@@ -296,15 +326,46 @@
                         <xsl:attribute name="authority">iso639-2b</xsl:attribute>
                         <xsl:text>eng</xsl:text>
                     </xsl:element>
-                </xsl:when>
-                <xsl:otherwise>
                     <xsl:element name="mods:languageTerm">
                         <xsl:attribute name="type">
                             <xsl:text>text</xsl:text>
                         </xsl:attribute>
-                        <xsl:apply-templates/>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>English</xsl:text>
                     </xsl:element>
-                </xsl:otherwise>
+                </xsl:when>
+                <xsl:when test=". = 'French'">
+                    <xsl:element name="mods:languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:text>code</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>fre</xsl:text>
+                    </xsl:element>
+                    <xsl:element name="mods:languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:text>text</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>French</xsl:text>
+                    </xsl:element>
+                </xsl:when>
+                <xsl:when test=". = 'Spanish'">
+                    <xsl:element name="mods:languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:text>code</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>spa</xsl:text>
+                    </xsl:element>
+                    <xsl:element name="mods:languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:text>text</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>Spanish</xsl:text>
+                    </xsl:element>
+                </xsl:when>
             </xsl:choose>
         </xsl:element>
     </xsl:template>
@@ -336,10 +397,12 @@
                             select="concat(substring-before(.,'&amp;'),'and',substring-after(.,'&amp;'))"
                         />
                     </xsl:when>
-                    <xsl:when test="(. ='Counseling and Developmental Psychology and Research Methods') or (. ='Counseling, Developmental Psychology and Research Methods')">
+                    <xsl:when
+                        test="(. ='Counseling and Developmental Psychology and Research Methods') or (. ='Counseling, Developmental Psychology and Research Methods')">
                         <xsl:text>Counseling, Developmental Psychology, and Research Methods</xsl:text>
                     </xsl:when>
-                    <xsl:when test="(.='Counseling, Development, and Educational Psychology') or (. ='Counseling, Developmental and Educational Psychology') or (. ='Counseling, Developmental and Educational Psychology ')">
+                    <xsl:when
+                        test="(.='Counseling, Development, and Educational Psychology') or (. ='Counseling, Developmental and Educational Psychology') or (. ='Counseling, Developmental and Educational Psychology ')">
                         <xsl:text>Counseling, Developmental, and Educational Psychology</xsl:text>
                     </xsl:when>
                     <xsl:when test=".='Education Administration'">
@@ -354,13 +417,14 @@
                     <xsl:when test=".='Educational Research, Measurement and Evaluation'">
                         <xsl:text>Educational Research, Measurement, and Evaluation</xsl:text>
                     </xsl:when>
-                    <xsl:when test="(.='Teacher Education, Special Education, and Curriculum and Instruction') or (.='Teacher Education, Curriculum and Instruction') or (. ='Teacher Education, Special Education and Curriculum and Instruction') or (. ='Teacher Education, Special Education, and Curriculum andInstruction') or (. ='Teacher Education, Special Education, Curriculum and Instruction') or (.='Teacher Education/Special Education, Curriculum and Instruction')">
+                    <xsl:when
+                        test="(.='Teacher Education, Special Education, and Curriculum and Instruction') or (.='Teacher Education, Curriculum and Instruction') or (. ='Teacher Education, Special Education and Curriculum and Instruction') or (. ='Teacher Education, Special Education, and Curriculum andInstruction') or (. ='Teacher Education, Special Education, Curriculum and Instruction') or (.='Teacher Education/Special Education, Curriculum and Instruction')">
                         <xsl:text>Teacher Education, Special Education, Curriculum and Instruction</xsl:text>
                     </xsl:when>
                     <xsl:when test=".='Theology and Education'">
                         <xsl:text>Theology</xsl:text>
                     </xsl:when>
-                
+
                     <xsl:otherwise>
                         <xsl:value-of select="."/>
                     </xsl:otherwise>
@@ -403,5 +467,134 @@
             </xsl:choose>
 
         </xsl:element>
+    </xsl:template>
+    <xsl:template name="classification">
+        <xsl:for-each select="degree/discipline">
+            <xsl:if test="starts-with(.,'Applied Developmental')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Biology')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Biology</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Chemistry')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Chemistry</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Counseling')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Curriculum')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Department of Educational')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Earth')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Earth and Environmental Sciences</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Economics')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Economics</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Education')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'English')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>English</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Finance')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Finance</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Geology')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Geology and Geophysics</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Higher Education')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'History')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>History</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Management and Organization')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Management and Organization</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Mathematics')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Mathematics</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Nursing')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Nursing</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Organization Studies')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Organization Studies</xsl:element>
+            </xsl:if>
+            <xsl:if test=". ='Organization Studies and Corporate Responsibility'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Corporate Responsibility</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Philosophy')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Philosophy</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Physics')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Physics</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Political Science')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Political Science</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Psychology')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Psychology</xsl:element>
+            </xsl:if>
+            <xsl:if test=". = 'Religious Education and Pastoral Ministry'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Religious Education and Pastoral Ministry</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Romance Languages')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Romance Languages and Literatures</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Sacred Theology')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Sacred Theology</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Social Work')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Social Work</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Sociology')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Sociology</xsl:element>
+            </xsl:if>
+            <xsl:if test="starts-with(.,'Teacher Education')">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+            <xsl:if test=". ='Theology'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Theology</xsl:element>
+            </xsl:if>
+            <xsl:if test=". ='Theology and Education'">
+                <xsl:element name="mods:classification"><xsl:attribute name="authority"
+                        >local</xsl:attribute>Education</xsl:element>
+            </xsl:if>
+        </xsl:for-each>
+
     </xsl:template>
 </xsl:stylesheet>
