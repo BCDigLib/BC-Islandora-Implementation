@@ -27,7 +27,7 @@
                     margin-right="0.5in">
                     <fo:region-body margin="0.5in" margin-top=".5in" margin-bottom=".5in"/>
                     <fo:region-before extent=".5in"/>
-                    <fo:region-after extent="4.25in"/>
+                    <fo:region-after extent="4.0in"/>
                 </fo:simple-page-master>
             </fo:layout-master-set>
 
@@ -168,43 +168,27 @@
                     <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
                 </fo:block>
             </xsl:when>
+            <xsl:when test="mods:note[@type='version identification'] = 'Version of record.'">
+                <xsl:call-template name="publisher"/>
+            </xsl:when>
+            <xsl:when test="mods:note[@type='version identification'] = mods:note[starts-with(.,'Post-print')]">
+                <fo:block font-size="12pt" space-before="22">
+                    <xsl:value-of select="mods:note[@type='version identification']"/>
+                </fo:block>
+            </xsl:when>
+            <xsl:when test="mods:note[@type='version identification'] = mods:note[starts-with(.,'Pre-print')]">
+                <fo:block font-size="12pt" space-before="22">
+                    <xsl:value-of select="mods:note[@type='version identification']"/>
+                </fo:block>
+            </xsl:when>
             <xsl:otherwise>
-                <xsl:choose>
-                    <xsl:when test="mods:note[@type='version identification'] = 'Version of record.'">
-                        <xsl:call-template name="publisher"/>
-                    </xsl:when>
-                    <xsl:when test="mods:note[@type='version identification'] = mods:note[starts-with(.,'Post-print')]">
-                        <fo:block font-size="12pt" space-before="22">
-                            <xsl:value-of select="mods:note[@type='version identification']"/>
-                        </fo:block>
-                    </xsl:when>
-                    <xsl:when test="mods:note[@type='version identification'] = mods:note[starts-with(.,'Pre-print')]">
-                        <fo:block font-size="12pt" space-before="22">
-                            <xsl:value-of select="mods:note[@type='version identification']"/>
-                        </fo:block>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:call-template name="publisher"/>
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:call-template name="publisher"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
     <xsl:template name="publisher">  
         <xsl:choose>
-            <xsl:when test="mods:originInfo/mods:publisher">
-                <fo:block font-size="12pt" space-before="22">
-                    <xsl:value-of select="mods:originInfo/mods:place/mods:placeTerm[@type='text']"/>
-                    <xsl:text>: </xsl:text><xsl:value-of select="mods:originInfo/mods:publisher"/>
-                    <xsl:if test="mods:originInfo/mods:dateIssued">
-                        <xsl:text>, </xsl:text><xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
-                    </xsl:if>
-                    <xsl:if test="mods:originInfo/mods:dateCreated">
-                        <xsl:text>, </xsl:text><xsl:value-of select="mods:originInfo/mods:dateCreated[not (@encoding)]"/>
-                    </xsl:if>
-                </fo:block>
-            </xsl:when>
             <xsl:when test="mods:relatedItem[@type='host']">
                 <fo:block font-size="12pt" space-before="22">
                     <xsl:text>Part of: </xsl:text><fo:inline font-style="italic"><xsl:value-of select="mods:relatedItem/mods:titleInfo/mods:title"/></fo:inline>
@@ -222,6 +206,23 @@
                     </xsl:if>
                 </fo:block>
             </xsl:when>
+            <xsl:when test="mods:originInfo/mods:publisher">
+                <fo:block font-size="12pt" space-before="22">
+                    <xsl:value-of select="mods:originInfo/mods:place/mods:placeTerm[@type='text']"/>
+                    <xsl:text>: </xsl:text><xsl:value-of select="mods:originInfo/mods:publisher"/>
+                    <xsl:if test="mods:originInfo/mods:dateIssued">
+                        <xsl:text>, </xsl:text><xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
+                    </xsl:if>
+                    <xsl:if test="mods:originInfo/mods:dateCreated">
+                        <xsl:text>, </xsl:text><xsl:value-of select="mods:originInfo/mods:dateCreated[not (@encoding)]"/>
+                    </xsl:if>
+                </fo:block>
+            </xsl:when>
+            <xsl:otherwise>
+                    <fo:block font-size="12pt" space-before="22">
+                        <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
+                    </fo:block>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
