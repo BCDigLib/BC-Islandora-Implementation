@@ -86,6 +86,9 @@
     
     <xsl:template name="titleInfo">
         <fo:block font-size="26pt" line-height="32pt" wrap-option="wrap" space-after="18pt">
+            <xsl:if test="mods:titleInfo[not (@type)]/mods:nonSort">
+                <xsl:value-of select="mods:titleInfo[not (@type)]/mods:nonSort"/>
+            </xsl:if>
             <xsl:value-of select="mods:titleInfo[not (@type)]/mods:title"/>
             <xsl:if test="mods:titleInfo[not (@type)]/mods:subTitle">
                 <xsl:text>: </xsl:text>
@@ -220,7 +223,12 @@
             </xsl:when>
             <xsl:otherwise>
                     <fo:block font-size="12pt" space-before="22">
-                        <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
+                        <xsl:if test="mods:originInfo/mods:dateIssued">
+                            <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
+                        </xsl:if>
+                        <xsl:if test="mods:originInfo/mods:dateCreated">
+                            <xsl:value-of select="mods:originInfo/mods:dateCreated[not (@encoding)]"/>
+                        </xsl:if>
                     </fo:block>
             </xsl:otherwise>
         </xsl:choose>
