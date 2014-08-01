@@ -131,19 +131,24 @@
                     <xsl:if test="(position()=1)">
                         <xsl:text>: </xsl:text>
                     </xsl:if>
-                    <xsl:choose>
-                        <xsl:when test="mods:namePart[@type='family']">
-                            <xsl:value-of
-                                select="concat(mods:namePart[@type='given'],' ',mods:namePart[@type='family'])"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of
-                                select="mods:displayForm"/>
-                        </xsl:otherwise>
-                    </xsl:choose>             
-                    <xsl:if test="not(position()=last())">
-                        <xsl:text>, </xsl:text>
+                    <xsl:if test="(position()&lt;=25)">
+                        <xsl:choose>
+                            <xsl:when test="mods:namePart[@type='family']">
+                                <xsl:value-of
+                                    select="concat(mods:namePart[@type='given'],' ',mods:namePart[@type='family'])"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of
+                                    select="mods:displayForm"/>
+                            </xsl:otherwise>
+                        </xsl:choose>             
+                        <xsl:if test="not(position()=25)">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
                     </xsl:if>
+                    <xsl:if test="(position()=25)">
+                        <xsl:text>...</xsl:text>
+                    </xsl:if>        
                 </xsl:for-each>    
                 </xsl:if>
             </fo:block>
