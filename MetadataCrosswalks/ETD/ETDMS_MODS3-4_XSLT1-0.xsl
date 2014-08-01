@@ -29,6 +29,24 @@
                 <xsl:element name="mods:issuance">monographic</xsl:element>
             </xsl:element>
             <xsl:apply-templates select="language"/>
+            <xsl:if test="not(language)">
+                <xsl:element name="mods:language">
+                    <xsl:element name="mods:languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:text>code</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>eng</xsl:text>
+                    </xsl:element>
+                    <xsl:element name="mods:languageTerm">
+                        <xsl:attribute name="type">
+                            <xsl:text>text</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                        <xsl:text>English</xsl:text>
+                    </xsl:element>
+                </xsl:element>
+            </xsl:if>
             <xsl:apply-templates select="format"/>
             <xsl:apply-templates select="description"/>
             <xsl:apply-templates select="subject"/>
