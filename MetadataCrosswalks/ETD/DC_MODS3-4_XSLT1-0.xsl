@@ -444,10 +444,7 @@
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
                         >local</xsl:attribute>Classical Studies</xsl:element>
             </xsl:if>
-            <xsl:if test="contains(.,'College Honors Program')">
-                <xsl:element name="mods:classification"><xsl:attribute name="authority"
-                        >local</xsl:attribute>College Honors Program</xsl:element>
-            </xsl:if>
+
             <xsl:if test="contains(.,'Communication')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
                         >local</xsl:attribute>Communication</xsl:element>
@@ -490,7 +487,7 @@
             </xsl:if>
             <xsl:if test="contains(.,'German')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
-                        >local</xsl:attribute>German</xsl:element>
+                        >local</xsl:attribute>German Studies</xsl:element>
             </xsl:if>
             <xsl:if test="contains(.,'History')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
@@ -506,7 +503,7 @@
             </xsl:if>
             <xsl:if test="contains(.,'Management')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
-                        >local</xsl:attribute>Management</xsl:element>
+                    >local</xsl:attribute>Management</xsl:element>
             </xsl:if>
             <xsl:if test="contains(.,'Mathematics')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
@@ -538,7 +535,7 @@
             </xsl:if>
             <xsl:if test="contains(.,'Romance Languages and Literature')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
-                        >local</xsl:attribute>Romance Languages and Literature</xsl:element>
+                        >local</xsl:attribute>Romance Languages and Literatures</xsl:element>
             </xsl:if>
             <xsl:if test="contains(.,'Slavic and Eastern Languages')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
@@ -565,19 +562,41 @@
     </xsl:template>
     <xsl:template name="bcSchoolOrCenter">
         <xsl:element name="mods:extension">
-            <xsl:element name="bcSchoolOrCenter">
-                <xsl:choose>
-                    <xsl:when test="contains(dcterms:grantor,'Arts')">
+  
+                
+                    <xsl:if test="contains(dcterms:grantor,'Arts')">
+                        <xsl:element name="bcSchoolOrCenter">
                         <xsl:text>Arts and Sciences</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="contains(dcterms:grantor,'Carroll')">
+                        </xsl:element>
+                    </xsl:if>
+
+                    <xsl:if test="contains(dcterms:grantor,'Carroll')">
+                        <xsl:element name="bcSchoolOrCenter">
                         <xsl:text>Carroll School of Management</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="contains(dcterms:grantor,'Connell')">
+                        </xsl:element>
+                    </xsl:if>
+            
+                    <xsl:if test="contains(dcterms:grantor,'Connell')">
+                        <xsl:element name="bcSchoolOrCenter">
                         <xsl:text>Connell School of Nursing</xsl:text>
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:element>
+                        </xsl:element>
+                    </xsl:if>
+
+            
+      
+                <xsl:for-each select="dcterms:discipline">
+                    <xsl:if test="contains(.,'College Honors')">
+                        <xsl:element name="bcSchoolOrCenter">   
+                        <xsl:text>College Honors Program</xsl:text>
+                        </xsl:element>
+                    </xsl:if>
+                    <xsl:if test="contains(.,'Carroll School of Management Honors Program')">
+                        <xsl:element name="bcSchoolOrCenter">                    
+                        <xsl:text>Carroll School of Management Honors Program</xsl:text>
+                        </xsl:element>
+                    </xsl:if>
+                </xsl:for-each>
+            
         </xsl:element>
     </xsl:template>
 
