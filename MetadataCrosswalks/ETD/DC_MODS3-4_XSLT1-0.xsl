@@ -52,7 +52,7 @@
             <xsl:apply-templates select="dc:format"/>
             <xsl:apply-templates select="dcterms:abstract"/>
             <xsl:apply-templates select="dc:subject"/>
-            <xsl:call-template name="classification"/>
+            <!-- <xsl:call-template name="classification"/> decided to do a virtual field instead-->
             <xsl:apply-templates select="dc:identifier"/>
             <xsl:apply-templates select="dcterms:accessRights"/>
             <xsl:element name="mods:extension">
@@ -63,7 +63,7 @@
                     <xsl:apply-templates select="dcterms:grantor"/>
                 </xsl:element>
             </xsl:element>
-            <xsl:call-template name="bcSchoolOrCenter"/>         
+           <!-- <xsl:call-template name="bcSchoolOrCenter"/> decided to do a virtual field instead-->
             <xsl:call-template name="recordInfo"/>
         </mods:mods>
     </xsl:template>
@@ -191,11 +191,13 @@
         </xsl:element>
     </xsl:template>
     <xsl:template match="dc:subject">
+        <xsl:if test=". !=''">
         <xsl:element name="mods:subject">
             <xsl:element name="mods:topic">
                 <xsl:apply-templates/>
             </xsl:element>
         </xsl:element>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="dcterms:abstract">
         <xsl:element name="mods:abstract">
@@ -214,7 +216,7 @@
         </xsl:element-->
     </xsl:template>
     <xsl:template match="dc:contributor">
-        <xsl:if test=". !=''">
+        <xsl:if test="(. !='') and contains(.,',')">
             <xsl:element name="mods:name">
                 <xsl:attribute name="type">personal</xsl:attribute>
                 <xsl:element name="mods:namePart">
@@ -241,7 +243,65 @@
                         <xsl:text>ths</xsl:text>
                     </xsl:element>
                 </xsl:element>
+            </xsl:element>
+        </xsl:if>
+        <xsl:if test="(. !='') and not( contains(.,','))">
+            <xsl:element name="mods:name">
+                <xsl:attribute name="type">personal</xsl:attribute>
+                <xsl:element name="mods:namePart">
+                    <xsl:attribute name="type">given</xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="contains(.,'.')">
+                            <xsl:value-of select="normalize-space(substring-before(.,'.'))"/>
+                            <xsl:text>.</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="normalize-space(substring-before(.,' '))"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
 
+
+                </xsl:element>
+                <xsl:element name="mods:namePart">
+                    <xsl:attribute name="type">family</xsl:attribute>
+                    <xsl:choose>
+                        <xsl:when test="contains(.,'.')">
+                            <xsl:value-of select="normalize-space(substring-after(.,'.'))"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="normalize-space(substring-after(.,' '))"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:element>
+                <!-- Betsy moved up display form so it would appear before the relator codes-->
+                <xsl:element name="mods:displayForm">
+                    <xsl:choose>
+                        <xsl:when test="contains(.,'.')">
+                            <xsl:value-of select="normalize-space(substring-after(.,'.'))"/>
+                            <xsl:text>, </xsl:text>
+                            <xsl:value-of select="normalize-space(substring-before(.,'.'))"/>
+                            <xsl:text>.</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="normalize-space(substring-after(.,' '))"/>
+                            <xsl:text>, </xsl:text>
+                            <xsl:value-of select="normalize-space(substring-before(.,' '))"/>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:element>
+
+                <xsl:element name="mods:role">
+                    <xsl:element name="mods:roleTerm">
+                        <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                        <xsl:attribute name="type">text</xsl:attribute>
+                        <xsl:text>Thesis advisor</xsl:text>
+                    </xsl:element>
+                    <xsl:element name="mods:roleTerm">
+                        <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                        <xsl:attribute name="type">code</xsl:attribute>
+                        <xsl:text>ths</xsl:text>
+                    </xsl:element>
+                </xsl:element>
             </xsl:element>
         </xsl:if>
     </xsl:template>
@@ -503,7 +563,7 @@
             </xsl:if>
             <xsl:if test="contains(.,'Management')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
-                    >local</xsl:attribute>Management</xsl:element>
+                        >local</xsl:attribute>Management</xsl:element>
             </xsl:if>
             <xsl:if test="contains(.,'Mathematics')">
                 <xsl:element name="mods:classification"><xsl:attribute name="authority"
@@ -562,41 +622,41 @@
     </xsl:template>
     <xsl:template name="bcSchoolOrCenter">
         <xsl:element name="mods:extension">
-  
-                
-                    <xsl:if test="contains(dcterms:grantor,'Arts')">
-                        <xsl:element name="bcSchoolOrCenter">
-                        <xsl:text>Arts and Sciences</xsl:text>
-                        </xsl:element>
-                    </xsl:if>
 
-                    <xsl:if test="contains(dcterms:grantor,'Carroll')">
-                        <xsl:element name="bcSchoolOrCenter">
-                        <xsl:text>Carroll School of Management</xsl:text>
-                        </xsl:element>
-                    </xsl:if>
-            
-                    <xsl:if test="contains(dcterms:grantor,'Connell')">
-                        <xsl:element name="bcSchoolOrCenter">
-                        <xsl:text>Connell School of Nursing</xsl:text>
-                        </xsl:element>
-                    </xsl:if>
 
-            
-      
-                <xsl:for-each select="dcterms:discipline">
-                    <xsl:if test="contains(.,'College Honors')">
-                        <xsl:element name="bcSchoolOrCenter">   
+            <xsl:if test="contains(dcterms:grantor,'Arts')">
+                <xsl:element name="bcSchoolOrCenter">
+                    <xsl:text>Arts and Sciences</xsl:text>
+                </xsl:element>
+            </xsl:if>
+
+            <xsl:if test="contains(dcterms:grantor,'Carroll')">
+                <xsl:element name="bcSchoolOrCenter">
+                    <xsl:text>Carroll School of Management</xsl:text>
+                </xsl:element>
+            </xsl:if>
+
+            <xsl:if test="contains(dcterms:grantor,'Connell')">
+                <xsl:element name="bcSchoolOrCenter">
+                    <xsl:text>Connell School of Nursing</xsl:text>
+                </xsl:element>
+            </xsl:if>
+
+
+
+            <xsl:for-each select="dcterms:discipline">
+                <xsl:if test="contains(.,'College Honors')">
+                    <xsl:element name="bcSchoolOrCenter">
                         <xsl:text>College Honors Program</xsl:text>
-                        </xsl:element>
-                    </xsl:if>
-                    <xsl:if test="contains(.,'Carroll School of Management Honors Program')">
-                        <xsl:element name="bcSchoolOrCenter">                    
+                    </xsl:element>
+                </xsl:if>
+                <xsl:if test="contains(.,'Carroll School of Management Honors Program')">
+                    <xsl:element name="bcSchoolOrCenter">
                         <xsl:text>Carroll School of Management Honors Program</xsl:text>
-                        </xsl:element>
-                    </xsl:if>
-                </xsl:for-each>
-            
+                    </xsl:element>
+                </xsl:if>
+            </xsl:for-each>
+
         </xsl:element>
     </xsl:template>
 
