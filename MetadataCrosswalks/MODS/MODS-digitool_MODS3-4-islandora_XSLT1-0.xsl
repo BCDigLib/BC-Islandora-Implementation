@@ -26,7 +26,7 @@
             <!--mods:targetAudience not used in IR-->
             <xsl:apply-templates select="mods:note"/>
             <xsl:apply-templates select="mods:subject"/>
-            <xsl:call-template name="bcdept"/>
+            <!--<xsl:call-template name="bcdept"/> decision to use virtual field-->
             <xsl:apply-templates select="mods:classification"/>
             <xsl:apply-templates select="mods:relatedItem"/>
             <xsl:apply-templates select="mods:identifier"/>
@@ -217,14 +217,14 @@
                         <xsl:text>MChB</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="mods:recordContentSource"/>
+                        <xsl:value-of select="normalize-space(mods:recordContentSource)"/>
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:element>
             <xsl:if test="mods:recordOrigin">
                 <xsl:element name="mods:recordContentSource">
                     <xsl:attribute name="authority">naf</xsl:attribute>
-                    <xsl:value-of select="mods:recordOrigin"/>
+                    <xsl:value-of select="normalize-space(mods:recordOrigin)"/>
                 </xsl:element>
             </xsl:if>
             <xsl:copy-of select="mods:recordCreationDate"/>
@@ -241,8 +241,14 @@
     <xsl:template match="mods:extension">
         <xsl:element name="mods:extension">
             <xsl:copy-of select="localCollectionName"/>
+            <xsl:if test="mods:localCollectionName">
+                <xsl:element name="localCollectionName">
+                    <xsl:value-of select="normalize-space(mods:localCollectionName)"/>
+                </xsl:element>
+            </xsl:if>
             <xsl:copy-of select="ingestFile"/>
         </xsl:element>
+
     </xsl:template>
 
     <xsl:template match="mods:part">
@@ -252,7 +258,7 @@
     <xsl:template match="mods:accessCondition">
         <xsl:element name="mods:accessCondition">
             <xsl:attribute name="type">use and reproduction</xsl:attribute>
-            <xsl:value-of select="."/>
+            <xsl:value-of select="normalize-space(translate(., '“”', '&quot;'))"/>
         </xsl:element>
     </xsl:template>
     <xsl:template match="mods:location">
@@ -279,8 +285,11 @@
     </xsl:template>
 
     <xsl:template match="mods:abstract">
-
-        <xsl:copy-of select="."/>
+        <xsl:element name="mods:abstract">
+            <xsl:value-of select="normalize-space(.)"/>
+    
+        </xsl:element>
+        
     </xsl:template>
 
     <xsl:template match="mods:physicalDescription">
@@ -366,7 +375,7 @@
                                     <xsl:value-of select="@authority"/>
                                 </xsl:attribute>
                             </xsl:if>
-                            <xsl:value-of select="translate(., '[]', '')"/>
+                            <xsl:value-of select="normalize-space(translate(., '[]', ''))"/>
                         </xsl:element>
                     </xsl:for-each>
                 </xsl:element>
@@ -398,7 +407,7 @@
             <xsl:if test="position()=1">
                 <xsl:attribute name="usage">primary</xsl:attribute>
             </xsl:if>
-            <xsl:value-of select="."/>
+            <xsl:value-of select="normalize-space(.)"/>
         </xsl:element>
     </xsl:template>
     <xsl:template match="mods:titleInfo">
@@ -408,7 +417,7 @@
                     <xsl:attribute name="supplied">yes</xsl:attribute>
                     <xsl:attribute name="usage">primary</xsl:attribute>
                     <xsl:element name="mods:title">
-                        <xsl:value-of select="translate(mods:title,'[]', '')"/>
+                        <xsl:value-of select="normalize-space(translate(mods:title,'[]', ''))"/>
                     </xsl:element>
                     <xsl:copy-of select="mods:subTitle"/>
                     <xsl:copy-of select="mods:partNumber"/>
@@ -463,7 +472,7 @@
     <xsl:template match="mods:name">
         <xsl:choose>
             <xsl:when
-                test="(mods:role/mods:roleTerm[@type='text']='Author') or (mods:role/mods:roleTerm[@type='text']='Creator')">
+                test="(mods:role/mods:roleTerm[@type='text']='Author') or (mods:role/mods:roleTerm[@type='text']='Creator')or (mods:role/mods:roleTerm[@type='text']='Interviewee')or (mods:role/mods:roleTerm[@type='text']='Speaker')">
                 <xsl:element name="mods:name">
                     <xsl:attribute name="type">
                         <xsl:value-of select="@type"/>
@@ -499,13 +508,16 @@
                                         <xsl:attribute name="type">code</xsl:attribute>
                                         <xsl:attribute name="authority">marcrelator</xsl:attribute>
                                         <xsl:if test="mods:roleTerm='Associated name'">asn</xsl:if>
-                                        <xsl:if test="child::mods:roleTerm='Author'">aut</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Author'">aut</xsl:if>
                                         <xsl:if test="mods:roleTerm='Contributor'">ctb</xsl:if>
                                         <xsl:if test="mods:roleTerm='Creator'">cre</xsl:if>
                                         <xsl:if test="mods:roleTerm='Editor'">edt</xsl:if>
                                         <xsl:if test="mods:roleTerm='Funder'">fnd</xsl:if>
                                         <xsl:if test="mods:roleTerm='Honoree'">hnr</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Interviewee'">ive</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Interviewer'">ivr</xsl:if>
                                         <xsl:if test="mods:roleTerm='Issuing body'">isb</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Moderator'">mod</xsl:if>
                                         <xsl:if test="mods:roleTerm='Organizer'">org</xsl:if>
                                         <xsl:if test="mods:roleTerm='Other'">oth</xsl:if>
                                         <xsl:if test="mods:roleTerm='Project director'">pdr</xsl:if>
@@ -513,6 +525,7 @@
                                         <xsl:if test="mods:roleTerm='Publishing Director'"
                                             >pbd</xsl:if>
                                         <xsl:if test="mods:roleTerm='Researcher'">res</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Speaker'">spk</xsl:if>
                                         <xsl:if test="mods:roleTerm='Sponsor'">spn</xsl:if>
                                         <xsl:if test="mods:roleTerm='Transcriber'">trc</xsl:if>
                                         <xsl:if test="mods:roleTerm='Translator'">trl</xsl:if>
@@ -559,13 +572,16 @@
                                         <xsl:attribute name="type">code</xsl:attribute>
                                         <xsl:attribute name="authority">marcrelator</xsl:attribute>
                                         <xsl:if test="mods:roleTerm='Associated name'">asn</xsl:if>
-                                        <xsl:if test="child::mods:roleTerm='Author'">aut</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Author'">aut</xsl:if>
                                         <xsl:if test="mods:roleTerm='Contributor'">ctb</xsl:if>
                                         <xsl:if test="mods:roleTerm='Creator'">cre</xsl:if>
                                         <xsl:if test="mods:roleTerm='Editor'">edt</xsl:if>
                                         <xsl:if test="mods:roleTerm='Funder'">fnd</xsl:if>
                                         <xsl:if test="mods:roleTerm='Honoree'">hnr</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Interviewee'">ive</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Interviewer'">ivr</xsl:if>
                                         <xsl:if test="mods:roleTerm='Issuing body'">isb</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Moderator'">mod</xsl:if>
                                         <xsl:if test="mods:roleTerm='Organizer'">org</xsl:if>
                                         <xsl:if test="mods:roleTerm='Other'">oth</xsl:if>
                                         <xsl:if test="mods:roleTerm='Project director'">pdr</xsl:if>
@@ -573,6 +589,7 @@
                                         <xsl:if test="mods:roleTerm='Publishing Director'"
                                             >pbd</xsl:if>
                                         <xsl:if test="mods:roleTerm='Researcher'">res</xsl:if>
+                                        <xsl:if test="mods:roleTerm='Speaker'">spk</xsl:if>
                                         <xsl:if test="mods:roleTerm='Sponsor'">spn</xsl:if>
                                         <xsl:if test="mods:roleTerm='Transcriber'">trc</xsl:if>
                                         <xsl:if test="mods:roleTerm='Translator'">trl</xsl:if>
