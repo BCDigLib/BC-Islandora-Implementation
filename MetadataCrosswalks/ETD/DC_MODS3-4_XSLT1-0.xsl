@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/"
-    xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.1/"
+    xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exclude-result-prefixes="dc dcterms"
     version="1.0">
@@ -16,8 +16,9 @@
     </xsl:template>
     <xsl:template match="record">
         <mods:mods version="3.4" xmlns:mods="http://www.loc.gov/mods/v3"
+            xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+            xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.ndltd.org/standards/metadata/etdms/1.0/ http://www.ndltd.org/standards/metadata/etdms/1.0/etdms.xsd">
             <xsl:apply-templates select="dc:title"/>
             <xsl:apply-templates select="dc:creator"/>
             <xsl:apply-templates select="dc:contributor"/>
