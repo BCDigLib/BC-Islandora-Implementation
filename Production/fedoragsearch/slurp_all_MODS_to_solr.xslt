@@ -24,25 +24,27 @@
     <xsl:param name="pid">not provided</xsl:param>
     <xsl:param name="datastream">not provided</xsl:param>
     <!-- Get date string for display. -->
-      <xsl:variable name="textValueDisplay">
-          <xsl:value-of select="normalize-space(text())"/>
-      </xsl:variable>
-      <xsl:if test="$textValueDisplay">
-          <xsl:variable name="this_prefix">
-              <xsl:value-of select="$prefix"/>
-              <xsl:for-each select="@*">
-                  <xsl:value-of select="local-name()"/>
-                  <xsl:text>_</xsl:text>
-                  <xsl:value-of select="."/>
-                  <xsl:text>_</xsl:text>
-              </xsl:for-each>
+      <xsl:if test="not(@*)">
+          <xsl:variable name="textValueDisplay">
+              <xsl:value-of select="normalize-space(text())"/>
           </xsl:variable>
-          <field>
-              <xsl:attribute name="name">
-                  <xsl:value-of select="concat($prefix, local-name(), '_ms')"/>
-              </xsl:attribute>
-              <xsl:value-of select="$textValueDisplay"/>
-          </field>
+          <xsl:if test="not(normalize-space($textValueDisplay)='')">
+              <xsl:variable name="this_prefix">
+                  <xsl:value-of select="$prefix"/>
+                  <xsl:for-each select="@*">
+                      <xsl:value-of select="local-name()"/>
+                      <xsl:text>_</xsl:text>
+                      <xsl:value-of select="."/>
+                      <xsl:text>_</xsl:text>
+                  </xsl:for-each>
+              </xsl:variable>
+              <field>
+                  <xsl:attribute name="name">
+                      <xsl:value-of select="concat($prefix, local-name(), '_ms')"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="$textValueDisplay"/>
+              </field>
+          </xsl:if>
       </xsl:if>
     <!-- Get ISO8601 date. -->
     <xsl:variable name="textValueISO">
@@ -85,8 +87,10 @@
     <xsl:param name="suffix"/>
     <xsl:param name="pid">not provided</xsl:param>
     <xsl:param name="datastream">not provided</xsl:param>
+
+    <xsl:call-template name="discipline"/>
+    <xsl:call-template name="school"/>  
     <xsl:apply-templates select="mods:name"/>
-    <xsl:apply-templates select="mods:name/mods:affiliation"/>
 
      <!--  Build up the list prefix with the element context.  -->
     <xsl:variable name="this_prefix">
@@ -128,6 +132,7 @@
   </xsl:template>
 
     <xsl:template match="mods:name">
+    <!-- Role term facet -->
         <xsl:param name="prefix"/>
         <xsl:param name="suffix">_ms</xsl:param>
         <xsl:param name="pid">not provided</xsl:param>
@@ -149,114 +154,361 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="mods:name/mods:affiliation">
+    <xsl:template name="discipline">
         <xsl:param name="prefix"/>
         <xsl:param name="suffix">_ms</xsl:param>
         <xsl:param name="pid">not provided</xsl:param>
         <xsl:param name="datastream">not provided</xsl:param>
-        <xsl:variable name="this_prefix">
-            <xsl:value-of select="$prefix"/>
-            <xsl:if test="contains(., ', Boston College') or contains(., 'Carroll School of Management') or contains(., 'Connell School of Nursing') or contains(., 'Lynch School of Education') or contains(., 'Graduate School of Social Work') or contains(., 'School of Theology and Ministry')">
-                <xsl:text>Classification</xsl:text>
-            </xsl:if>  
-        </xsl:variable>
-        <xsl:variable name="textValue">
-            <xsl:if test=".='Dept. of Biology, Boston College'">
-                <xsl:text>Biology</xsl:text>
+        
+        <!-- Discipline facet for non-ETD MODS. -->
+        <xsl:for-each select="mods:name/mods:affiliation">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="$prefix"/>
+                <xsl:if test="contains(., ', Boston College') or contains(., 'Carroll School of Management') or contains(., 'Connell School of Nursing') or contains(., 'Lynch School of Education') or contains(., 'Graduate School of Social Work') or contains(., 'School of Theology and Ministry')">
+                    <xsl:text>discipline</xsl:text>
+                </xsl:if>  
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test=".='Dept. of Biology, Boston College'">
+                        <xsl:text>Biology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Business Law, Carroll School of Management'">
+                        <xsl:text>Business Law</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Chemistry, Boston College'">
+                        <xsl:text>Chemistry</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Classical Studies, Boston College'">
+                        <xsl:text>Classical Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Economics, Boston College'">
+                        <xsl:text>Economics</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Counseling, Developmental, and Educational Psychology, Lynch School of Education'">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Educational Administration and Higher Education, Lynch School of Education'">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Educational Research, Measurement and Evaluation, Lynch School of Education'">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Teacher Education, Special Education, Curriculum and Instruction, Lynch School of Education'">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of English, Boston College'">
+                        <xsl:text>English</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Finance, Carroll School of Management'">
+                        <xsl:text>Finance</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of History, Boston College'">
+                        <xsl:text>History</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Marketing, Carroll School of Management'">
+                        <xsl:text>Marketing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Adult Health, Connell School of Nursing'">
+                        <xsl:text>Nursing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Maternal/Child Health Nursing, Connell School of Nursing'">
+                        <xsl:text>Nursing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Operations and Strategic Management, Carroll School of Management'">
+                        <xsl:text>Operations and Strategic Management</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Organization Studies, Carroll School of Management'">
+                        <xsl:text>Organization Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Philosophy, Boston College'">
+                        <xsl:text>Philosophy</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Physics, Boston College'">
+                        <xsl:text>Physics</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Psychology, Boston College'">
+                        <xsl:text>Psychology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Romance Languages &amp; Literatures, Boston College'">
+                        <xsl:text>Romance Languages and Literatures</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Slavic &amp; Eastern Languages and Literature, Boston College'">
+                        <xsl:text>Slavic and Eastern Language and Literatures</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Slavic and Eastern Languages, Boston College'">
+                        <xsl:text>Slavic and Eastern Language and Literatures</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Graduate School of Social Work'">
+                        <xsl:text>Social Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Graduate School of Social Work, Boston College'">
+                        <xsl:text>Social Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Sociology, Boston College'">
+                        <xsl:text>Sociology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Dept. of Theology, Boston College'">
+                        <xsl:text>Theology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='Boston College. School of Theology and Ministry'">
+                        <xsl:text>Theology and Ministry</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='School of Theology and Ministry'">
+                        <xsl:text>Theology and Ministry</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
             </xsl:if>
-            <xsl:if test=".='Dept. of Business Law, Carroll School of Management'">
-                <xsl:text>Business Law</xsl:text>
+        </xsl:for-each>
+        
+        <!-- Discipline facet for ETD MODS. -->
+        <xsl:for-each select="mods:extension/etdms:degree/etdms:discipline">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="concat($prefix, 'discipline')"/>
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test="contains(.,'Accounting')">
+                        <xsl:text>Accounting</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Applied Developmental')">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Biology')">
+                        <xsl:text>Biology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Business Law')">
+                        <xsl:text>Business Law</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Chemistry')">
+                        <xsl:text>Chemistry</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Classical Studies')">
+                        <xsl:text>Classical Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Communication')">
+                        <xsl:text>Communication</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Counseling')">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Curriculum')">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Computer Science')">
+                        <xsl:text>Computer Science</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Earth')">
+                        <xsl:text>Earth and Environmental Sciences</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Economics')">
+                        <xsl:text>Economics</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Educational')">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Education')">
+                        <xsl:text>Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'English')">
+                        <xsl:text>English</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Film')">
+                        <xsl:text>Film Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Finance')">
+                        <xsl:text>Finance</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Fine Arts')">
+                        <xsl:text>Fine Arts</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Geology')">
+                        <xsl:text>Geology and Geophysics</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'German')">
+                        <xsl:text>German Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'History')">
+                        <xsl:text>History</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'International Studies')">
+                        <xsl:text>International Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Islamic Civilizations')">
+                        <xsl:text>Islamic Civilizations</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Management and Organization')">
+                        <xsl:text>Management and Organization</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Management')">
+                        <xsl:text>Management</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Mathematics')">
+                        <xsl:text>Mathematics</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Music')">
+                        <xsl:text>Music</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Nursing')">
+                        <xsl:text>Nursing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Organization Studies and Corporate Responsibility')">
+                        <xsl:text>Corporate Responsibility</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Organization Studies')">
+                        <xsl:text>Organization Studies</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Philosophy')">
+                        <xsl:text>Philosophy</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Physics')">
+                        <xsl:text>Physics</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Political Science')">
+                        <xsl:text>Political Science</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Psychology')">
+                        <xsl:text>Psychology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Religious Education and Pastoral Ministry')">
+                        <xsl:text>Religious Education and Pastoral Ministry</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Romance Languages')">
+                        <xsl:text>Romance Languages and Literature</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Sacred Theology')">
+                        <xsl:text>Sacred Theology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Slavic and Eastern Languages')">
+                        <xsl:text>Slavic and Eastern Languages</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Social Work')">
+                        <xsl:text>Social Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Sociology')">
+                        <xsl:text>Sociology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Theater')">
+                        <xsl:text>Theater</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Theology and Education')">
+                        <xsl:text>Theology and Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(.,'Theology')">
+                        <xsl:text>Theology</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
             </xsl:if>
-            <xsl:if test=".='Dept. of Chemistry, Boston College'">
-                <xsl:text>Chemistry</xsl:text>
+        </xsl:for-each>
+        
+    </xsl:template>
+
+    <xsl:template name="school">
+        <xsl:param name="prefix"/>
+        <xsl:param name="suffix">_ms</xsl:param>
+        <xsl:param name="pid">not provided</xsl:param>
+        <xsl:param name="datastream">not provided</xsl:param>
+        
+        <!-- School facet for non-ETD MODS. -->
+        <xsl:for-each select="mods:name/mods:affiliation">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="$prefix"/>
+                <xsl:if test="contains(., ', Boston College') or contains(., 'Carroll School of Management') or contains(., 'Connell School of Nursing') or contains(., 'Lynch School of Education') or contains(., 'Graduate School of Social Work') or contains(., 'School of Theology and Ministry')">
+                    <xsl:text>school</xsl:text>
+                </xsl:if>  
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test="contains(., ', Boston College') and starts-with(., 'Dept.')">
+                        <xsl:text>School of Arts and Sciences</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Carroll School of Management')">
+                        <xsl:text>Carroll School of Management</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Connell School of Nursing')">
+                        <xsl:text>Connell School of Nursing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Lynch School of Education')">
+                        <xsl:text>Lynch School of Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Graduate School of Social Work')">
+                        <xsl:text>Graduate School of Social Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'School of Theology and Ministry')">
+                        <xsl:text>School of Theology and Ministry</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
             </xsl:if>
-            <xsl:if test=".='Dept. of Classical Studies, Boston College'">
-                <xsl:text>Classical Studies</xsl:text>
+        </xsl:for-each>
+        
+        <!-- School facet for ETD MODS. -->
+        <xsl:for-each select="mods:extension/etdms:degree/etdms:grantor">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="$prefix"/>
+                <xsl:if test=".">
+                    <xsl:text>school</xsl:text>
+                </xsl:if>  
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test="contains(., 'Arts and Sciences')">
+                        <xsl:text>School of Arts and Sciences</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Carroll School of Management')">
+                        <xsl:text>Carroll School of Management</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Connell School of Nursing')">
+                        <xsl:text>Connell School of Nursing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Lynch School of Education')">
+                        <xsl:text>Lynch School of Education</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'Graduate School of Social Work')">
+                        <xsl:text>Graduate School of Social Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="contains(., 'School of Theology and Ministry')">
+                        <xsl:text>School of Theology and Ministry</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
             </xsl:if>
-            <xsl:if test=".='Dept. of Economics, Boston College'">
-                <xsl:text>Economics</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Counseling, Developmental, and Educational Psychology, Lynch School of Education'">
-                <xsl:text>Education</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Educational Administration and Higher Education, Lynch School of Education'">
-                <xsl:text>Education</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Educational Research, Measurement and Evaluation, Lynch School of Education'">
-                <xsl:text>Education</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Teacher Education, Special Education, Curriculum and Instruction, Lynch School of Education'">
-                <xsl:text>Education</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of English, Boston College'">
-                <xsl:text>English</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Finance, Carroll School of Management'">
-                <xsl:text>Finance</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of History, Boston College'">
-                <xsl:text>History</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Marketing, Carroll School of Management'">
-                <xsl:text>Marketing</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Adult Health, Connell School of Nursing'">
-                <xsl:text>Nursing</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Maternal/Child Health Nursing, Connell School of Nursing'">
-                <xsl:text>Nursing</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Operations and Strategic Management, Carroll School of Management'">
-                <xsl:text>Operations and Strategic Management</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Organization Studies, Carroll School of Management'">
-                <xsl:text>Organization Studies</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Philosophy, Boston College'">
-                <xsl:text>Philosophy</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Physics, Boston College'">
-                <xsl:text>Physics</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Psychology, Boston College'">
-                <xsl:text>Psychology</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Romance Languages &amp; Literatures, Boston College'">
-                <xsl:text>Romance Languages and Literatures</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Slavic &amp; Eastern Languages and Literature, Boston College'">
-                <xsl:text>Slavic and Eastern Language and Literatures</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Slavic and Eastern Languages, Boston College'">
-                <xsl:text>Slavic and Eastern Language and Literatures</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Graduate School of Social Work'">
-                <xsl:text>Social Work</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Graduate School of Social Work, Boston College'">
-                <xsl:text>Social Work</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Sociology, Boston College'">
-                <xsl:text>Sociology</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Dept. of Theology, Boston College'">
-                <xsl:text>Theology</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='Boston College. School of Theology and Ministry'">
-                <xsl:text>Theology and Ministry</xsl:text>
-            </xsl:if>
-            <xsl:if test=".='School of Theology and Ministry'">
-                <xsl:text>Theology and Ministry</xsl:text>
-            </xsl:if>
-        </xsl:variable>
-        <xsl:if test="$textValue">
-            <field>
-                <xsl:attribute name="name">
-                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                </xsl:attribute>
-                <xsl:value-of select="$textValue"/>
-            </field>
-        </xsl:if>
+        </xsl:for-each>
+        
     </xsl:template>
 
 </xsl:stylesheet>
