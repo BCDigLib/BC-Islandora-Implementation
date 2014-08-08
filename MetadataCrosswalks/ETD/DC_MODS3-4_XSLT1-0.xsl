@@ -93,9 +93,9 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:when>
-                <xsl:when test="starts-with(.,'An ' or 'La ')">
+                <xsl:when test="starts-with(.,'An ') or starts-with(.,'La ')">
                     <xsl:element name="mods:nonSort">
-                        <xsl:value-of select="normalize-space(substring(.,1,3))"/>
+                        <xsl:value-of select="substring(.,1,3)"/>
                     </xsl:element>
                     <xsl:choose>
                         <xsl:when test="contains(.,':')">
@@ -117,7 +117,7 @@
                 </xsl:when>
                 <xsl:when test="starts-with(.,'The ')">
                     <xsl:element name="mods:nonSort">
-                        <xsl:value-of select="normalize-space(substring(.,1,4))"/>
+                        <xsl:value-of select="substring(.,1,4)"/>
                     </xsl:element>
                     <xsl:choose>
                         <xsl:when test="contains(.,':')">
