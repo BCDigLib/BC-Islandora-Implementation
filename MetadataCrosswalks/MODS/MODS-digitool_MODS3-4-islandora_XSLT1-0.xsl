@@ -240,18 +240,17 @@
 
     <xsl:template match="mods:extension">
         <xsl:element name="mods:extension">
-            <xsl:choose>
-                <xsl:when test="mods:localCollectionName">
-                    <xsl:element name="localCollectionName">
-                    <xsl:value-of select="normalize-space(mods:localCollectionName)"/>
-                    </xsl:element>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:element name="localCollectionName">
-                    <xsl:value-of select="normalize-space(localCollectionName)"/>
+            <xsl:for-each select="mods:localCollectionName">
+                <xsl:element name="localCollectionName">
+                    <xsl:value-of select="normalize-space(.)"/>
                 </xsl:element>
-                </xsl:otherwise>
-            </xsl:choose>
+            </xsl:for-each>
+            <xsl:for-each select="localCollectionName">
+                <xsl:element name="localCollectionName">
+                    <xsl:value-of select="normalize-space(.)"/>
+                </xsl:element>
+            </xsl:for-each>
+                    
 
             <xsl:copy-of select="ingestFile"/>
         </xsl:element>
