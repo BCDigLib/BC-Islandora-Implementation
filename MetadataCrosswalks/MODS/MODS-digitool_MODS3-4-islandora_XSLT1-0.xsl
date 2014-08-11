@@ -244,11 +244,21 @@
                 <xsl:element name="localCollectionName">
                     <xsl:value-of select="normalize-space(.)"/>
                 </xsl:element>
+                <xsl:if test="contains(.,'C21')">
+                    <xsl:element name="localCollectionName">
+                        <xsl:text>C21</xsl:text>
+                    </xsl:element>
+                </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="localCollectionName">
                 <xsl:element name="localCollectionName">
                     <xsl:value-of select="normalize-space(.)"/>
                 </xsl:element>
+                <xsl:if test="contains(.,'C21')">
+                    <xsl:element name="localCollectionName">
+                        <xsl:text>C21</xsl:text>
+                    </xsl:element>
+                </xsl:if>
             </xsl:for-each>
                     
 
