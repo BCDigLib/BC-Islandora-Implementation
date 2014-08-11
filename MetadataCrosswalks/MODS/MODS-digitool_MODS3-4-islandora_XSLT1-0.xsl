@@ -246,7 +246,7 @@
                 </xsl:element>
                 <xsl:if test="contains(.,'C21')">
                     <xsl:element name="localCollectionName">
-                        <xsl:text>C21</xsl:text>
+                        <xsl:text>c21</xsl:text>
                     </xsl:element>
                 </xsl:if>
             </xsl:for-each>
@@ -256,7 +256,7 @@
                 </xsl:element>
                 <xsl:if test="contains(.,'C21')">
                     <xsl:element name="localCollectionName">
-                        <xsl:text>C21</xsl:text>
+                        <xsl:text>c21</xsl:text>
                     </xsl:element>
                 </xsl:if>
             </xsl:for-each>
