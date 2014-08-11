@@ -29,15 +29,6 @@
               <xsl:value-of select="normalize-space(text())"/>
           </xsl:variable>
           <xsl:if test="not(normalize-space($textValueDisplay)='')">
-              <xsl:variable name="this_prefix">
-                  <xsl:value-of select="$prefix"/>
-                  <xsl:for-each select="@*">
-                      <xsl:value-of select="local-name()"/>
-                      <xsl:text>_</xsl:text>
-                      <xsl:value-of select="."/>
-                      <xsl:text>_</xsl:text>
-                  </xsl:for-each>
-              </xsl:variable>
               <field>
                   <xsl:attribute name="name">
                       <xsl:value-of select="concat($prefix, local-name(), '_ms')"/>
