@@ -240,12 +240,19 @@
 
     <xsl:template match="mods:extension">
         <xsl:element name="mods:extension">
-            <xsl:copy-of select="localCollectionName"/>
-            <xsl:if test="mods:localCollectionName">
-                <xsl:element name="localCollectionName">
+            <xsl:choose>
+                <xsl:when test="mods:localCollectionName">
+                    <xsl:element name="localCollectionName">
                     <xsl:value-of select="normalize-space(mods:localCollectionName)"/>
+                    </xsl:element>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:element name="localCollectionName">
+                    <xsl:value-of select="normalize-space(localCollectionName)"/>
                 </xsl:element>
-            </xsl:if>
+                </xsl:otherwise>
+            </xsl:choose>
+
             <xsl:copy-of select="ingestFile"/>
         </xsl:element>
 
@@ -258,7 +265,7 @@
     <xsl:template match="mods:accessCondition">
         <xsl:element name="mods:accessCondition">
             <xsl:attribute name="type">use and reproduction</xsl:attribute>
-            <xsl:value-of select="normalize-space(translate(., '“”', '&quot;'))"/>
+            <xsl:value-of select="normalize-space(translate(., '“”', '&quot;&quot;'))"/>
         </xsl:element>
     </xsl:template>
     <xsl:template match="mods:location">
@@ -286,7 +293,7 @@
 
     <xsl:template match="mods:abstract">
         <xsl:element name="mods:abstract">
-            <xsl:value-of select="normalize-space(.)"/>
+            <xsl:value-of select="normalize-space(translate(., '“”', '&quot;&quot;'))"/>
     
         </xsl:element>
         
