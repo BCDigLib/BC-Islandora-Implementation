@@ -90,6 +90,8 @@
 
     <xsl:call-template name="discipline"/>
     <xsl:call-template name="school"/>  
+    <xsl:call-template name="center"/> 
+    <xsl:call-template name="faculty"/>
     <xsl:apply-templates select="mods:name"/>
 
      <!--  Build up the list prefix with the element context.  -->
@@ -471,8 +473,8 @@
         <!-- School facet for ETD MODS. -->
         <xsl:for-each select="mods:extension/etdms:degree/etdms:grantor">
             <xsl:variable name="this_prefix">
-                <xsl:value-of select="$prefix"/>
                 <xsl:if test=".">
+                    <xsl:value-of select="$prefix"/>       
                     <xsl:text>school</xsl:text>
                 </xsl:if>  
             </xsl:variable>
@@ -509,6 +511,84 @@
             </xsl:if>
         </xsl:for-each>
         
+    </xsl:template>
+    
+    <xsl:template name="center">
+        <xsl:param name="prefix"/>
+        <xsl:param name="suffix">_ms</xsl:param>
+        <xsl:param name="pid">not provided</xsl:param>
+        <xsl:param name="datastream">not provided</xsl:param>
+        
+        <!-- Center facet for non-ETD MODS. -->
+        <xsl:for-each select="mods:extension/localCollectionName">
+            <xsl:variable name="this_prefix">
+                <xsl:if test=".='c21' or .='crr' or .='cwp' or .='scaw' or .='wfrn'">
+                    <xsl:value-of select="$prefix"/>
+                    <xsl:text>center</xsl:text>
+                </xsl:if>  
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test=".='c21'">
+                        <xsl:text>Church in the 21st Century Center</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='crr'">
+                        <xsl:text>Center for Retirement Research</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='cwp'">
+                        <xsl:text>Center on Wealth and Philanthropy</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='scaw'">
+                        <xsl:text>Sloan Center on Aging and Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='wfrn'">
+                        <xsl:text>Work and Family Research Network</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
+    
+    <xsl:template name="faculty">
+        <xsl:param name="prefix"/>
+        <xsl:param name="suffix">_ms</xsl:param>
+        <xsl:param name="pid">not provided</xsl:param>
+        <xsl:param name="datastream">not provided</xsl:param>
+
+        <!-- Virtual field to idenitfy faculty/non-faculty. -->
+        <xsl:for-each select="mods:name/mods:description">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="concat($prefix, 'bc_affiliate')"/>      
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test=".!='nonfaculty' and .!=''">
+                        <xsl:text>faculty</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='nonfaculty'">
+                        <xsl:text>non-faculty</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
 </xsl:stylesheet>
