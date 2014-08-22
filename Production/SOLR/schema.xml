@@ -285,6 +285,11 @@
      -->
    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 
+   <!-- Boston College Specific field definitions 
+   -->
+   <field name="mods_titleInfo_primary_title_ms" type="string" indexed="true" stored="true"/>
+    <field name="mods_name_personal_primary_displayForm_ms" type="string" indexed="true" stored="true"/>
+
    <!-- Dynamic field definitions.  If a field name is not found, dynamicFields
         will be used if the name matches any of the patterns.
         RESTRICTION: the glob-like pattern in the name attribute must have
