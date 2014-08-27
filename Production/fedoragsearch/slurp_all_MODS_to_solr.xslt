@@ -4,12 +4,12 @@
   <!--
  <xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/config/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
 -->
-  <xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
+  <!--xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/-->
   <xsl:template match="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]" name="index_MODS">
     <xsl:param name="content"/>
     <xsl:param name="prefix"/>
     <xsl:param name="suffix">ms</xsl:param>
-    <xsl:apply-templates mode="slurping_MODS" select="$content//mods:mods[1]">
+    <xsl:apply-templates mode="slurping_MODS" select="$content//mods:mods[1]">      
       <xsl:with-param name="prefix" select="$prefix"/>
       <xsl:with-param name="suffix" select="$suffix"/>
       <xsl:with-param name="pid" select="../../@PID"/>
@@ -24,7 +24,7 @@
     <xsl:param name="pid">not provided</xsl:param>
     <xsl:param name="datastream">not provided</xsl:param>
     <!-- Get date string for display. -->
-      <xsl:if test="not(@encoding))">
+      <xsl:if test="not(@encoding)">
           <xsl:variable name="textValueDisplay">
               <xsl:value-of select="normalize-space(text())"/>
           </xsl:variable>
@@ -61,22 +61,25 @@
         </xsl:attribute>
         <xsl:value-of select="$textValueISO"/>
       </field>
-      <field>
-        <xsl:attribute name="name">
-          <xsl:value-of select="concat($prefix, local-name(), '_mdt')"/>
-        </xsl:attribute>
-        <xsl:value-of select="$textValueISO"/>
-      </field>
+          <xsl:if test="@keyDate = 'yes'">
+          <field>
+              <xsl:attribute name="name">
+                  <xsl:value-of select="concat($prefix, local-name(), '_mdt')"/>
+              </xsl:attribute>
+              <xsl:value-of select="$textValueISO"/>
+              <xsl:value-of select="local-name()"/>
+          </field>          
+      </xsl:if>
       <xsl:if test="concat($this_prefix, local-name())='mods_originInfo_dateIssued' or concat($this_prefix, local-name())='mods_originInfo_dateCreated'">
           <field>
               <xsl:attribute name="name">
-                  <xsl:value-of select="concat($this_prefix, 'mods_originInfo_dateIssued_and_dateCreated_dt')"/>
+                  <xsl:text>mods_originInfo_dateIssued_and_dateCreated_dt</xsl:text>
               </xsl:attribute>
               <xsl:value-of select="$textValueISO"/>
           </field>
           <field>
               <xsl:attribute name="name">
-                  <xsl:value-of select="concat($prefix, 'mods_originInfo_dateIssued_and_dateCreated_mdt')"/>
+                  <xsl:text>mods_originInfo_dateIssued_and_dateCreated_mdt</xsl:text>
               </xsl:attribute>
               <xsl:value-of select="$textValueISO"/>
           </field>
