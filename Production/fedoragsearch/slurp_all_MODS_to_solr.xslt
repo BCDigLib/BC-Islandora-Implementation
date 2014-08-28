@@ -62,24 +62,17 @@
         <xsl:value-of select="$textValueISO"/>
       </field>
           <xsl:if test="@keyDate = 'yes'">
-          <field>
-              <xsl:attribute name="name">
-                  <xsl:value-of select="concat($prefix, local-name(), '_mdt')"/>
-              </xsl:attribute>
-              <xsl:value-of select="$textValueISO"/>
-              <xsl:value-of select="local-name()"/>
-          </field>          
+              <field>
+                  <xsl:attribute name="name">
+                      <xsl:text>mods_originInfo_dateIssued_and_dateCreated_mdt</xsl:text>
+                  </xsl:attribute>
+                  <xsl:value-of select="$textValueISO"/>
+              </field>         
       </xsl:if>
       <xsl:if test="concat($this_prefix, local-name())='mods_originInfo_dateIssued' or concat($this_prefix, local-name())='mods_originInfo_dateCreated'">
           <field>
               <xsl:attribute name="name">
                   <xsl:text>mods_originInfo_dateIssued_and_dateCreated_dt</xsl:text>
-              </xsl:attribute>
-              <xsl:value-of select="$textValueISO"/>
-          </field>
-          <field>
-              <xsl:attribute name="name">
-                  <xsl:text>mods_originInfo_dateIssued_and_dateCreated_mdt</xsl:text>
               </xsl:attribute>
               <xsl:value-of select="$textValueISO"/>
           </field>
