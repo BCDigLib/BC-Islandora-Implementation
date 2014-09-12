@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageLookUp>
+  <DISS_language value="af" code="af" language="Afrikaans"/>
+  <DISS_language value="ar" code="ar" language="Arabic"/>
+  <DISS_language value="eu" code="eu" language="Basque"/>
+  <DISS_language value="bs" code="bs" language="Bosnian"/>
+  <DISS_language value="ca" code="ca" language="Catalan"/>
+  <DISS_language value="zh" code="zh" language="Chinese"/>
+  <DISS_language value="hr" code="hr" language="Croatian"/>
+  <DISS_language value="cs" code="cs" language="Czech"/>
+  <DISS_language value="da" code="da" language="Danish"/>
+  <DISS_language value="nl" code="nl" language="Dutch, Flemish"/>
+  <DISS_language value="en" code="en" language="English"/>
+  <DISS_language value="ang" code="ang" language="English, Old"/>
+  <DISS_language value="et" code="et" language="Estonian"/>
+  <DISS_language value="fi" code="fi" language="Finnish"/>
+  <DISS_language value="fr" code="fr" language="French"/>
+  <DISS_language value="fr-ca" code="fr-ca" language="French Canadian"/>
+  <DISS_language value="gl" code="gl" language="Galician"/>
+  <DISS_language value="de" code="de" language="German"/>
+  <DISS_language value="el" code="el" language="Greek"/>
+  <DISS_language value="haw" code="haw" language="Hawaiian"/>
+  <DISS_language value="he" code="he" language="Hebrew"/>
+  <DISS_language value="hu" code="hu" language="Hungarian"/>
+  <DISS_language value="is" code="is" language="Icelandic"/>
+  <DISS_language value="ga" code="ga" language="Irish"/>
+  <DISS_language value="it" code="it" language="Italian"/>
+  <DISS_language value="ja" code="ja" language="Japanese"/>
+  <DISS_language value="ko" code="ko" language="Korean"/>
+  <DISS_language value="la" code="la" language="Latin"/>
+  <DISS_language value="lv" code="lv" language="Latvian"/>
+  <DISS_language value="lt" code="lt" language="Lithuanian"/>
+  <DISS_language value="no" code="no" language="Norwegian"/>
+  <DISS_language value="pl" code="pl" language="Polish"/>
+  <DISS_language value="pt" code="pt" language="Portuguese"/>
+  <DISS_language value="ro" code="ro" language="Romanian"/>
+  <DISS_language value="ru" code="ru" language="Russian"/>
+  <DISS_language value="sa" code="sa" language="Sanskrit"/>
+  <DISS_language value="sl" code="sl" language="Slovenian"/>
+  <DISS_language value="st" code="st" language="Sotho"/>
+  <DISS_language value="es" code="es" language="Spanish"/>
+  <DISS_language value="sv" code="sv" language="Swedish"/>
+  <DISS_language value="tn" code="tn" language="Tswana"/>
+  <DISS_language value="tr" code="tr" language="Turkish"/>
+  <DISS_language value="uk" code="uk" language="Ukrainian"/>
+  <DISS_language value="ve" code="ve" language="Venda"/>
+  <DISS_language value="cy" code="cy" language="Welsh"/>
+  <DISS_language value="yi" code="yi" language="Yiddish"/>
+  <DISS_language value="zu" code="zu" language="Zulu"/>  
+</LanguageLookUp>
