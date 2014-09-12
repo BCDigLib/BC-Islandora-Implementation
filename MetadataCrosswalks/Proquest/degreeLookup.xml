@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DegreeLookUp>
+    <DISS_degree degree="BA" name="BA" level="Bachelors"/>
+    <DISS_degree degree="BS" name="BS" level="Bachelors"/>
+    <DISS_degree degree="MA" name="MA" level="Masters"/>
+    <DISS_degree degree="MS" name="MS" level="Masters"/>
+    <DISS_degree degree="PHD" name="PhD" level="Doctoral"/>
+    <DISS_degree degree="EDD"  name="EdD" level="Doctoral"/>
+    <DISS_degree degree="STD" name="STD" level="Doctoral"></DISS_degree>
+</DegreeLookUp>
