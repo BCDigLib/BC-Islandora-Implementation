@@ -134,11 +134,11 @@
                 <xsl:attribute name="usage">primary</xsl:attribute>                    
             </xsl:if> 
             <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">given</xsl:attribute>
+                <xsl:attribute name="type">family</xsl:attribute>
                 <xsl:value-of select="DISS_surname"/>
             </xsl:element>
             <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">family</xsl:attribute>
+                <xsl:attribute name="type">given</xsl:attribute>
                 <xsl:value-of select="DISS_fname"/>
                 <xsl:apply-templates select="DISS_middle"/>
             </xsl:element>

@@ -8,14 +8,9 @@
         <x_where from="HDeControl">
             <x_condition>
                 <type>contains</type>
-                <element>series</element>
-                <value>faculty publication highlights</value>
+                <element>partitionb</element>
+                <value>islandoragraduate</value>
             </x_condition> 
-            <x_condition>
-                <type>contains</type>
-                <element>usagetype</element>
-                <value>VIEW_MAIN</value>
-            </x_condition>
         </x_where>
     </x_query>
 </xb:x_queries>

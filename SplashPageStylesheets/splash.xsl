@@ -142,7 +142,7 @@
                                     select="mods:displayForm"/>
                             </xsl:otherwise>
                         </xsl:choose>             
-                        <xsl:if test="not(position()=25)">
+                        <xsl:if test="not(position()=last()) and not(position()=25)">
                             <xsl:text>, </xsl:text>
                         </xsl:if>
                     </xsl:if>
@@ -199,7 +199,7 @@
         <xsl:choose>
             <xsl:when test="mods:relatedItem[@type='host']">
                 <fo:block font-size="12pt" space-before="22">
-                    <xsl:text>Part of: </xsl:text><fo:inline font-style="italic"><xsl:value-of select="mods:relatedItem/mods:titleInfo/mods:title"/></fo:inline>
+                    <xsl:text>Published in </xsl:text><fo:inline font-style="italic"><xsl:value-of select="mods:relatedItem/mods:titleInfo/mods:title"/></fo:inline>
                     <xsl:if test="mods:relatedItem/mods:part/mods:detail[@type='volume']">
                         <xsl:text>, vol. </xsl:text><xsl:value-of select="mods:relatedItem/mods:part/mods:detail[@type='volume']/mods:number"/>
                     </xsl:if>

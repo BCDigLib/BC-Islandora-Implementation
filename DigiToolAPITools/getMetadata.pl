@@ -28,7 +28,7 @@ sub main {
     my $dxproxy = 'http://dcollections.bc.edu/de_repository_web/services/DigitalEntityExplorer';
     my $dmproxy = 'http://dcollections.bc.edu/de_repository_web/services/DigitalEntityManager';
     
-    mkdir ("$deOutput");
+    #mkdir ("$deOutput");
     
     my $result = SOAP::Lite
 	-> uri('DigitalEntityExplorer')
@@ -50,23 +50,25 @@ sub main {
           -> digitalEntityCall($general, $newdeCall)
           -> result;   
 
-	my $parser = XML::LibXML->new();
-	my $xslt = XML::LibXSLT->new();
-	
-	my $source = $parser->load_xml(string => $digitalEntity);
-	my $xsltDoc = $parser->load_xml(location => $xslStylesheet);
-	
-	my $xsltStyle = $xslt->parse_stylesheet($xsltDoc);
-	my $result = $xsltStyle->transform($source, XML::LibXSLT::xpath_to_string(mdType => $mdType));     
-	
+	#my $parser = XML::LibXML->new();
+	#my $xslt = XML::LibXSLT->new();
+	#
+	#my $source = $parser->load_xml(string => $digitalEntity);
+	#my $xsltDoc = $parser->load_xml(location => $xslStylesheet);
+	#
+	#my $xsltStyle = $xslt->parse_stylesheet($xsltDoc);
+	#my $result = $xsltStyle->transform($source, XML::LibXSLT::xpath_to_string(mdType => $mdType));     
+	#
 	my $file = $deOutput . '\\' . $pid . '.xml';   
-	
+	#
 	my $deFH = new FileHandle();
-	
+	#
 	$deFH->open("> $file");
 	$deFH->binmode(':utf8');
+	#
+	#print $deFH $xsltStyle->output_as_chars($result);
 	
-	print $deFH $xsltStyle->output_as_chars($result);
+	print $deFH $digitalEntity;
 	
 	# Get Object
 	my $url = 'http://dcollections.bc.edu/webclient/DeliveryManager?pid=' . $pid;
@@ -75,8 +77,13 @@ sub main {
 	my $xp = XML::XPath->new( xml => $digitalEntity );
 	my $extension = $xp->findvalue('/xb:digital_entity_result/xb:digital_entity/stream_ref/file_extension');
 	
+	my $xpFile = XML::XPath->new( xml => $digitalEntity );
+	my $filename = $xpFile->findvalue('/xb:digital_entity_result/xb:digital_entity/stream_ref/file_name');
+	
+
 	if ($extension ne 'undefined') {
-	    my $objFile = $deOutput . '\\' . $pid . '.' . $extension;
+	    #my $objFile = $deOutput . '\\' . $pid . '.' . $extension;
+	    my $objFile = $deOutput . '\\' . $filename;	
 		
 	    my $objFH = new FileHandle();
 	
