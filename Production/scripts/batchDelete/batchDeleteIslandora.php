@@ -22,8 +22,8 @@ if (count($argv) < 3){
 $file = file_get_contents($argv[1]);
 
 $fedoraUrl = 'http://dlib.bc.edu:8080/fedora/';
-$username = '';
-$password = '';
+$username = 'fedoraAdmin';
+$password = 'Yah4ooWingeis0C';
 
 $connection = new RepositoryConnection($fedoraUrl, $username, $password);
 $api = new FedoraApi($connection);

@@ -1,3 +1,3 @@
 select $object from <#ri> 
   where $object <fedora-model:state> <info:fedora/fedora-system:def/model#Active> 
-and $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/ir:facpub>
+and $object <fedora-rels-ext:isMemberOfCollection> <info:fedora/islandora:2694>
