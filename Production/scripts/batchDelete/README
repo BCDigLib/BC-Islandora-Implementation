@@ -1,8 +1,0 @@
-Basic drush script to batche delete/query items in Fedora DB
-
-batchDeleteIslandora.php - php script that makes drush calls
-query_Collection.itql - sample query on Collection
-query_CM.itql - sample query on Conetnt Model
-
-batchDeletislandora.php requires Islandora tuque API (https://github.com/islandora/tuque)
-to be in local php.ini include_path
