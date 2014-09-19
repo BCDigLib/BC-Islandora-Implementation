@@ -206,9 +206,16 @@
     <xsl:template match="DISS_language">
         <xsl:param name="element"/>
         <xsl:variable name="varCode">
-            <xsl:value-of select="."/>
+            <xsl:value-of select="translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
         </xsl:variable>
         <xsl:element name="{$element}">
+            <xsl:element name="mods:languageTerm">
+                <xsl:attribute name="type">
+                    <xsl:text>code</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="authority">iso639-2b</xsl:attribute>
+                <xsl:value-of select="$languagelookup/LanguageLookUp/DISS_language[@value=$varCode]/@code"/>
+            </xsl:element>             
             <xsl:element name="mods:languageTerm">
                 <xsl:attribute name="type">
                     <xsl:text>text</xsl:text>
@@ -216,13 +223,6 @@
                 <xsl:attribute name="authority">iso639-2b</xsl:attribute>
                 <xsl:value-of select="$languagelookup/LanguageLookUp/DISS_language[@value=$varCode]/@language"/>
             </xsl:element>            
-            <xsl:element name="mods:languageTerm">
-                <xsl:attribute name="type">
-                    <xsl:text>code</xsl:text>
-                </xsl:attribute>
-                <xsl:attribute name="authority">iso639-2b</xsl:attribute>
-                <xsl:value-of select="$languagelookup/LanguageLookUp/DISS_language[@value=$varCode]/@code"/>
-            </xsl:element> 
         </xsl:element>
     </xsl:template>
     <xsl:template name="physicalDescription">
