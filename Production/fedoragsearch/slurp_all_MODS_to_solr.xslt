@@ -89,12 +89,12 @@
     <xsl:param name="pid">not provided</xsl:param>
     <xsl:param name="datastream">not provided</xsl:param>
 
+    <xsl:call-template name="role"/>
     <xsl:call-template name="collection"/>    
     <xsl:call-template name="discipline"/>
     <xsl:call-template name="school"/>  
     <xsl:call-template name="center"/> 
     <xsl:call-template name="faculty"/>
-    <xsl:apply-templates select="mods:name"/>
 
      <!--  Build up the list prefix with the element context.  -->
     <xsl:variable name="this_prefix">
@@ -135,27 +135,29 @@
     </xsl:apply-templates>
   </xsl:template>
 
-    <xsl:template match="mods:name">
-    <!-- Role term facet -->
+    <xsl:template name="role">
+        <!-- Role term facet -->
         <xsl:param name="prefix"/>
         <xsl:param name="suffix">_ms</xsl:param>
         <xsl:param name="pid">not provided</xsl:param>
         <xsl:param name="datastream">not provided</xsl:param>
-        <xsl:variable name="this_prefix">
-            <xsl:value-of select="$prefix"/>
-            <xsl:value-of select="translate(mods:role/mods:roleTerm[@type='text'], ' ', '_')"/>
-        </xsl:variable>
-        <xsl:variable name="textValue">
-            <xsl:value-of select="normalize-space(mods:displayForm)"/>
-        </xsl:variable>
-        <xsl:if test="$textValue">
-            <field>
-                <xsl:attribute name="name">
-                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                </xsl:attribute>
-                <xsl:value-of select="$textValue"/>
-            </field>
-        </xsl:if>
+        <xsl:for-each select="mods:name">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="$prefix"/>
+                <xsl:value-of select="translate(mods:role/mods:roleTerm[@type='text'], ' ', '_')"/>
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:value-of select="normalize-space(mods:displayForm)"/>
+            </xsl:variable>
+            <xsl:if test="$textValue">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <xsl:template name="collection">
