@@ -91,6 +91,7 @@ $_ir_citation_marcgt_csl_terms = array(
 "standard or specification" => NULL,
 "statistics" => NULL,
 "survey of literature" => NULL,
+"thesis" => "thesis",
 "toy" => NULL,
 "transparency" => NULL,
 "treaty" => 'treaty',
@@ -128,6 +129,15 @@ $_ir_citation_zotero_local_csl_terms = array(
 "forumPost" => "webpage",
 "webpage" => "webpage",
 );
+$_ir_citation_bc_local_csl_terms = array(
+"blog entry" => "webpage",
+"book part" => "chapter",
+"case study" => "manuscript",
+"encyclopedia entry" => "entry-encyclopedia",
+"occasional paper" => "report",
+"report" => "report",
+"working paper" => "manuscript",
+);
 $_ir_citation_bibutils_noauth_csl_terms = array(
 "academic journal" => "article-journal",
 "magazine" => "article-magazine",
@@ -159,6 +169,18 @@ function zotero_to_csl($term) {
 global $_ir_citation_zotero_local_csl_terms;
 if (!empty($_ir_citation_zotero_local_csl_terms[$term])) {
 return $_ir_citation_zotero_local_csl_terms[$term];
+}
+else {
+return FALSE;
+}
+}
+/**
+* Convert Boston College local term to csl term.
+*/
+function zotero_to_csl($term) {
+global $_ir_citation_bc_local_csl_terms;
+if (!empty($_ir_citation_bc_local_csl_terms[$term])) {
+return $_ir_citation_bc_local_csl_terms[$term];
 }
 else {
 return FALSE;

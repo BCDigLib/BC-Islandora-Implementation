@@ -112,7 +112,7 @@ add_mods_namespace($mods);
 $names = convert_mods_to_citeproc_json_names($mods);
 $dates = convert_mods_to_citeproc_json_dates($mods);
 $type = convert_mods_to_citeproc_json_type($mods);
-$parented = "'$type'='book' or '$type'='chapter' or '$type'='article-journal'";
+$parented = "'$type'='book' or '$type'='chapter' or '$type'='article-journal' or '$type'='thesis'";
 $output = array_merge(array(
 'title' => convert_mods_to_citeproc_json_title($mods),
 'abstract' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:abstract'),
@@ -137,6 +137,7 @@ $output = array_merge(array(
 'number-pmcid' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="pmc"]'),
 'number-nihmsid' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="mid"]'),
 'type' => convert_mods_to_citeproc_json_genre($mods),
+'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification"]'),
 ),
 $names,
 $dates
@@ -282,7 +283,7 @@ $output = NULL;
 $pages = $mods->xpath("//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:extent[@unit='pages']");
 // Note: "pages" is correct, but Zotero uses "page".
 if (empty($pages)) {
-$pages = $mods->xpath("//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:extent[@unit='page']");
+$pages = $mods->xpath("//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:extent[@unit='pages']");
 }
 if (isset($pages[0])) {
 if (!empty($pages[0]->total)) {
