@@ -181,11 +181,11 @@
             <xsl:attribute name="type">personal</xsl:attribute>
             <xsl:attribute name="usage">primary</xsl:attribute>
             <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">given</xsl:attribute>
+                <xsl:attribute name="type">family</xsl:attribute>
                 <xsl:value-of select="substring-before(.,',')"/>
             </xsl:element>
             <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">family</xsl:attribute>
+                <xsl:attribute name="type">given</xsl:attribute>
                 <xsl:value-of select="substring-after(.,', ')"/>
             </xsl:element>
             <!--Betsy moved mods:displayForm up so it appears before before mods:role-->
@@ -231,11 +231,11 @@
             <xsl:element name="mods:name">
                 <xsl:attribute name="type">personal</xsl:attribute>
                 <xsl:element name="mods:namePart">
-                    <xsl:attribute name="type">given</xsl:attribute>
+                    <xsl:attribute name="type">family</xsl:attribute>
                     <xsl:value-of select="substring-before(.,',')"/>
                 </xsl:element>
                 <xsl:element name="mods:namePart">
-                    <xsl:attribute name="type">family</xsl:attribute>
+                    <xsl:attribute name="type">given</xsl:attribute>
                     <xsl:value-of select="substring-after(.,', ')"/>
                 </xsl:element>
                 <!-- Betsy moved up display form so it would appear before the relator codes-->
