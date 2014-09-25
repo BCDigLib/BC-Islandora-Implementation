@@ -250,11 +250,10 @@
                     <xsl:attribute name="type">family</xsl:attribute>
                     <xsl:choose>
                         <xsl:when test="contains(.,'.')">
-                            <xsl:value-of select="normalize-space(substring-before(.,'.'))"/>
-                            <xsl:text>.</xsl:text>
+                            <xsl:value-of select="normalize-space(substring-after(.,'.'))"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="normalize-space(substring-before(.,' '))"/>
+                            <xsl:value-of select="normalize-space(substring-after(.,' '))"/>
                         </xsl:otherwise>
                     </xsl:choose>
 
@@ -264,10 +263,11 @@
                     <xsl:attribute name="type">given</xsl:attribute>
                     <xsl:choose>
                         <xsl:when test="contains(.,'.')">
-                            <xsl:value-of select="normalize-space(substring-after(.,'.'))"/>
+                            <xsl:value-of select="normalize-space(substring-before(.,'.'))"/>
+                            <xsl:text>.</xsl:text>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="normalize-space(substring-after(.,' '))"/>
+                            <xsl:value-of select="normalize-space(substring-before(.,' '))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:element>
@@ -275,15 +275,15 @@
                 <xsl:element name="mods:displayForm">
                     <xsl:choose>
                         <xsl:when test="contains(.,'.')">
-                            <xsl:value-of select="normalize-space(substring-before(.,'.'))"/>
-                            <xsl:text>, </xsl:text>
                             <xsl:value-of select="normalize-space(substring-after(.,'.'))"/>
+                            <xsl:text>, </xsl:text>
+                            <xsl:value-of select="normalize-space(substring-before(.,'.'))"/>
                             <xsl:text>.</xsl:text>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="normalize-space(substring-before(.,' '))"/>
-                            <xsl:text>, </xsl:text>
                             <xsl:value-of select="normalize-space(substring-after(.,' '))"/>
+                            <xsl:text>, </xsl:text>
+                            <xsl:value-of select="normalize-space(substring-before(.,' '))"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:element>
