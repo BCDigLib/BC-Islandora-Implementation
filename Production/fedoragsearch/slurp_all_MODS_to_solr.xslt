@@ -346,10 +346,10 @@
                     <xsl:text>Romance Languages and Literatures</xsl:text>
                 </xsl:when>
                 <xsl:when test=".='Dept. of Slavic &amp; Eastern Languages and Literature, Boston College'">
-                    <xsl:text>Slavic and Eastern Language and Literatures</xsl:text>
+                    <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                 </xsl:when>
                 <xsl:when test=".='Dept. of Slavic and Eastern Languages, Boston College'">
-                    <xsl:text>Slavic and Eastern Language and Literatures</xsl:text>
+                    <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                 </xsl:when>
                 <xsl:when test=".='Graduate School of Social Work'">
                     <xsl:text>Social Work</xsl:text>
@@ -498,13 +498,13 @@
                         <xsl:text>Psychology</xsl:text>
                     </xsl:when>
                     <xsl:when test="contains(.,'Romance Languages')">
-                        <xsl:text>Romance Languages and Literature</xsl:text>
+                        <xsl:text>Romance Languages and Literatures</xsl:text>
                     </xsl:when>
                     <xsl:when test="contains(.,'Sacred Theology')">
                         <xsl:text>Sacred Theology</xsl:text>
                     </xsl:when>
                     <xsl:when test="contains(.,'Slavic and Eastern Languages')">
-                        <xsl:text>Slavic and Eastern Languages</xsl:text>
+                        <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                     </xsl:when>
                     <xsl:when test="contains(.,'Social Work')">
                         <xsl:text>Social Work</xsl:text>
