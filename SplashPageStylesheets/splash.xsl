@@ -161,9 +161,10 @@
     <xsl:template name="handle">
         <xsl:if test="mods:identifier[@type= 'hdl']">
             <fo:block font-size="16pt" space-before="22">Persistent link:
-            <fo:basic-link external-destination="http://www.bc.edu/escholarship"
-                color="#990000"><xsl:value-of select="mods:identifier[@type= 'hdl']"/>
-            </fo:basic-link>
+                <fo:basic-link color="#990000">
+                    <xsl:attribute name="external-destination"><xsl:value-of select="mods:identifier[@type= 'hdl']"/></xsl:attribute>
+                    <xsl:value-of select="mods:identifier[@type= 'hdl']"/>
+                </fo:basic-link>
         </fo:block>
         </xsl:if>
     </xsl:template>
