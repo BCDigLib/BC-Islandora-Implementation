@@ -18,10 +18,10 @@
             such as margins fonts alter the following page-masters.-->
        
          <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+            
+             <!-- Page master for Cover Page -->
+
             <fo:layout-master-set>
-
-                <!-- Page master for Cover Page -->
-
                 <fo:simple-page-master master-name="cover-page" page-width="8.5in"
                     page-height="11in" margin-top="0.5in" margin-bottom="0.5in" margin-left="0.5in"
                     margin-right="0.5in">
@@ -34,56 +34,40 @@
             <!-- The fo:page-sequence establishes headers, footers and the body of the page.-->
 
             <fo:page-sequence master-reference="cover-page">
-                <fo:static-content flow-name="xsl-region-after">
-                    <fo:block margin-left=".5in" margin-right=".5in" margin-bottom=".25in" text-align="left">
-                        <xsl:call-template name="handle"/>
-                    </fo:block> 
-                    <fo:block  margin-left=".5in" text-align="left" font-size="16pt" line-height="20pt">
-                        This work is posted on <fo:basic-link external-destination="http://escholarship.bc.edu" color="#990000">eScholarship@BC</fo:basic-link>,
-                    </fo:block> 
-                    <fo:block margin-bottom=".25in" margin-left=".5in" text-align="left" font-size="16pt" line-height="20pt">Boston College University Libraries.</fo:block>
-                    <fo:block margin-left=".5in" margin-right=".5in" border-top=".5pt solid #990000" line-height="50pt"/> 
-                    <fo:block margin-top=".25in" margin-left=".5in" margin-right=".5in" text-align="left" font-size="12pt" line-height="15pt">
-                        <xsl:call-template name="version"/>
-                    </fo:block> 
-                    <fo:block  
-                        margin-left=".5in" margin-right=".5in" text-align="left" font-size="12pt" line-height="15pt" space-before="22">
-                        <xsl:value-of select="mods:accessCondition[@type='use and reproduction']"/>
-                    </fo:block>
-      
-                </fo:static-content>
                 <fo:flow flow-name="xsl-region-body">
                     <fo:block font-family="Arial">
-                        <xsl:call-template name="splash"/>
+                        <xsl:call-template name="article"/>
                     </fo:block>
                 </fo:flow>
+                <fo:static-content flow-name="xsl-region-after">
+                    <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in" margin-bottom=".25in" text-align="left">
+                        <xsl:call-template name="handle"/>
+                    </fo:block> 
+                    <fo:block  font-family="Arial" margin-left=".5in" text-align="left" font-size="16pt" line-height="20pt">
+                        This work is posted on <fo:basic-link external-destination="http://escholarship.bc.edu" color="#990000">eScholarship@BC</fo:basic-link>,
+                    </fo:block> 
+                    <fo:block font-family="Arial" margin-bottom=".25in" margin-left=".5in" text-align="left" font-size="16pt" line-height="20pt">Boston College University Libraries.</fo:block>
+                    <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in" border-top=".5pt solid #990000" line-height="50pt"/> 
+                    <fo:block font-family="Arial" margin-top=".25in" margin-left=".5in" margin-right=".5in" text-align="left" font-size="12pt" line-height="15pt">
+                        <xsl:call-template name="version"/>
+                    </fo:block> 
+                    <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in" text-align="left" font-size="12pt" line-height="15pt" space-before="22">
+                        <xsl:value-of select="mods:accessCondition[@type='use and reproduction']"/>
+                    </fo:block>
+                </fo:static-content>            
             </fo:page-sequence>
+
         </fo:root>
     </xsl:template>
 
-    <!-- EAD Header, this information populates the cover page -->
-
-    
-
-    <xsl:template name="splash">
-    <!-- <fo:block border-top=".5pt solid #990000" line-height="1pt"/> -->
+    <xsl:template name="article">
         <fo:block text-align="left" padding-top=".25in" font-weight="normal" line-height="24pt"
             space-after="18pt" padding-bottom="12pt">
             <xsl:call-template name="titleInfo"/>
-            <xsl:call-template name="contributors"/>
-           
-            <!-- Adds repositry branding device. 
-            <xsl:if test="/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:p/ead:extref">
-                <fo:block>
-                    <fo:external-graphic src="{/ead:ead/ead:eadheader/ead:filedesc/ead:publicationstmt/ead:p/ead:extref/ns2:href}" content-height="100%" content-width="100%"/>
-                </fo:block>    
-            </xsl:if>-->
-
+            <xsl:call-template name="contributors"/>       
         </fo:block>
     </xsl:template>
-
-
-    
+   
     <xsl:template name="titleInfo">
         <fo:block font-size="26pt" line-height="32pt" wrap-option="wrap" space-after="18pt">
             <xsl:if test="mods:titleInfo[not (@type)]/mods:nonSort">
@@ -96,22 +80,20 @@
             </xsl:if>
         </fo:block>
         <fo:block font-size="26pt" wrap-option="wrap" space-after="18pt">
-        <xsl:if
-            test="mods:titleInfo[not (@type)]/mods:partNumber or mods:titleInfo[not (@type)]/mods:partName">
-            <xsl:text>. </xsl:text>
-        </xsl:if>
-        <xsl:if test="mods:titleInfo[not (@type)]/mods:partNumber">
-            <xsl:value-of select="mods:titleInfo[not (@type)]/mods:partNumber"/>
-        </xsl:if>
-        <xsl:if
-            test="mods:titleInfo[not (@type)]/mods:partName and mods:titleInfo[not (@type)]/mods:partNumber">
-            <xsl:text>, </xsl:text>
-        </xsl:if>
-        <xsl:value-of select="mods:titleInfo[not (@type)]/mods:partName"/>
+            <xsl:if
+                test="mods:titleInfo[not (@type)]/mods:partNumber or mods:titleInfo[not (@type)]/mods:partName">
+                <xsl:text>. </xsl:text>
+            </xsl:if>
+            <xsl:if test="mods:titleInfo[not (@type)]/mods:partNumber">
+                <xsl:value-of select="mods:titleInfo[not (@type)]/mods:partNumber"/>
+            </xsl:if>
+            <xsl:if
+                test="mods:titleInfo[not (@type)]/mods:partName and mods:titleInfo[not (@type)]/mods:partNumber">
+                <xsl:text>, </xsl:text>
+            </xsl:if>
+            <xsl:value-of select="mods:titleInfo[not (@type)]/mods:partName"/>
         </fo:block>
     </xsl:template>
-
-
 
     <xsl:template name="contributors">
         <xsl:for-each
@@ -155,8 +137,6 @@
             <xsl:text>&#xA;</xsl:text>
         </xsl:for-each>
     </xsl:template>
-
-
 
     <xsl:template name="handle">
         <xsl:if test="mods:identifier[@type= 'hdl']">
