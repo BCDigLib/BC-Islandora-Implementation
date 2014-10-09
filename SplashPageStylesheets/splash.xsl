@@ -34,11 +34,6 @@
             <!-- The fo:page-sequence establishes headers, footers and the body of the page.-->
 
             <fo:page-sequence master-reference="cover-page">
-                <fo:flow flow-name="xsl-region-body">
-                    <fo:block font-family="Arial">
-                        <xsl:call-template name="article"/>
-                    </fo:block>
-                </fo:flow>
                 <fo:static-content flow-name="xsl-region-after">
                     <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in" margin-bottom=".25in" text-align="left">
                         <xsl:call-template name="handle"/>
@@ -54,7 +49,12 @@
                     <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in" text-align="left" font-size="12pt" line-height="15pt" space-before="22">
                         <xsl:value-of select="mods:accessCondition[@type='use and reproduction']"/>
                     </fo:block>
-                </fo:static-content>            
+                </fo:static-content>   
+                <fo:flow flow-name="xsl-region-body">
+                    <fo:block font-family="Arial">
+                        <xsl:call-template name="article"/>
+                    </fo:block>
+                </fo:flow>         
             </fo:page-sequence>
 
         </fo:root>
