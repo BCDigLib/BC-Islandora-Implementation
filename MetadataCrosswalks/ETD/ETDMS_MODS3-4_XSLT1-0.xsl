@@ -311,7 +311,7 @@
             </xsl:element>
             <xsl:variable name="date" select="preceding-sibling::date"/>
             <xsl:choose>
-                <xsl:when test="$date > '2008'">
+                <xsl:when test="$date > '2007'">
                     <xsl:element name="mods:digitalOrigin">born digital</xsl:element>
                 </xsl:when>
                 <xsl:otherwise>

@@ -355,6 +355,9 @@
             <xsl:element name="mods:internetMediaType">
                 <xsl:text>application/pdf</xsl:text>
             </xsl:element>
+            <xsl:element name="mods:digitalOrigin">
+                <xsl:text>born digital</xsl:text>
+            </xsl:element>
         </xsl:element>
 
     </xsl:template>
