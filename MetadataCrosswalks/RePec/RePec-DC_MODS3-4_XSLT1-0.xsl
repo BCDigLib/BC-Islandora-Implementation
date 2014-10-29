@@ -54,7 +54,6 @@
             <xsl:call-template name="relatedItem"/>
             <xsl:apply-templates select="dc:identifier"/>
             <xsl:apply-templates select="dcterms:URI"/>
-            <xsl:call-template name="accessCondition"/>
             <xsl:call-template name="localCollecion"/>
             <xsl:call-template name="recordInfo"/>
         </mods:mods>
@@ -206,7 +205,7 @@
     <xsl:template name="note">
         <xsl:if test="starts-with(dc:identifier, 'RePEc:boc:bocoec')">
             <xsl:element name="mods:note">           
-                <xsl:text>Orginially posted on: http://ideas.repec.org/p/boc/bocoec/</xsl:text><xsl:value-of select="substring-after(dc:identifier, 'RePEc:boc:bocoec:')"/><xsl:text>.html</xsl:text>
+                <xsl:text>Originally posted on: http://ideas.repec.org/p/boc/bocoec/</xsl:text><xsl:value-of select="substring-after(dc:identifier, 'RePEc:boc:bocoec:')"/><xsl:text>.html</xsl:text>
             </xsl:element>
         </xsl:if>
     </xsl:template>
@@ -429,14 +428,6 @@
                     </xsl:element>
                 </xsl:when>
             </xsl:choose>
-        </xsl:element>
-    </xsl:template>
-    <xsl:template name="accessCondition">
-        <xsl:element name="mods:accessCondition">
-            <xsl:attribute name="type">
-                <xsl:text>use and reproduction</xsl:text>
-            </xsl:attribute>
-            <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
         </xsl:element>
     </xsl:template>
     <xsl:template name="localCollecion">
