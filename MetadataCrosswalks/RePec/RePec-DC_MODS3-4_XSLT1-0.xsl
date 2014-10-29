@@ -48,13 +48,14 @@
             </xsl:if>
             <xsl:call-template name="format"/>
             <xsl:apply-templates select="dcterms:abstract"/>
-            <xsl:apply-templates select="dcterms:IsPartof"/>
-            <xsl:call-template name="version"/>
+            <xsl:call-template name="note"/>
             <xsl:apply-templates select="dc:subject"/>
             <xsl:apply-templates select="dcterms:keyword"/>
+            <xsl:call-template name="relatedItem"/>
             <xsl:apply-templates select="dc:identifier"/>
             <xsl:apply-templates select="dcterms:URI"/>
-            <xsl:apply-templates select="dcterms:accessRights"/>
+            <xsl:call-template name="accessCondition"/>
+            <xsl:call-template name="localCollecion"/>
             <xsl:call-template name="recordInfo"/>
         </mods:mods>
     </xsl:template>
@@ -201,17 +202,15 @@
             <xsl:value-of select="normalize-space(.)"/>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="dcterms:IsPartof">
-        <xsl:element name="mods:note">
-            <xsl:value-of select="normalize-space(.)"/>
-        </xsl:element>
+
+    <xsl:template name="note">
+        <xsl:if test="starts-with(dc:identifier, 'RePEc:boc:bocoec')">
+            <xsl:element name="mods:note">           
+                <xsl:text>Orginially posted on: http://ideas.repec.org/p/boc/bocoec/</xsl:text><xsl:value-of select="substring-after(dc:identifier, 'RePEc:boc:bocoec:')"/><xsl:text>.html</xsl:text>
+            </xsl:element>
+        </xsl:if>
     </xsl:template>
-    <xsl:template name="version">
-        <xsl:element name="mods:note">
-            <xsl:attribute name='type'>version identification</xsl:attribute>
-            <xsl:text>Pre-print</xsl:text>
-        </xsl:element>
-    </xsl:template>
+
     <xsl:template match="dc:publisher">
         <xsl:element name="mods:publisher">
             <xsl:apply-templates/>
@@ -336,6 +335,25 @@
         </xsl:element>
     </xsl:template>
 
+    <xsl:template name="relatedItem">
+        <xsl:element name="mods:relatedItem">
+            <xsl:attribute name="type">series</xsl:attribute>
+            <xsl:element name="mods:titleInfo">
+                <xsl:attribute name="usage">primary</xsl:attribute>
+                <xsl:element name="mods:title">
+                    <xsl:text>Boston College Working Papers in Economics</xsl:text>
+                </xsl:element>              
+                <xsl:if test="dc:identifier !=''">
+                    <xsl:element name="mods:partNumber">
+                        <xsl:value-of select="substring-after(dc:identifier, 'RePEc:boc:bocoec:')"/>
+                    </xsl:element>
+                </xsl:if>
+                
+            </xsl:element>
+            
+        </xsl:element>
+    </xsl:template>
+
     <xsl:template match="dc:identifier">
         <xsl:if test=". !=''">
             <xsl:element name="mods:identifier">
@@ -413,12 +431,19 @@
             </xsl:choose>
         </xsl:element>
     </xsl:template>
-    <xsl:template match="dcterms:accessRights">
+    <xsl:template name="accessCondition">
         <xsl:element name="mods:accessCondition">
             <xsl:attribute name="type">
                 <xsl:text>use and reproduction</xsl:text>
             </xsl:attribute>
             <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
+        </xsl:element>
+    </xsl:template>
+    <xsl:template name="localCollecion">
+        <xsl:element name="mods:extension">
+            <xsl:element name="localCollectionName">        
+                <xsl:text>repec</xsl:text>
+            </xsl:element>
         </xsl:element>
     </xsl:template>
     <xsl:template name="recordInfo">
