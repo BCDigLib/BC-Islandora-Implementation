@@ -55,20 +55,30 @@
           <xsl:text>_</xsl:text>
         </xsl:for-each>
       </xsl:variable>
-      <field>
-        <xsl:attribute name="name">
-          <xsl:value-of select="concat($this_prefix, local-name(), '_dt')"/>
-        </xsl:attribute>
-        <xsl:value-of select="$textValueISO"/>
-      </field>
+          <xsl:choose>
+              <xsl:when test="ancestor::mods:relatedItem"/>
+              <xsl:otherwise>
+                  <field>
+                      <xsl:attribute name="name">
+                          <xsl:value-of select="concat($this_prefix, local-name(), '_dt')"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="$textValueISO"/>
+                  </field>                   
+              </xsl:otherwise>
+          </xsl:choose> 
           <xsl:if test="@keyDate = 'yes'">
-              <field>
-                  <xsl:attribute name="name">
-                      <xsl:text>mods_originInfo_dateIssued_and_dateCreated_mdt</xsl:text>
-                  </xsl:attribute>
-                  <xsl:value-of select="$textValueISO"/>
-              </field>         
-      </xsl:if>
+              <xsl:choose>
+                  <xsl:when test="ancestor::mods:relatedItem"/>
+                  <xsl:otherwise>
+                      <field>
+                          <xsl:attribute name="name">
+                              <xsl:text>mods_originInfo_dateIssued_and_dateCreated_mdt</xsl:text>
+                          </xsl:attribute>
+                          <xsl:value-of select="$textValueISO"/>
+                      </field>                      
+                  </xsl:otherwise>
+              </xsl:choose>       
+          </xsl:if>
       <xsl:if test="concat($this_prefix, local-name())='mods_originInfo_dateIssued' or concat($this_prefix, local-name())='mods_originInfo_dateCreated'">
           <field>
               <xsl:attribute name="name">
