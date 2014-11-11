@@ -99,6 +99,7 @@
     <xsl:param name="pid">not provided</xsl:param>
     <xsl:param name="datastream">not provided</xsl:param>
 
+    <xsl:call-template name="genre"/>    
     <xsl:call-template name="role"/>
     <xsl:call-template name="collection"/>    
     <xsl:call-template name="discipline"/>
@@ -121,9 +122,6 @@
         <xsl:value-of select="@authority"/>
         <xsl:text>_</xsl:text>
       </xsl:if>
-        <xsl:if test="@authority='marcgt' or @authority='local'">
-        <xsl:text>marcgtorlocal_</xsl:text>
-      </xsl:if>
     </xsl:variable>
 
     <xsl:variable name="textValue">
@@ -144,6 +142,29 @@
       <xsl:with-param name="datastream" select="$datastream"/>
     </xsl:apply-templates>
   </xsl:template>
+
+    <xsl:template name="genre">
+        <xsl:param name="prefix"/>
+        <xsl:param name="suffix">_ms</xsl:param>
+        <xsl:param name="pid">not provided</xsl:param>
+        <xsl:param name="datastream">not provided</xsl:param>   
+        <xsl:for-each select="mods:genre">
+            <xsl:if test="@authority='marcgt' or @authority='local'">
+                <xsl:variable name="this_prefix">         
+                    <xsl:value-of select="concat($prefix, 'mods_genre_marcgtorlocal')"/>       
+                </xsl:variable>
+                <xsl:variable name="textValue">   
+                    <xsl:value-of select="normalize-space(text())"/>      
+                </xsl:variable>
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>  
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
 
     <xsl:template name="role">
         <!-- Role term facet -->
