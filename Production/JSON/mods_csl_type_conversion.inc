@@ -177,7 +177,7 @@ return FALSE;
 /**
 * Convert Boston College local term to csl term.
 */
-function zotero_to_csl($term) {
+function bc_to_csl($term) {
 global $_ir_citation_bc_local_csl_terms;
 if (!empty($_ir_citation_bc_local_csl_terms[$term])) {
 return $_ir_citation_bc_local_csl_terms[$term];
