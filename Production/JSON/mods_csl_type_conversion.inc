@@ -210,6 +210,10 @@ $zotero = zotero_to_csl($term);
 if (!empty($zotero)) {
 return $zotero;
 }
+$bc = bc_to_csl($term);
+if (!empty($bc)) {
+return $bc;
+}
 $bibutils = bibutils_to_csl($term);
 if (!empty($bibutils)) {
 return $bibutils;
