@@ -127,7 +127,7 @@ $output = array_merge(array(
 'ISBN' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="isbn"]'),
 'volume' => (int) convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="volume"]/mods:number'),
 'issue' => (int) convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="issue"]/mods:number'),
-'note' => convert_mods_to_citeproc_json_note($mods),
+'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification"]'),
 'number' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="series"]/mods:titleInfo/mods:partNumber'),
 'page' => convert_mods_to_citeproc_json_page($mods),
 'publisher' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:originInfo/mods:publisher'),
@@ -137,7 +137,6 @@ $output = array_merge(array(
 'number-pmcid' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="pmc"]'),
 'number-nihmsid' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="mid"]'),
 'type' => convert_mods_to_citeproc_json_genre($mods),
-'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification"]'),
 ),
 $names,
 $dates
@@ -249,25 +248,6 @@ else {
 // zotero.
 return convert_mods_to_citeproc_json_query($mods, '//mods:mods[1][mods:genre[@authority="local"][text()="conferencePaper"]]/mods:originInfo/mods:place/mods:placeTerm');
 }
-}
-/**
-* Gets the note property for the Citation.
-*
-* KEYWORD seems to be useless to CSL
-*
-* @param SimpleXMLElement $mods
-* A MODS document.
-*
-* @return string
-* The note property for the Citation.
-*/
-function convert_mods_to_citeproc_json_note(SimpleXMLElement $mods) {
-$notes = $mods->xpath("//mods:mods[1]/mods:note");
-$ouput = '';
-while (list($num, $note) = each($notes)) {
-$ouput .= $num + 1 . ". " . rtrim(strip_tags($note), '. ') . ". ";
-}
-return !empty($ouput) ? $ouput : NULL;
 }
 /**
 * Gets the page property for the Citation.
