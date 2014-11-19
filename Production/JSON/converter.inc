@@ -128,7 +128,7 @@ $output = array_merge(array(
 'ISBN' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="isbn"]'),
 'volume' => (int) convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="volume"]/mods:number'),
 'issue' => (int) convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="issue"]/mods:number'),
-'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification" and not(.="Version of record.")]'),
+'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification"]'),
 'number' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="series"]/mods:titleInfo/mods:partNumber'),
 // 'page' => convert_mods_to_citeproc_json_page($mods),
 'page' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:extent[@unit='pages']/mods:list'),
