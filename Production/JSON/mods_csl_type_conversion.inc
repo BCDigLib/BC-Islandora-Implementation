@@ -4,8 +4,8 @@
 * This is a mapping for translation from mods to json.
 */
 $_ir_citation_marcgt_csl_terms = array(
-"article" => "article",
-"issue" => "article",
+"article" => "article-journal",
+"issue" => "article-journal",
 "journal" => "article-journal",
 "periodical" => "article-journal",
 "newspaper" => "article-newspaper",
