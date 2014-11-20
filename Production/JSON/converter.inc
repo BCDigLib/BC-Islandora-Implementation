@@ -451,29 +451,29 @@ $queries = array(
 'author',
 // Valid Roles.
 array(
-'Editor' => 'editor',
-'Translator' => 'translator',
-'Interviewer' => 'interviewer',
-'Composer' => 'composer',
-'Original' => 'original-author',
-'Recipient' => 'recipient',
-'Author' => 'author',
+'editor' => 'editor',
+'translator' => 'translator',
+'interviewer' => 'interviewer',
+'composer' => 'composer',
+'original' => 'original-author',
+'recipient' => 'recipient',
+'author' => 'author',
 ),
 ),
 1 => array(
 '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:name',
 'container-author',
 array(
-'Editor' => 'editor',
-'Translator' => 'translator',
-'Author' => 'container-author',
+'editor' => 'editor',
+'translator' => 'translator',
+'author' => 'container-author',
 ),
 ),
 2 => array(
 '//mods:mods[1]/mods:relatedItem[@type="series"]/mods:name',
 NULL,
 array(
-'Editor' => 'collection-editor',
+'editor' => 'collection-editor',
 ),
 ),
 );
@@ -597,10 +597,10 @@ return $output;
 function convert_mods_to_citeproc_json_name_role(SimpleXMLElement $name, array $valid_roles, $default_role) {
 module_load_include('inc', 'citeproc', 'includes/marcrelator_conversion');
 if (isset($name->role)) {
-$role = strtolower((string) $name->role->roleTerm);
-if (isset($name->role->roleTerm)) {
-$role_authority = (string) $name->role->roleTerm->attributes()->authority;
-$role_type = (string) $name->role->roleTerm->attributes()->type;
+$role = strtolower((string) $name->role->roleTerm[0]);
+if (isset($name->role->roleTerm[0])) {
+$role_authority = (string) $name->role->roleTerm[0]->attributes()->authority;
+$role_type = (string) $name->role->roleTerm[0]->attributes()->type;
 if ($role_authority == 'marcrelator' && $role_type == 'code') {
 $role = marcrelator_code_to_term($role);
 }
