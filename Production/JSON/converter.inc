@@ -597,6 +597,7 @@ return $output;
 function convert_mods_to_citeproc_json_name_role(SimpleXMLElement $name, array $valid_roles, $default_role) {
 module_load_include('inc', 'citeproc', 'includes/marcrelator_conversion');
 if (!empty($name)) {
+add_mods_namespace($role);
 $role = strtolower((string) $name->xpath("mods:role/mods:roleTerm[1]"));
 if (!empty($role)) {
 $role_authority = (string) $role->attributes()->authority;
