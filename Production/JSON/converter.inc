@@ -128,7 +128,7 @@ $output = array_merge(array(
 'ISBN' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="isbn"]'),
 'volume' => (int) convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="volume"]/mods:number'),
 'issue' => (int) convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="issue"]/mods:number'),
-'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification"]'),
+'note' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:note[@type="version identification" and not(.="Version of record.")]')'),
 'number' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="series"]/mods:titleInfo/mods:partNumber'),
 // 'page' => convert_mods_to_citeproc_json_page($mods),
 'page' => convert_mods_to_citeproc_json_query($mods, 'substring-after(//mods:mods[1]/mods:relatedItem[@type="host"]/mods:part/mods:extent[@unit="pages"]/mods:list, "pp. ")'),
@@ -596,12 +596,9 @@ return $output;
 */
 function convert_mods_to_citeproc_json_name_role(SimpleXMLElement $name, array $valid_roles, $default_role) {
 module_load_include('inc', 'citeproc', 'includes/marcrelator_conversion');
-if (isset($name->role)) {
-$role = strtolower((string) $name->role->roleTerm[0]);
-if (isset($name->role->roleTerm[0])) {
-$role_authority = (string) $name->role->roleTerm[0]->attributes()->authority;
-$role_type = (string) $name->role->roleTerm[0]->attributes()->type;
-if ($role_authority == 'marcrelator' && $role_type == 'code') {
+if (isset($name->xpath("mods:role"))) {
+$role = strtolower((string) $name->xpath("mods:role/mods:roleTerm[1]"));
+if (isset($name->xpath("mods:role/mods:roleTerm[1][@type='code']")) {
 $role = marcrelator_code_to_term($role);
 }
 }
