@@ -157,6 +157,15 @@
                     <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
                 </fo:block>
             </xsl:when>
+            <xsl:when test="mods:identifier[@type='repec']">
+                <fo:block font-size="12pt" space-before="22">
+                    <xsl:text>Boston College Working Papers in Economics, </xsl:text>
+                    <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
+                </fo:block>
+                <fo:block font-size="12pt" space-before="22">
+                    <xsl:value-of select="mods:note"/>
+                </fo:block>                
+            </xsl:when>            
             <xsl:when test="mods:note[@type='version identification'] = 'Version of record.'">
                 <xsl:call-template name="publisher"/>
             </xsl:when>
