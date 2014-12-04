@@ -4,11 +4,6 @@
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exclude-result-prefixes="dc dcterms"
     version="1.0">
-    <!-- Spring 2014: Brian adapted the DC to MODS 3.4 stylesheet on the LC site to support the 
-        conversion of our etd-ms metadata to MODS.  This stylesheet will be called as our 
-        digital entities exports are migrated to Islandora by DGI.
-        -->
-    <!-- June 2014:  Betsy made updates to stylesheet as noted in comments-->
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
     <xsl:template match="/">
         <xsl:apply-templates/>
@@ -150,32 +145,69 @@
     </xsl:template>
     <xsl:template match="dc:creator">
         <xsl:element name="mods:name">
-            <xsl:attribute name="type">personal</xsl:attribute>
-            <xsl:attribute name="usage">primary</xsl:attribute>
-            <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">family</xsl:attribute>
-                <xsl:value-of select="normalize-space(substring-before(.,','))"/>
+            <xsl:choose>
+                <xsl:when test="contains(.,',')">
+                    <xsl:attribute name="type">personal</xsl:attribute>
+                    <xsl:attribute name="usage">primary</xsl:attribute>
+                    <xsl:element name="mods:namePart">
+                        <xsl:attribute name="type">family</xsl:attribute>
+                        <xsl:value-of select="normalize-space(substring-before(.,','))"/>
+                    </xsl:element>
+                    <xsl:element name="mods:namePart">
+                        <xsl:attribute name="type">given</xsl:attribute>
+                        <xsl:value-of select="normalize-space(substring-after(.,', '))"/>
+                    </xsl:element>
+                    <xsl:element name="mods:displayForm">
+                        <xsl:value-of select="normalize-space(.)"/>
+                    </xsl:element>
+                    <xsl:call-template name="nameRole"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:variable name="varGiven">
+                        <xsl:call-template name="parsename">
+                            <xsl:with-param name="varName" select="."/>
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:attribute name="type">personal</xsl:attribute>
+                    <xsl:attribute name="usage">primary</xsl:attribute>
+                    <xsl:element name="mods:namePart">
+                        <xsl:attribute name="type">family</xsl:attribute>
+                        <xsl:value-of select="normalize-space(substring-after(., $varGiven))"/>
+                    </xsl:element>
+                    <xsl:element name="mods:namePart">
+                        <xsl:attribute name="type">given</xsl:attribute>
+                        <xsl:value-of select="$varGiven"/>
+                    </xsl:element>
+                    <xsl:element name="mods:displayForm">
+                        <xsl:value-of select="normalize-space(concat(substring-after(., $varGiven), ', ', $varGiven))"/>
+                    </xsl:element>
+                    <xsl:call-template name="nameRole"/>                                    
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:element>
+    </xsl:template>
+    <xsl:template name="parsename">
+        <xsl:param name="varName"/>
+        <xsl:value-of select="substring-before($varName,' ')"/>
+        <xsl:if test="contains(substring-after($varName,' '),' ')">
+            <xsl:text> </xsl:text>
+            <xsl:call-template name="parsename">
+                <xsl:with-param name="varName" select="substring-after($varName,' ')"/>
+              </xsl:call-template>
+        </xsl:if>        
+    </xsl:template>
+    <xsl:template name="nameRole">
+        <xsl:element name="mods:role">
+            <xsl:element name="mods:roleTerm">
+                <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                <xsl:attribute name="type">text</xsl:attribute>
+                <xsl:text>Author</xsl:text>
             </xsl:element>
-            <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">given</xsl:attribute>
-                <xsl:value-of select="normalize-space(substring-after(.,', '))"/>
+            <xsl:element name="mods:roleTerm">
+                <xsl:attribute name="authority">marcrelator</xsl:attribute>
+                <xsl:attribute name="type">code</xsl:attribute>
+                <xsl:text>aut</xsl:text>
             </xsl:element>
-            <xsl:element name="mods:displayForm">
-                <xsl:value-of select="normalize-space(.)"/>
-            </xsl:element>
-            <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                    <xsl:attribute name="type">text</xsl:attribute>
-                    <xsl:text>Author</xsl:text>
-                </xsl:element>
-                <xsl:element name="mods:roleTerm">
-                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                    <xsl:attribute name="type">code</xsl:attribute>
-                    <xsl:text>aut</xsl:text>
-                </xsl:element>
-            </xsl:element>
-
         </xsl:element>
     </xsl:template>
     <xsl:template match="dc:subject">
@@ -347,7 +379,7 @@
                         <xsl:value-of select="substring-after(dc:identifier, 'RePEc:boc:bocoec:')"/>
                     </xsl:element>
                 </xsl:if>
-                
+               
             </xsl:element>
             
         </xsl:element>
@@ -456,9 +488,6 @@
                 </xsl:element>
             </xsl:element>
         </xsl:element>
-
     </xsl:template>
-
-  
-
+    
 </xsl:stylesheet>
