@@ -220,6 +220,20 @@
             </xsl:if>
         </xsl:for-each>
         <xsl:for-each select="mods:extension/localCollectionName">
+            <xsl:if test=".='repec'">
+                <xsl:variable name="this_prefix">         
+                    <xsl:value-of select="concat($prefix, 'local_collection')"/>       
+                </xsl:variable>
+                <xsl:variable name="textValue">   
+                    <xsl:text>Faculty Works</xsl:text>       
+                </xsl:variable>
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>  
+            </xsl:if>
             <xsl:if test=".='c21' or .='crr' or .='cwp' or .='scaw' or .='wfrn'">
                 <xsl:variable name="this_prefix">         
                     <xsl:value-of select="concat($prefix, 'local_collection')"/>       
@@ -630,7 +644,7 @@
             </xsl:if>
         </xsl:for-each>
 
-        <!-- School facet for RePec MODS. -->
+        <!-- School facet for RePec MODS. 
         
         <xsl:for-each select="mods:extension/localCollectionName[.='repec']">
             <xsl:variable name="this_prefix">
@@ -646,6 +660,8 @@
                 <xsl:value-of select="$textValue"/>
             </field>   
         </xsl:for-each>  
+
+            -->
 
         <!-- School facet for ETD MODS. -->
         <xsl:for-each select="mods:extension/etdms:degree/etdms:grantor">
