@@ -384,6 +384,9 @@
                 <xsl:when test=".='Dept. of Physics, Boston College'">
                     <xsl:text>Physics</xsl:text>
                 </xsl:when>
+                <xsl:when test=".='Dept. of Political Science, Boston College'">
+                    <xsl:text>Political Science</xsl:text>
+                </xsl:when>
                 <xsl:when test=".='Dept. of Psychology, Boston College'">
                     <xsl:text>Psychology</xsl:text>
                 </xsl:when>
