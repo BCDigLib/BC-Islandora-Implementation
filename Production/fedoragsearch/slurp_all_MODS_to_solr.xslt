@@ -644,7 +644,7 @@
             </xsl:if>
         </xsl:for-each>
 
-        <!-- School facet for RePec MODS. 
+        <!-- School facet for RePec MODS. -->
         
         <xsl:for-each select="mods:extension/localCollectionName[.='repec']">
             <xsl:variable name="this_prefix">
@@ -661,7 +661,7 @@
             </field>   
         </xsl:for-each>  
 
-            -->
+            
 
         <!-- School facet for ETD MODS. -->
         <xsl:for-each select="mods:extension/etdms:degree/etdms:grantor">
