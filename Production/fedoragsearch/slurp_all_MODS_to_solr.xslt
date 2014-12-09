@@ -360,6 +360,9 @@
                 <xsl:when test=".='Dept. of Finance, Carroll School of Management'">
                     <xsl:text>Finance</xsl:text>
                 </xsl:when>
+                <xsl:when test=".='Dept. of Fine Arts, Boston College'">
+                    <xsl:text>Fine Arts</xsl:text>
+                </xsl:when>
                 <xsl:when test=".='Dept. of History, Boston College'">
                     <xsl:text>History</xsl:text>
                 </xsl:when>
