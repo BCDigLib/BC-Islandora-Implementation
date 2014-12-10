@@ -148,7 +148,7 @@
         <xsl:param name="suffix">_ms</xsl:param>
         <xsl:param name="pid">not provided</xsl:param>
         <xsl:param name="datastream">not provided</xsl:param>   
-        <xsl:for-each select="mods:genre">
+        <xsl:for-each select="mods:genre[not(parent::mods:relatedItem)]">
             <xsl:if test="@authority='marcgt' or @authority='local'">
                 <xsl:variable name="this_prefix">         
                     <xsl:value-of select="concat($prefix, 'mods_genre_marcgtorlocal')"/>       
@@ -172,7 +172,7 @@
         <xsl:param name="suffix">_ms</xsl:param>
         <xsl:param name="pid">not provided</xsl:param>
         <xsl:param name="datastream">not provided</xsl:param>
-        <xsl:for-each select="mods:name">
+        <xsl:for-each select="mods:name[not(parent::mods:relatedItem)]">
             <xsl:variable name="this_prefix">
                 <xsl:value-of select="$prefix"/>
                 <xsl:value-of select="translate(mods:role/mods:roleTerm[@type='text'], ' ', '_')"/>
