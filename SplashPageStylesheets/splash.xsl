@@ -151,7 +151,7 @@
 
     <xsl:template name="version">
         <xsl:choose>
-            <xsl:when test="mods:genre[@authority='ndltd'] = 'Electronic Thesis or Dissertation'">
+            <xsl:when test="mods:genre[@authority='ndltd']='Electronic Thesis or Dissertation' and mods:originInfo/mods:publisher='Boston College'">
                 <fo:block font-size="12pt" space-before="22">
                     <xsl:text>Boston College Electronic Thesis or Dissertation, </xsl:text>
                     <xsl:value-of select="mods:originInfo/mods:dateIssued[not (@encoding)]"/>
