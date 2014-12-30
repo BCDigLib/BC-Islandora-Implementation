@@ -254,7 +254,7 @@
                 <xsl:text>use and reproduction</xsl:text>
             </xsl:attribute>
             <xsl:choose>
-                <xsl:when test="$ccAttr = 'None'">
+                <xsl:when test="$ccAttr = 'None' or $ccAttr = ''">
                     <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
