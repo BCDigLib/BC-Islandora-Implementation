@@ -192,7 +192,7 @@
     </xsl:template>
     <xsl:template match="DISS_comp_date">
         <xsl:element name="mods:originInfo">
-            <xsl:element name="publisher">Boston College</xsl:element>
+            <xsl:element name="mods:publisher">Boston College</xsl:element>
             <xsl:element name="mods:dateIssued">
                 <xsl:value-of select="."/>
             </xsl:element>
@@ -325,7 +325,7 @@
                 </xsl:element>
             </xsl:when>    
             <xsl:when test="starts-with(DISS_inst_contact, 'LSOE')">
-                <xsl:element name="discipline">
+                <xsl:element name="etdms:discipline">
                     <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
                 </xsl:element>
                 <xsl:element name="etdms:grantor">
