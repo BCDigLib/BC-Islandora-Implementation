@@ -27,11 +27,23 @@
             <xsl:call-template name="processKW">
                 <xsl:with-param name="keywords" select="DISS_description/DISS_categorization/DISS_keyword"/>
             </xsl:call-template>
-            <xsl:apply-templates select="DISS_repository/DISS_acceptance">
-                <xsl:with-param name="ccAttr">
-                    <xsl:value-of select="DISS_creative_commons_license/DISS_abbreviation"/>
-                </xsl:with-param>
-            </xsl:apply-templates>
+            <xsl:choose>
+                <xsl:when test="DISS_repository/DISS_acceptance">
+                    <xsl:apply-templates select="DISS_repository/DISS_acceptance">
+                        <xsl:with-param name="ccAttr">
+                            <xsl:value-of select="DISS_creative_commons_license/DISS_abbreviation"/>
+                        </xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:element name="mods:accessCondition">
+                        <xsl:attribute name="type">
+                            <xsl:text>use and reproduction</xsl:text>
+                        </xsl:attribute>
+                        <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>   
+                    </xsl:element>
+                </xsl:otherwise>
+            </xsl:choose>
             <xsl:element name="mods:extension">
                 <xsl:element name="etdms:degree">
                     <xsl:apply-templates select="DISS_description/DISS_degree"/>
