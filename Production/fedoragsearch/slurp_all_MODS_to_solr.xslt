@@ -402,6 +402,9 @@
                 <xsl:when test=".='Dept. of Slavic and Eastern Languages, Boston College'">
                     <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                 </xsl:when>
+                <xsl:when test=".='School of Social Work'">
+                    <xsl:text>Social Work</xsl:text>
+                </xsl:when>
                 <xsl:when test=".='Graduate School of Social Work'">
                     <xsl:text>Social Work</xsl:text>
                 </xsl:when>
@@ -631,8 +634,8 @@
                     <xsl:when test="contains(., 'Lynch School of Education')">
                         <xsl:text>Lynch School of Education</xsl:text>
                     </xsl:when>
-                    <xsl:when test="contains(., 'Graduate School of Social Work')">
-                        <xsl:text>Graduate School of Social Work</xsl:text>
+                    <xsl:when test="contains(., 'Graduate School of Social Work') or contains(., 'School of Social Work')">
+                        <xsl:text>School of Social Work</xsl:text>
                     </xsl:when>
                     <xsl:when test="contains(., 'School of Theology and Ministry')">
                         <xsl:text>School of Theology and Ministry</xsl:text>
@@ -691,8 +694,8 @@
                     <xsl:when test="contains(., 'Lynch School of Education')">
                         <xsl:text>Lynch School of Education</xsl:text>
                     </xsl:when>
-                    <xsl:when test="contains(., 'Graduate School of Social Work')">
-                        <xsl:text>Graduate School of Social Work</xsl:text>
+                    <xsl:when test="contains(., 'Graduate School of Social Work') or contains(., 'School of Social Work')">
+                        <xsl:text>School of Social Work</xsl:text>
                     </xsl:when>
                     <xsl:when test="contains(., 'School of Theology and Ministry')">
                         <xsl:text>School of Theology and Ministry</xsl:text>
@@ -738,7 +741,7 @@
                         <xsl:text>Center on Wealth and Philanthropy</xsl:text>
                     </xsl:when>
                     <xsl:when test=".='scaw'">
-                        <xsl:text>Sloan Center on Aging and Work</xsl:text>
+                        <xsl:text>Center on Aging and Work</xsl:text>
                     </xsl:when>
                     <xsl:when test=".='wfrn'">
                         <xsl:text>Work and Family Research Network</xsl:text>
