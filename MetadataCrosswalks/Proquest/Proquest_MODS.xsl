@@ -213,6 +213,7 @@
                 <xsl:attribute name="keyDate">yes</xsl:attribute>
                 <xsl:value-of select="."/>            
             </xsl:element>
+            <xsl:element name="mods:issuance">monographic</xsl:element>
         </xsl:element>
     </xsl:template>
     <xsl:template match="DISS_language">
