@@ -724,7 +724,7 @@
         <!-- Center facet for non-ETD MODS. -->
         <xsl:for-each select="mods:extension/localCollectionName">
             <xsl:variable name="this_prefix">
-                <xsl:if test=".='c21' or .='crr' or .='cwp' or .='scaw' or .='wfrn'">
+                <xsl:if test=".='c21' or .='chrij' or .='crr' or .='cwp' or .='scaw' or .='wfrn'">
                     <xsl:value-of select="$prefix"/>
                     <xsl:text>center</xsl:text>
                 </xsl:if>  
@@ -733,6 +733,9 @@
                 <xsl:choose>
                     <xsl:when test=".='c21'">
                         <xsl:text>Church in the 21st Century Center</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='chrij'">
+                        <xsl:text>Center for Human Rights and International Justice</xsl:text>
                     </xsl:when>
                     <xsl:when test=".='crr'">
                         <xsl:text>Center for Retirement Research</xsl:text>
