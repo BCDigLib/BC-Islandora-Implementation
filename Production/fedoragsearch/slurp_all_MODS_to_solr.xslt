@@ -402,7 +402,7 @@
                 <xsl:when test=".='Dept. of Slavic and Eastern Languages, Boston College'">
                     <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                 </xsl:when>
-                <xsl:when test=".='School of Social Work'">
+                <xsl:when test=".='School of Social Work, Boston College'">
                     <xsl:text>Social Work</xsl:text>
                 </xsl:when>
                 <xsl:when test=".='Graduate School of Social Work'">
