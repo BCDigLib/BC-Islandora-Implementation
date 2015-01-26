@@ -369,6 +369,9 @@
                 <xsl:when test=".='Dept. of Marketing, Carroll School of Management'">
                     <xsl:text>Marketing</xsl:text>
                 </xsl:when>
+                <xsl:when test=".='Connell School of Nursing'">
+                    <xsl:text>Nursing</xsl:text>
+                </xsl:when>
                 <xsl:when test=".='Adult Health, Connell School of Nursing'">
                     <xsl:text>Nursing</xsl:text>
                 </xsl:when>
