@@ -523,29 +523,29 @@ function convert_mods_to_citeproc_json_names(SimpleXMLElement $mods) {
       'author',
       // Valid Roles.
       array(
-        'editor' => 'editor',
-        'translator' => 'translator',
-        'interviewer' => 'interviewer',
-        'composer' => 'composer',
-        'original' => 'original-author',
-        'recipient' => 'recipient',
-        'author' => 'author',
+        'Editor' => 'editor',
+        'Translator' => 'translator',
+        'Interviewer' => 'interviewer',
+        'Composer' => 'composer',
+        'Original' => 'original-author',
+        'Recipient' => 'recipient',
+        'Author' => 'author',
       ),
     ),
     1 => array(
       '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:name',
       'container-author',
       array(
-        'editor' => 'editor',
-        'translator' => 'translator',
-        'author' => 'container-author',
+        'Editor' => 'editor',
+        'Translator' => 'translator',
+        'Author' => 'container-author',
       ),
     ),
     2 => array(
       '//mods:mods[1]/mods:relatedItem[@type="series"]/mods:name',
       NULL,
       array(
-        'editor' => 'collection-editor',
+        'Editor' => 'collection-editor',
       ),
     ),
   );
