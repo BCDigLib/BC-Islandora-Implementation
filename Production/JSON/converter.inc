@@ -302,10 +302,10 @@ function convert_mods_to_citeproc_json_note(SimpleXMLElement $mods) {
  */
 function convert_mods_to_citeproc_json_page(SimpleXMLElement $mods) {
   $output = NULL;
-  $pages = $mods->xpath("//mods:mods[1]/mods:part/mods:extent[@unit='pages']");
+  $pages = $mods->xpath("//mods:mods[1]/mods:relatedItem/mods:part/mods:extent[@unit='pages']");
   // Note: "pages" is correct, but Zotero uses "page".
   if (empty($pages)) {
-    $pages = $mods->xpath("//mods:mods[1]/mods:part/mods:extent[@unit='page']");
+    $pages = $mods->xpath("//mods:mods[1]/mods:relatedItem/mods:part/mods:extent[@unit='page']");
   }
 
   $pages = (!empty($pages) ? $pages[0] : NULL);
