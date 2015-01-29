@@ -133,6 +133,7 @@ $_ir_citation_bc_local_csl_terms = array(
 "blog entry" => "webpage",
 "book part" => "chapter",
 "case study" => "manuscript",
+"Electronic Thesis or Dissertation" => "thesis", 
 "encyclopedia entry" => "entry-encyclopedia",
 "occasional paper" => "report",
 "report" => "report",
