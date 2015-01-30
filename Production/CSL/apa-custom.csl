@@ -79,9 +79,6 @@
                         <text variable="publisher"/>
                         <text macro="title"/>
                     </if>
-                    <else>
-                        <text macro="title"/>
-                    </else>
                 </choose>
             </substitute>
         </names>
@@ -103,9 +100,6 @@
                     <else-if type="bill book graphic legislation motion_picture song" match="any">
                         <text variable="title" form="short" font-style="italic"/>
                     </else-if>
-                    <else>
-                        <text variable="title" form="short" quotes="true"/>
-                    </else>
                 </choose>
             </substitute>
         </names>
