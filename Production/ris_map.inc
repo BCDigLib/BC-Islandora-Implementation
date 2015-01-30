@@ -60,7 +60,7 @@ return array(
 // "RP" => "Reprint Edition",
 // "SE" => "Section",
 "SN" => "mods:identifier[@type = 'issn' or @type = 'isbn' ]",
-"SP" => "mods:relatedItem[@type='host']/mods:part/mods:extent[@unit='pages']/mods:list",
+"SP" => "mods:relatedItem[@type='host']/mods:part/mods:extent[@unit='pages']/mods:start",
 // "ST" => "Short Title",
 "T2" => "mods:relatedItem[@type = 'host']/mods:titleInfo[not(@type)]/mods:title",
 "T3" => "mods:relatedItem[@type = 'series']/mods:titleInfo/mods:title",
