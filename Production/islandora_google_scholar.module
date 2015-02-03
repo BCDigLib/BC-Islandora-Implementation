@@ -36,7 +36,7 @@ return FALSE;
 $authors = array();
 foreach ($mods_xml->name as $name_xml) {
 $name_parts = array();
-$role = (string) @$name_xml->role->roleTerm;
+$role = strtolower((string) @$name_xml->role->roleTerm);
 if ($role) {
 if ($role == 'author') {
 foreach ($name_xml->namePart as $name_part) {
@@ -49,11 +49,17 @@ $name_parts['first_name'] = (string) $name_part;
 if ($name_part['type'] == 'family') {
 $name_parts['last_name'] = $np;
 }
+if (!isset($name_part['type'])) {
+$name_parts['no_type'] = $np;
+}
 }
 }
 }
 if (isset($name_parts['last_name']) && isset($name_parts['first_name'])) {
 $tags['citation_author'][] = $name_parts['last_name'] . ', ' . $name_parts['first_name'];
+}
+elseif (isset($name_parts['no_type'])) {
+$tags['citation_author'][] = $name_parts['no_type'];
 }
 }
 }
@@ -95,7 +101,7 @@ $journal_title = $mods_xml->xpath('//mods:relatedItem[@type="host"]//mods:title'
 if ($journal_title) {
 $tags['citation_journal_title'] = (string) reset($journal_title);
 }
-$volume = $mods_xml->xpath('//mods:part/mods:detail[@type="volume"]/mods:number');
+$volume = $mods_xml->xpath('//mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="volume"]/mods:number');
 if ($volume) {
 $tags['citation_volume'] = (string) reset($volume);
 }
@@ -106,15 +112,15 @@ array("&", "=", ",", ";"),
 array('', '', '', ''),
 (string) reset($issn));
 }
-$issue = $mods_xml->xpath('//mods:part/mods:detail[@type="issue"]/mods:number');
+$issue = $mods_xml->xpath('//mods:relatedItem[@type="host"]/mods:part/mods:detail[@type="issue"]/mods:number');
 if ($issue) {
 $tags['citation_issue'] = (string) reset($issue);
 }
-$start_page = $mods_xml->xpath('//mods:extent[@unit="page"]/mods:start');
+$start_page = $mods_xml->xpath('//mods:extent[@unit="pages"]/mods:start');
 if ($start_page) {
 $tags['citation_firstpage'] = (string) reset($start_page);
 }
-$end_page = $mods_xml->xpath('//mods:extent[@unit="page"]/mods:end');
+$end_page = $mods_xml->xpath('//mods:extent[@unit="pages"]/mods:end');
 if ($end_page) {
 $tags['citation_endpage'] = (string) reset($end_page);
 }
