@@ -121,7 +121,6 @@ function convert_mods_to_citeproc_jsons($mods_in) {
     $names = convert_mods_to_citeproc_json_names($mods);
     $dates = convert_mods_to_citeproc_json_dates($mods);
     $type = convert_mods_to_citeproc_json_type($mods);
-    $parented = "'$type'='book' or '$type'='chapter' or '$type'='article-journal' or '$type'='thesis'";
     $output = array_merge(array(
       'title' => convert_mods_to_citeproc_json_title($mods),
       'abstract' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:abstract'),
@@ -148,6 +147,7 @@ function convert_mods_to_citeproc_jsons($mods_in) {
       'number-pmcid' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="pmc"]'),
       'number-nihmsid' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="mid"]'),
       'type' => convert_mods_to_citeproc_json_genre($mods),
+      //'type' => $type,
     ),
     $names,
     $dates
@@ -177,18 +177,42 @@ function convert_mods_to_citeproc_jsons($mods_in) {
  *   The JSON repersentation of the MODS genre.
  */
 function convert_mods_to_citeproc_json_genre($mods) {
-  $genre = convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:genre');
+  $genre = convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:genre[@usage="primary"]');
   switch (trim($genre)) {
     case 'journal article':
+    case 'article':
       return 'article-journal';
 
     case 'book chapter':
     case 'book section':
       return 'chapter';
-
+    
     case 'book':
       return 'book';
+    
+    case 'conference':
+      return 'paper-conference';
+    
+    case 'interview':
+      return 'interview';
 
+    case 'report':
+    case 'occasional paper':
+    case 'case study':
+      return 'report';
+    
+    case 'review':
+      return 'review';
+    
+    case 'thesis':
+      return 'thesis';
+    
+    case 'videorecording':
+      return 'motion_picture';
+    
+    case 'working paper':
+      return 'manuscript';
+    
     default:
       return 'article-journal';
   }
