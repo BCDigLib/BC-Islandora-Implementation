@@ -339,6 +339,9 @@
                 <xsl:when test=".='Dept. of Classical Studies, Boston College'">
                     <xsl:text>Classical Studies</xsl:text>
                 </xsl:when>
+                <xsl:when test=".='Dept. of Earth and Environmental Sciences, Boston College'">
+                    <xsl:text>Earth and Environmental Sciences</xsl:text>
+                </xsl:when>
                 <xsl:when test=".='Dept. of Economics, Boston College'">
                     <xsl:text>Economics</xsl:text>
                 </xsl:when>
