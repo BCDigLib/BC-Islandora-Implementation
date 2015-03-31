@@ -35,11 +35,11 @@
             <xsl:if test="@usage='primary'">
                 <xsl:attribute name='usage'>primary</xsl:attribute>
             </xsl:if>
-            <xsl:element name="mods:namepart">
+            <xsl:element name="mods:namePart">
                 <xsl:attribute name='type'>family</xsl:attribute>
                 <xsl:value-of select="normalize-space(mods:namePart[@type='family'])"/>
             </xsl:element>
-            <xsl:element name="mods:namepart">
+            <xsl:element name="mods:namePart">
                 <xsl:attribute name='type'>given</xsl:attribute>
                 <xsl:value-of select="normalize-space(mods:namePart[@type='given'])"/>
             </xsl:element> 
