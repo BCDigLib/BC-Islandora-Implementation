@@ -30,6 +30,7 @@
         </xsl:choose>
     </xsl:template>
     <xsl:template match="mods:name">
+        <xsl:if test="not(normalize-space(mods:namePart[@type='given'])='') or not(normalize-space(mods:namePart[@type='family'])='')">
         <xsl:element name="mods:name">
             <xsl:attribute name='type'>personal</xsl:attribute>
             <xsl:if test="@usage='primary'">
@@ -44,12 +45,21 @@
                 <xsl:value-of select="normalize-space(mods:namePart[@type='given'])"/>
             </xsl:element> 
             <xsl:element name="mods:displayForm">
-                <xsl:value-of select="normalize-space(mods:namePart[@type='family'])"/><xsl:text>, </xsl:text><xsl:value-of select="normalize-space(mods:namePart[@type='given'])"/>
+                <xsl:if test="not(normalize-space(mods:namePart[@type='family'])='')">
+                    <xsl:value-of select="normalize-space(mods:namePart[@type='family'])"/>
+                </xsl:if>
+                <xsl:if test="not(normalize-space(mods:namePart[@type='given'])='') and not(normalize-space(mods:namePart[@type='family'])='')">               
+                    <xsl:text>, </xsl:text>
+                </xsl:if>
+                <xsl:if test="not(normalize-space(mods:namePart[@type='given'])='')">
+                    <xsl:value-of select="normalize-space(mods:namePart[@type='given'])"/>
+                </xsl:if>
             </xsl:element>
             <xsl:element name="mods:role">
                 <xsl:copy-of select="mods:role/mods:roleTerm"/>           
             </xsl:element>
         </xsl:element>
+        </xsl:if>
     </xsl:template>
     <xsl:template match="mods:originInfo">
         <xsl:element name="mods:originInfo">
