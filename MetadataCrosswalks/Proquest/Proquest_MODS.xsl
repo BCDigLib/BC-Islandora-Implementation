@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
     xmlns:mods="http://www.loc.gov/mods/v3">
+    <xsl:param name="handle"/>
     <xsl:variable name="degreelookup" select="document('degreelookup.xml')"/>
     <xsl:variable name="languagelookup" select="document('languagelookup.xml')"/>
     <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
@@ -31,7 +32,7 @@
                 <xsl:when test="DISS_repository/DISS_acceptance">
                     <xsl:apply-templates select="DISS_repository/DISS_acceptance">
                         <xsl:with-param name="ccAttr">
-                            <xsl:value-of select="DISS_creative_commons_license/DISS_abbreviation"/>
+                            <xsl:value-of select="translate(DISS_creative_commons_license/DISS_abbreviation,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
                         </xsl:with-param>
                     </xsl:apply-templates>
                 </xsl:when>
@@ -51,6 +52,10 @@
                 </xsl:element>
             </xsl:element>
             <xsl:call-template name="recordInfo"/>
+            <xsl:element name="mods:identifier">
+                <xsl:attribute name="type">hdl</xsl:attribute>
+                <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
+            </xsl:element>
         </mods:mods>
     </xsl:template>
     <xsl:template match="DISS_title">        
@@ -267,7 +272,7 @@
                 <xsl:text>use and reproduction</xsl:text>
             </xsl:attribute>
             <xsl:choose>
-                <xsl:when test="$ccAttr = 'None' or $ccAttr = ''">
+                <xsl:when test="$ccAttr = 'NONE' or $ccAttr = ''">
                     <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
