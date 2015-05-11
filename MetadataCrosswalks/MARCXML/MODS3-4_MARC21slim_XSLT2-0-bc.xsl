@@ -2,8 +2,9 @@
 <xsl:stylesheet version="2.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:mods="http://www.loc.gov/mods/v3"	
+	xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	exclude-result-prefixes="mods xlink" 
+	exclude-result-prefixes="mods etdms xlink" 
 	xmlns:marc="http://www.loc.gov/MARC21/slim">
 <!-- 
 	Version 2.0 - 2012/05/11 WS  
@@ -452,8 +453,8 @@
 				<!-- 35-37 -->	
 				<xsl:choose>
 				<!-- v3 language -->
-					<xsl:when test="mods:language/mods:languageTerm[@authority='iso639-2b']">
-						<xsl:value-of select="mods:language/mods:languageTerm[@authority='iso639-2b']"/>
+					<xsl:when test="mods:language/mods:languageTerm[@authority='iso639-2b' and @type='code']">
+					    <xsl:value-of select="mods:language/mods:languageTerm[@authority='iso639-2b' and @type='code']"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>|||</xsl:text>
@@ -572,21 +573,17 @@
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">720</xsl:with-param>
 			<xsl:with-param name="subfields">
-				<marc:subfield code="a">
-					<xsl:value-of select="mods:namePart"/>
-				</marc:subfield>
+			    <marc:subfield code="a"><xsl:value-of select="mods:namePart[@type='family']"/><xsl:text>, </xsl:text><xsl:value-of select="mods:namePart[@type='given']"/></marc:subfield>
 			</xsl:with-param>
 		</xsl:call-template>	
 	</xsl:template>
 	<!-- v3 role-->
-	<xsl:template match="mods:name[@type='personal'][mods:role/mods:roleTerm[@type='text']='creator']">
+	<xsl:template match="mods:name[@type='personal'][mods:role/mods:roleTerm[@type='text']='Author'][1]">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">100</xsl:with-param>
 			<xsl:with-param name="ind1">1</xsl:with-param>
 			<xsl:with-param name="subfields">
-				<marc:subfield code="a">
-					<xsl:value-of select="mods:namePart"/>
-				</marc:subfield>
+			    <marc:subfield code="a"><xsl:value-of select="mods:namePart[@type='family']"/><xsl:text>, </xsl:text><xsl:value-of select="mods:namePart[@type='given']"/></marc:subfield>
 				<!-- v3 termsOfAddress -->
 				<xsl:for-each select="mods:namePart[@type='termsOfAddress']">
 					<marc:subfield code="c">
@@ -623,7 +620,7 @@
 		</xsl:call-template>	
 	</xsl:template>
 	<!-- v3 role -->
-	<xsl:template match="mods:name[@type='corporate'][mods:role/mods:roleTerm[@type='text']='creator']">
+	<xsl:template match="mods:name[@type='corporate'][mods:role/mods:roleTerm[@type='text']='Author']">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">110</xsl:with-param>
 			<xsl:with-param name="ind1">2</xsl:with-param>
@@ -656,7 +653,7 @@
 		</xsl:call-template>	
 	</xsl:template>
 	<!-- v3 role -->
-	<xsl:template match="mods:name[@type='conference'][mods:role/mods:roleTerm[@type='text']='creator']">
+	<xsl:template match="mods:name[@type='conference'][mods:role/mods:roleTerm[@type='text']='Author']">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">111</xsl:with-param>
 			<xsl:with-param name="ind1">2</xsl:with-param>
@@ -674,13 +671,51 @@
 		</xsl:call-template>	
 	</xsl:template>
 	<!-- v3 role -->
-	<xsl:template match="mods:name[@type='personal'][mods:role/mods:roleTerm[@type='text']!='creator' or not(mods:role)]">
+    <xsl:template match="mods:name[@type='personal'][position()>1]">
+        <xsl:call-template name="datafield">
+            <xsl:with-param name="tag">700</xsl:with-param>
+            <xsl:with-param name="ind1">1</xsl:with-param>
+            <xsl:with-param name="subfields">
+                <marc:subfield code="a">
+                    <xsl:value-of select="mods:namePart[@type='family']"/><xsl:text>, </xsl:text><xsl:value-of select="mods:namePart[@type='given']"/>
+                </marc:subfield>
+                <!-- v3 termsofAddress -->
+                <xsl:for-each select="mods:namePart[@type='termsOfAddress']">
+                    <marc:subfield code="c">
+                        <xsl:value-of select="."/>
+                    </marc:subfield>
+                </xsl:for-each>
+                <xsl:for-each select="mods:namePart[@type='date']">
+                    <marc:subfield code="d">
+                        <xsl:value-of select="."/>
+                    </marc:subfield>
+                </xsl:for-each>
+                <!-- v3 role -->
+                <xsl:for-each select="mods:role/mods:roleTerm[@type='text']">
+                    <marc:subfield code="e">
+                        <xsl:value-of select="."/>
+                    </marc:subfield>
+                </xsl:for-each>
+                <xsl:for-each select="mods:role/mods:roleTerm[@type='code']">
+                    <marc:subfield code="4">
+                        <xsl:value-of select="."/>
+                    </marc:subfield>
+                </xsl:for-each>
+                <xsl:for-each select="mods:affiliation">
+                    <marc:subfield code="u">
+                        <xsl:value-of select="."/>
+                    </marc:subfield>
+                </xsl:for-each>
+            </xsl:with-param>
+        </xsl:call-template>	
+    </xsl:template>
+    <xsl:template match="mods:name[@type='personal'][mods:role/mods:roleTerm[@type='text']!='Author' or not(mods:role)]">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">700</xsl:with-param>
 			<xsl:with-param name="ind1">1</xsl:with-param>
 			<xsl:with-param name="subfields">
 				<marc:subfield code="a">
-					<xsl:value-of select="mods:namePart"/>
+				    <xsl:value-of select="mods:namePart[@type='family']"/><xsl:text>, </xsl:text><xsl:value-of select="mods:namePart[@type='given']"/>
 				</marc:subfield>
 				<!-- v3 termsofAddress -->
 				<xsl:for-each select="mods:namePart[@type='termsOfAddress']">
@@ -713,7 +748,7 @@
 		</xsl:call-template>	
 	</xsl:template>
 	<!-- v3 role -->
-	<xsl:template match="mods:name[@type='corporate'][mods:role/mods:roleTerm[@type='text']!='creator' or not(mods:role)]">
+	<xsl:template match="mods:name[@type='corporate'][mods:role/mods:roleTerm[@type='text']!='Author' or not(mods:role)]">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">710</xsl:with-param>
 			<xsl:with-param name="ind1">2</xsl:with-param>
@@ -744,7 +779,7 @@
 		</xsl:call-template>	
 	</xsl:template>
 	<!-- v3 role -->
-	<xsl:template match="mods:name[@type='conference'][mods:role/mods:roleTerm[@type='text']!='creator' or not(mods:role)]">
+	<xsl:template match="mods:name[@type='conference'][mods:role/mods:roleTerm[@type='text']!='Author' or not(mods:role)]">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">711</xsl:with-param>
 			<xsl:with-param name="ind1">2</xsl:with-param>
@@ -762,7 +797,7 @@
 		</xsl:call-template>	
 	</xsl:template>
 	
-<!-- Genre elements -->
+<!-- Genre elements 
 	<xsl:template match="mods:genre[@authority!='marcgt' or not(@authority)]">
 		<xsl:variable name="dfv">
 			<xsl:choose>
@@ -786,7 +821,24 @@
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>	
-	
+-->
+
+    <xsl:template match="mods:genre[@authority='marcgt']">
+        <xsl:call-template name="datafield">
+            <xsl:with-param name="tag">655</xsl:with-param>
+            <xsl:with-param name="ind2">7</xsl:with-param>
+            <xsl:with-param name="subfields">
+                <marc:subfield code='a'>
+                    <xsl:value-of select="."/>
+                </marc:subfield>
+                <xsl:for-each select="@authority">
+                    <marc:subfield code='2'>
+                        <xsl:value-of select="."/>
+                    </marc:subfield>
+                </xsl:for-each>
+            </xsl:with-param>
+        </xsl:call-template>
+    </xsl:template>		
 	
 <!-- Origin Info elements -->	
 	<xsl:template match="mods:originInfo">
@@ -903,7 +955,7 @@
 						<xsl:value-of select="."/>
 					</marc:subfield>
 				</xsl:for-each>
-				<xsl:for-each select="mods:dateIssued[@point='start'] | mods:dateIssued[not(@point)]">
+				<xsl:for-each select="mods:dateIssued[@point='start'] | mods:dateIssued[not(@point)][not(@encoding)]">
 					<marc:subfield code='c'>
 						<xsl:value-of select="."/>
 						<!-- v3.4 generate question mark for dateIssued with qualifier="questionable" -->
@@ -1197,8 +1249,8 @@
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">
 			<xsl:choose>
-				<xsl:when test="@type='restrictionOnAccess'">506</xsl:when>
-				<xsl:when test="@type='useAndReproduction'">540</xsl:when>
+				<xsl:when test="@type='restriction on access'">506</xsl:when>
+				<xsl:when test="@type='use and reproduction'">500</xsl:when>
 			</xsl:choose>
 			</xsl:with-param>
 			<xsl:with-param name="subfields">
@@ -1242,6 +1294,8 @@
 	</xsl:template>
 
 	<xsl:template match="mods:subject[local-name(*[1])='topic']">
+        <xsl:choose>
+        <xsl:when test="@authority='lcsh'">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">650</xsl:with-param>
 			<xsl:with-param name="ind1">1</xsl:with-param>
@@ -1252,6 +1306,19 @@
 				<xsl:apply-templates select="*[position()>1]"/>
 			</xsl:with-param>
 		</xsl:call-template>	
+        </xsl:when>
+        <xsl:when test="not(@*)">
+            <xsl:call-template name="datafield">
+                <xsl:with-param name="tag">653</xsl:with-param>
+                <xsl:with-param name="subfields">
+                    <marc:subfield code="a">
+                        <xsl:value-of select="*[1]"/>
+                    </marc:subfield>
+                    <xsl:apply-templates select="*[position()>1]"/>
+                </xsl:with-param>
+            </xsl:call-template>	
+        </xsl:when>
+        </xsl:choose>
 	</xsl:template>
 	<xsl:template match="mods:subject[local-name(*[1])='titleInfo']">		
 		<xsl:call-template name="datafield">
@@ -1630,7 +1697,7 @@
 	
 <!-- Identifiers -->	
 	<!-- v3.4 updated doi subfields and datafield mapping -->
-	<xsl:template match="mods:identifier[@type='doi'] | mods:identifier[@type='hdl'] ">
+	<xsl:template match="mods:identifier[@type='doi'] ">
 		<xsl:call-template name="datafield">
 			<xsl:with-param name="tag">024</xsl:with-param>
 			<xsl:with-param name="subfields">
@@ -1643,6 +1710,22 @@
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
+
+    <xsl:template match="mods:identifier[@type='hdl']">
+        <xsl:call-template name="datafield">
+            <xsl:with-param name="tag">856</xsl:with-param>
+            <xsl:with-param name="ind1">4</xsl:with-param>
+            <xsl:with-param name="ind2">0</xsl:with-param>
+            <xsl:with-param name="subfields">
+                <marc:subfield code="u">
+                    <xsl:value-of select="."/>
+                </marc:subfield>
+                <marc:subfield code="2">
+                    <xsl:value-of select="@type"/>
+                </marc:subfield>			
+            </xsl:with-param>
+        </xsl:call-template>
+    </xsl:template>
 
 	<xsl:template match="mods:identifier[@type='isbn']">
 		<xsl:call-template name="datafield">
@@ -1959,10 +2042,14 @@
 	
 	<xsl:template match="mods:extension">
 		<xsl:call-template name="datafield">
-			<xsl:with-param name="tag">887</xsl:with-param>
+			<xsl:with-param name="tag">502</xsl:with-param>
 			<xsl:with-param name="subfields">
 				<marc:subfield code="a">
-					<xsl:value-of select="."/>
+				    <xsl:if test="etdms:degree/etdms:name"><xsl:value-of select="etdms:degree/etdms:name"/></xsl:if>
+				    <xsl:if test="etdms:degree/etdms:discipline"><xsl:text> (</xsl:text><xsl:value-of select="etdms:degree/etdms:discipline"/><xsl:text>)</xsl:text></xsl:if>
+				    <xsl:if test="etdms:degree/etdms:grantor"><xsl:text>--</xsl:text><xsl:value-of select="etdms:degree/etdms:grantor"/></xsl:if>
+				    <xsl:if test="../mods:originInfo/mods:dateIssued"><xsl:text>, </xsl:text><xsl:value-of select="../mods:originInfo/mods:dateIssued[not(@encoding)]"/></xsl:if>
+                    <xsl:text>.</xsl:text>
 				</marc:subfield>
 			</xsl:with-param>
 		</xsl:call-template>		
