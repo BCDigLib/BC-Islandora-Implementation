@@ -15,7 +15,7 @@
 
 	<xsl:include href="http://www.loc.gov/marcxml/xslt/MARC21slimUtils.xsl"/>
 	
-	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
+    <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
 
 	<xsl:template match="/">
 			<xsl:apply-templates/>
