@@ -405,6 +405,9 @@
                 <xsl:when test=".='Dept. of Slavic &amp; Eastern Languages and Literature, Boston College'">
                     <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                 </xsl:when>
+                <xsl:when test=".='Dept. of Slavic &amp; Eastern Languages and Literatures, Boston College'">
+                    <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
+                </xsl:when>
                 <xsl:when test=".='Dept. of Slavic and Eastern Languages, Boston College'">
                     <xsl:text>Slavic and Eastern Languages and Literatures</xsl:text>
                 </xsl:when>
