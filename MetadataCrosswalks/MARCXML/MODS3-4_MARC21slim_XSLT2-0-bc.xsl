@@ -2052,7 +2052,17 @@
                     <xsl:text>.</xsl:text>
 				</marc:subfield>
 			</xsl:with-param>
-		</xsl:call-template>		
+		</xsl:call-template>
+        <xsl:if test="etdms:degree">	
+            <xsl:call-template name="datafield">
+                <xsl:with-param name="tag">940</xsl:with-param>
+                <xsl:with-param name="subfields">
+                    <marc:subfield code="a">
+                        <xsl:text>BC THESES</xsl:text>
+                    </marc:subfield>
+                </xsl:with-param>
+            </xsl:call-template>
+        </xsl:if>		
 	</xsl:template>
 	<!-- 1/04 fix -->
 	<!--<xsl:template match="mods:internetMediaType">
@@ -2421,4 +2431,5 @@
 			</xsl:choose>
 		</xsl:variable>
 -->
+		
 </xsl:stylesheet>
