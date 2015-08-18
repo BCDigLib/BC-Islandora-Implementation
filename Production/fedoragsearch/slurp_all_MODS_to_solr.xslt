@@ -234,7 +234,7 @@
                     <xsl:value-of select="$textValue"/>
                 </field>  
             </xsl:if>
-            <xsl:if test=".='c21' or .='chrij' or .='crr' or .='cwp' or .='scaw' or .='wfrn'">
+            <xsl:if test=".='c21' or .='chrij' or .='crr' or .='cwp' or .='scaw' or .='timss-pirls' or .='wfrn'">
                 <xsl:variable name="this_prefix">         
                     <xsl:value-of select="concat($prefix, 'local_collection')"/>       
                 </xsl:variable>
