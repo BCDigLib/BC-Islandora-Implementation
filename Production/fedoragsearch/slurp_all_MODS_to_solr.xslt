@@ -284,7 +284,7 @@
                         <xsl:value-of select="concat($prefix, 'local_collection')"/>       
                     </xsl:variable>
                     <xsl:variable name="textValue">   
-                        <xsl:text>Undergraduate Honors Program</xsl:text>       
+                        <xsl:text>Undergraduate Honors Theses</xsl:text>       
                     </xsl:variable>
                     <field>
                         <xsl:attribute name="name">
@@ -597,9 +597,11 @@
                     <xsl:when test="contains(.,'Theology')">
                         <xsl:text>Theology</xsl:text>
                     </xsl:when>
+<!--  
                     <xsl:when test="contains(., 'College Honors')">
                         <xsl:text>College Honors Program</xsl:text>
                     </xsl:when>
+-->
                     <xsl:otherwise/>
                 </xsl:choose>
             </xsl:variable>
