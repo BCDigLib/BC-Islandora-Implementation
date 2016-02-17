@@ -166,57 +166,6 @@
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template name="name">
-        <xsl:param name="prefix"/>
-        <xsl:param name="suffix">_ms</xsl:param>
-        <xsl:param name="pid">not provided</xsl:param>
-        <xsl:param name="datastream">not provided</xsl:param>
-        
-        <!-- Virtual field to idenitfy faculty/non-faculty. -->
-        <xsl:for-each select="mods:name/mods:description">
-            <xsl:variable name="this_prefix">
-                <xsl:value-of select="concat($prefix, 'bc_affiliate')"/>      
-            </xsl:variable>
-            <xsl:variable name="textValue">
-                <xsl:choose>
-                    <xsl:when test=".!='nonfaculty' and .!=''">
-                        <xsl:text>faculty</xsl:text>
-                    </xsl:when>
-                    <xsl:when test=".='nonfaculty'">
-                        <xsl:text>non-faculty</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise/>
-                </xsl:choose>
-            </xsl:variable>
-            <xsl:if test="not(normalize-space($textValue)='')">
-                <field>
-                    <xsl:attribute name="name">
-                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="$textValue"/>
-                </field>
-            </xsl:if>
-        </xsl:for-each>
-        
-        <!-- Virtual field to transform ORCID into url. -->
-        <xsl:for-each select="mods:name/mods:nameIdentifier[@type='orcid']">
-            <xsl:variable name="this_prefix">
-                <xsl:value-of select="concat($prefix, 'orcid')"/>      
-            </xsl:variable>
-            <xsl:variable name="textValue">   
-                <xsl:text>http://orcid.org/</xsl:text>
-                <xsl:value-of select="."/>       
-            </xsl:variable>
-            <field>
-                <xsl:attribute name="name">
-                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                </xsl:attribute>
-                <xsl:value-of select="$textValue"/>
-            </field>  
-        </xsl:for-each>
-        
-    </xsl:template>
-
     <xsl:template name="role">
         <!-- Role term facet -->
         <xsl:param name="prefix"/>
@@ -829,7 +778,56 @@
     </xsl:template>
     
 
-
+    <xsl:template name="name">
+        <xsl:param name="prefix"/>
+        <xsl:param name="suffix">_ms</xsl:param>
+        <xsl:param name="pid">not provided</xsl:param>
+        <xsl:param name="datastream">not provided</xsl:param>
+        
+        <!-- Virtual field to idenitfy faculty/non-faculty. -->
+        <xsl:for-each select="mods:name/mods:description">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="concat($prefix, 'bc_affiliate')"/>      
+            </xsl:variable>
+            <xsl:variable name="textValue">
+                <xsl:choose>
+                    <xsl:when test=".!='nonfaculty' and .!=''">
+                        <xsl:text>faculty</xsl:text>
+                    </xsl:when>
+                    <xsl:when test=".='nonfaculty'">
+                        <xsl:text>non-faculty</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:if test="not(normalize-space($textValue)='')">
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
+            </xsl:if>
+        </xsl:for-each>
+        
+        <!-- Virtual field to transform ORCID into url. -->
+        <xsl:for-each select="mods:name/mods:nameIdentifier[@type='orcid']">
+            <xsl:variable name="this_prefix">
+                <xsl:value-of select="concat($prefix, 'orcid')"/>      
+            </xsl:variable>
+            <xsl:variable name="textValue">   
+                <xsl:text>http://orcid.org/</xsl:text>
+                <xsl:value-of select="."/>       
+            </xsl:variable>
+            <field>
+                <xsl:attribute name="name">
+                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                </xsl:attribute>
+                <xsl:value-of select="$textValue"/>
+            </field>  
+        </xsl:for-each>
+        
+    </xsl:template>
 
 
 </xsl:stylesheet>
