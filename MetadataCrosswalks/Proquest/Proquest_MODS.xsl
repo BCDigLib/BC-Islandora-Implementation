@@ -7,7 +7,7 @@
     <xsl:variable name="languagelookup" select="document('languagelookup.xml')"/>
     <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
     <xsl:template match="/DISS_submission">
-        <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.ndltd.org/standards/metadata/etdms/1.0/ http://www.ndltd.org/standards/metadata/etdms/1.0/etdms.xsd">
+        <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd http://www.ndltd.org/standards/metadata/etdms/1.0/ http://www.ndltd.org/standards/metadata/etdms/1.0/etdms.xsd">
             <xsl:apply-templates select="DISS_description/DISS_title"/>
             <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_name">
                 <xsl:with-param name="text">Author</xsl:with-param>
@@ -175,6 +175,17 @@
                     <xsl:value-of select="$code"/>
                 </xsl:element>
             </xsl:element>
+            <xsl:for-each select="../DISS_orcid">
+                <xsl:choose>
+                    <xsl:when test="not(. = '')">
+                        <xsl:element name="mods:nameIdentifier">
+                            <xsl:attribute name="type">orcid</xsl:attribute>
+                            <xsl:value-of select="."/>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:otherwise/>
+                </xsl:choose>
+            </xsl:for-each>
         </xsl:element>
     </xsl:template>
     <xsl:template match="DISS_middle">
