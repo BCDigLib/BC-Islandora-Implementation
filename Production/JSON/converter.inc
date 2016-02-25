@@ -236,7 +236,7 @@ function convert_mods_to_citeproc_json_genre($mods) {
 function convert_mods_to_citeproc_json_title(SimpleXMLElement $mods) {
   $output = '';
   add_mods_namespace($mods);
-  $titles = $mods->xpath("//mods:mods[1]/mods:titleInfo/mods:title");
+  $titles = $mods->xpath("//mods:mods[1]/mods:titleInfo[@usage='primary']/mods:title");
 
   if (!empty($titles)) {
     while (list($num, $node) = each($titles)) {
@@ -256,7 +256,7 @@ function convert_mods_to_citeproc_json_title(SimpleXMLElement $mods) {
 function convert_mods_to_citeproc_json_container_title(SimpleXMLElement $mods) {
   $output = '';
   add_mods_namespace($mods);
-  $titles = $mods->xpath("//mods:mods[1]/mods:relatedItem[@type='host']/mods:titleInfo/mods:title");
+  $titles = $mods->xpath("//mods:mods[1]/mods:relatedItem[@type='host']/mods:titleInfo[@usage='primary']/mods:title");
 
   if (!empty($titles)) {
     while (list($num, $node) = each($titles)) {
