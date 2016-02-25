@@ -126,7 +126,7 @@ function convert_mods_to_citeproc_jsons($mods_in) {
       'abstract' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:abstract'),
       'call-number' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:classification'),
       'collection-title' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="series"]/mods:titleInfo[not(@type)]/mods:title'),
-      'container-title' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:relatedItem[@type="host"]/mods:titleInfo[not(@type)]/mods:title'),
+      'container-title' => convert_mods_to_citeproc_json_container_title($mods),
       'DOI' => convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:identifier[@type="doi"]'),
       'edition' => preg_replace('/[^0-9]/', '', convert_mods_to_citeproc_json_query($mods, '//mods:mods[1]/mods:originInfo/mods:edition')),
       'event' => convert_mods_to_citeproc_json_event($mods),
@@ -237,6 +237,26 @@ function convert_mods_to_citeproc_json_title(SimpleXMLElement $mods) {
   $output = '';
   add_mods_namespace($mods);
   $titles = $mods->xpath("//mods:mods[1]/mods:titleInfo/mods:title");
+
+  if (!empty($titles)) {
+    while (list($num, $node) = each($titles)) {
+      add_mods_namespace($node);
+      $title = (string) $node;
+      $subtitle = convert_mods_to_citeproc_json_query($node, '../mods:subTitle');
+      $non_sort = convert_mods_to_citeproc_json_query($node, '../mods:nonSort');
+      $title = !empty($subtitle) ? "$title: $subtitle" : $title;
+      $title = !empty($non_sort) ? "$non_sort $title" : $title;
+      // Choose the longest title.
+      $output = strlen($title) > strlen($output) ? $title : $output;
+    }
+  }
+  return !empty($output) ? $output : NULL;
+}
+
+function convert_mods_to_citeproc_json_container_title(SimpleXMLElement $mods) {
+  $output = '';
+  add_mods_namespace($mods);
+  $titles = $mods->xpath("//mods:mods[1]/mods:relatedItem[@type='host']/mods:titleInfo/mods:title");
 
   if (!empty($titles)) {
     while (list($num, $node) = each($titles)) {
