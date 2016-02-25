@@ -373,16 +373,16 @@
     <choose>
       <if match="none" type="article-journal">
         <choose>
-          <if match="none" is-numeric="collection-number">
+          <if match="none" is-numeric="number">
             <group delimiter=", ">
               <text variable="collection-title"/>
-              <text variable="collection-number"/>
+              <text variable="number"/>
             </group>
           </if>
           <else>
             <group delimiter=" ">
               <text variable="collection-title"/>
-              <text variable="collection-number"/>
+              <text variable="number"/>
             </group>
           </else>
         </choose>
@@ -394,7 +394,7 @@
       <if type="article-journal">
         <group delimiter=" ">
           <text variable="collection-title"/>
-          <text variable="collection-number"/>
+          <text variable="number"/>
         </group>
       </if>
     </choose>
