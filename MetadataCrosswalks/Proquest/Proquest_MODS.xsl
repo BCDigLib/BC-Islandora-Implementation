@@ -3,8 +3,8 @@
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
     xmlns:mods="http://www.loc.gov/mods/v3">
     <xsl:param name="handle"/>
-    <xsl:variable name="degreelookup" select="document('degreelookup.xml')"/>
-    <xsl:variable name="languagelookup" select="document('languagelookup.xml')"/>
+    <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
+    <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
     <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
     <xsl:template match="/DISS_submission">
         <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd http://www.ndltd.org/standards/metadata/etdms/1.0/ http://www.ndltd.org/standards/metadata/etdms/1.0/etdms.xsd">
@@ -243,14 +243,14 @@
                     <xsl:text>code</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="authority">iso639-2b</xsl:attribute>
-                <xsl:value-of select="$languagelookup/LanguageLookUp/DISS_language[@value=$varCode]/@code"/>
+                <xsl:value-of select="$languageLookup/LanguageLookUp/DISS_language[@value=$varCode]/@code"/>
             </xsl:element>             
             <xsl:element name="mods:languageTerm">
                 <xsl:attribute name="type">
                     <xsl:text>text</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="authority">iso639-2b</xsl:attribute>
-                <xsl:value-of select="$languagelookup/LanguageLookUp/DISS_language[@value=$varCode]/@language"/>
+                <xsl:value-of select="$languageLookup/LanguageLookUp/DISS_language[@value=$varCode]/@language"/>
             </xsl:element>            
         </xsl:element>
     </xsl:template>
@@ -315,10 +315,10 @@
     <xsl:template match="DISS_degree">
         <xsl:variable name="degree" select="translate(translate(.,'.',''),'abdehmps','ABDEHMPST')"/>
         <xsl:element name="etdms:name">
-            <xsl:value-of select="$degreelookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>   
+            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>   
         </xsl:element>                  
         <xsl:element name="etdms:level">
-            <xsl:value-of select="$degreelookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
+            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
         </xsl:element>                   
     </xsl:template>
     <xsl:template match="DISS_institution">
