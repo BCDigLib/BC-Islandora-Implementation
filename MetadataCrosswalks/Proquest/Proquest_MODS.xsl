@@ -287,25 +287,25 @@
                     <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:text>Copyright is held by the author. This work is licensed under a Creative Commons Attribution 4.0 International License. </xsl:text>
+                    <xsl:text>Copyright is held by the author. </xsl:text>
                     <xsl:choose>
                         <xsl:when test="$ccAttr = 'CC BY'">
-                            <xsl:text>http://creativecommons.org/licenses/by/4.0/</xsl:text>
+                            <xsl:text>This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0).</xsl:text>
                         </xsl:when>
                         <xsl:when test="$ccAttr = 'CC BY-ND'">
-                            <xsl:text>http://creativecommons.org/licenses/by-nd/4.0/</xsl:text>
+                            <xsl:text>This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nd/4.0).</xsl:text>
                         </xsl:when>
                         <xsl:when test="$ccAttr = 'CC BY-NC-SA'">
-                            <xsl:text>http://creativecommons.org/licenses/by-nc-sa/4.0</xsl:text>
+                            <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-nc-sa/4.0).</xsl:text>
                         </xsl:when>
                         <xsl:when test="$ccAttr = 'CC BY-SA'">
-                            <xsl:text>http://creativecommons.org/licenses/by-sa/4.0</xsl:text>
+                            <xsl:text>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-sa/4.0).</xsl:text>
                         </xsl:when>
                         <xsl:when test="$ccAttr = 'CC BY-NC'">
-                            <xsl:text>http://creativecommons.org/licenses/by-nc/4.0</xsl:text>
+                            <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License (http://creativecommons.org/licenses/by-nc/4.0).</xsl:text>
                         </xsl:when>
                         <xsl:when test="$ccAttr = 'CC BY-NC-ND'">
-                            <xsl:text>http://creativecommons.org/licenses/by-nc-nd/4.0</xsl:text>
+                            <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nc-nd/4.0).</xsl:text>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:otherwise>
