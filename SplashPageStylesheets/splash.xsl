@@ -14,7 +14,7 @@
 
     <xsl:template match="mods:mods">
 
-        <!--fo:root establishes the page type and layouts contained in the PDF. To alter basic page apperence 
+        <!--fo:root establishes the page type and layouts contained in the PDF. To alter basic page apperence
             such as margins fonts alter the following page-masters.-->
 
         <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -43,7 +43,7 @@
                             <dc:title>
                                 <xsl:value-of select="/mods:mods/mods:titleInfo/mods:title"/>
                             </dc:title>
-                            
+
                                 <xsl:if test="mods:name/mods:role/mods:roleTerm='aut'">
                             <dc:creator>
                                 <xsl:value-of
@@ -53,7 +53,7 @@
                                     select="/mods:mods/mods:name/mods:namePart[@type='family']"/>
                             </dc:creator>
                                 </xsl:if>
-                            
+
                             <xsl:for-each select="/mods:mods/mods:name[not(position()='1')]">
                                <dc:contributor>
                                    <xsl:value-of
@@ -61,8 +61,8 @@
                                    <xsl:text> </xsl:text>
                                    <xsl:value-of
                                        select="mods:namePart[@type='family']"/>
-                               </dc:contributor> 
-                               
+                               </dc:contributor>
+
                             </xsl:for-each>
                             <xsl:text/>
 
@@ -82,30 +82,30 @@
 
             <fo:page-sequence master-reference="cover-page">
                 <fo:static-content flow-name="xsl-region-after">
-                    <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in"
+                    <fo:block font-family="FreeSans" margin-left=".5in" margin-right=".5in"
                         margin-bottom=".25in" text-align="left">
                         <xsl:call-template name="handle"/>
                     </fo:block>
-                    <fo:block font-family="Arial" margin-left=".5in" text-align="left"
+                    <fo:block font-family="FreeSans" margin-left=".5in" text-align="left"
                         font-size="16pt" line-height="20pt"> This work is posted on <fo:basic-link
                             external-destination="http://escholarship.bc.edu" color="#990000"
                             >eScholarship@BC</fo:basic-link>, </fo:block>
-                    <fo:block font-family="Arial" margin-bottom=".25in" margin-left=".5in"
+                    <fo:block font-family="FreeSans" margin-bottom=".25in" margin-left=".5in"
                         text-align="left" font-size="16pt" line-height="20pt">Boston College
                         University Libraries.</fo:block>
-                    <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in"
+                    <fo:block font-family="FreeSans" margin-left=".5in" margin-right=".5in"
                         border-top=".5pt solid #990000" line-height="50pt"/>
-                    <fo:block font-family="Arial" margin-top=".25in" margin-left=".5in"
+                    <fo:block font-family="FreeSans" margin-top=".25in" margin-left=".5in"
                         margin-right=".5in" text-align="left" font-size="12pt" line-height="15pt">
                         <xsl:call-template name="version"/>
                     </fo:block>
-                    <fo:block font-family="Arial" margin-left=".5in" margin-right=".5in"
+                    <fo:block font-family="FreeSans" margin-left=".5in" margin-right=".5in"
                         text-align="left" font-size="12pt" line-height="15pt" space-before="22">
                         <xsl:value-of select="mods:accessCondition[@type='use and reproduction']"/>
                     </fo:block>
                 </fo:static-content>
                 <fo:flow flow-name="xsl-region-body">
-                    <fo:block font-family="Arial">
+                    <fo:block font-family="FreeSans">
                         <xsl:call-template name="article"/>
                     </fo:block>
                 </fo:flow>
