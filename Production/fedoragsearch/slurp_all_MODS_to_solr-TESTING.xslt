@@ -837,8 +837,10 @@
                             <xsl:value-of select="concat($this_prefix, $suffix)"/>
                         </xsl:attribute>
                         <xsl:value-of select="$textValue"/>
-                    </field> 
+                    </field>
+                <!-- Close out the test of whether the field is empty or not -->    
                 </xsl:when>
+                <!-- In the even -->
                 <xsl:otherwise/>
             </xsl:choose> 
         </xsl:for-each>

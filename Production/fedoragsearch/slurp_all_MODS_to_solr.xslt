@@ -812,19 +812,24 @@
         
         <!-- Virtual field to transform ORCID into url. -->
         <xsl:for-each select="mods:name/mods:nameIdentifier[@type='orcid']">
-            <xsl:variable name="this_prefix">
-                <xsl:value-of select="concat($prefix, 'orcid')"/>      
-            </xsl:variable>
-            <xsl:variable name="textValue">   
-                <xsl:text>http://orcid.org/</xsl:text>
-                <xsl:value-of select="."/>       
-            </xsl:variable>
+            <xsl:choose>
+                <xsl:when test="not(. = '')">
+                    <xsl:variable name="this_prefix">
+                        <xsl:value-of select="concat($prefix, 'orcid')"/>      
+                    </xsl:variable>
+                    <xsl:variable name="textValue">   
+                        <xsl:text>http://orcid.org/</xsl:text>
+                        <xsl:value-of select="."/>       
+                    </xsl:variable>
+                </xsl:when>
+                <xsl:otherwise/>
+            </xsl:choose> 
             <field>
                 <xsl:attribute name="name">
                     <xsl:value-of select="concat($this_prefix, $suffix)"/>
                 </xsl:attribute>
                 <xsl:value-of select="$textValue"/>
-            </field>  
+            </field>
         </xsl:for-each>
         
     </xsl:template>
