@@ -4,7 +4,7 @@
   <!--
  <xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/config/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
 -->
-  <xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
+<xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
   <xsl:template match="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]" name="index_MODS">
     <xsl:param name="content"/>
     <xsl:param name="prefix"/>
@@ -821,15 +821,15 @@
                         <xsl:text>http://orcid.org/</xsl:text>
                         <xsl:value-of select="."/>       
                     </xsl:variable>
+                    <field>
+                        <xsl:attribute name="name">
+                            <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="$textValue"/>
+                    </field>
                 </xsl:when>
                 <xsl:otherwise/>
             </xsl:choose> 
-            <field>
-                <xsl:attribute name="name">
-                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                </xsl:attribute>
-                <xsl:value-of select="$textValue"/>
-            </field>
         </xsl:for-each>
         
     </xsl:template>
