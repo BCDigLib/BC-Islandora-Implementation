@@ -4,7 +4,7 @@
   <!--
  <xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/config/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
 -->
-  <xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
+<xsl:include href="/apps/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
   <xsl:template match="foxml:datastream[@ID='MODS']/foxml:datastreamVersion[last()]" name="index_MODS">
     <xsl:param name="content"/>
     <xsl:param name="prefix"/>
@@ -812,19 +812,24 @@
         
         <!-- Virtual field to transform ORCID into url. -->
         <xsl:for-each select="mods:name/mods:nameIdentifier[@type='orcid']">
-            <xsl:variable name="this_prefix">
-                <xsl:value-of select="concat($prefix, 'orcid')"/>      
-            </xsl:variable>
-            <xsl:variable name="textValue">   
-                <xsl:text>http://orcid.org/</xsl:text>
-                <xsl:value-of select="."/>       
-            </xsl:variable>
-            <field>
-                <xsl:attribute name="name">
-                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                </xsl:attribute>
-                <xsl:value-of select="$textValue"/>
-            </field>  
+            <xsl:choose>
+                <xsl:when test="not(. = '')">
+                    <xsl:variable name="this_prefix">
+                        <xsl:value-of select="concat($prefix, 'orcid')"/>      
+                    </xsl:variable>
+                    <xsl:variable name="textValue">   
+                        <xsl:text>http://orcid.org/</xsl:text>
+                        <xsl:value-of select="."/>       
+                    </xsl:variable>
+                    <field>
+                        <xsl:attribute name="name">
+                            <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="$textValue"/>
+                    </field>
+                </xsl:when>
+                <xsl:otherwise/>
+            </xsl:choose> 
         </xsl:for-each>
         
     </xsl:template>

@@ -808,20 +808,41 @@
         </xsl:for-each>
         
         <!-- Virtual field to transform ORCID into url. -->
+        <!-- Every time we encounter the mods:nameIdentifier element (which here we're calling 'orcid')... -->
         <xsl:for-each select="mods:name/mods:nameIdentifier[@type='orcid']">
-            <xsl:variable name="this_prefix">
-                <xsl:value-of select="concat($prefix, 'orcid')"/>      
-            </xsl:variable>
-            <xsl:variable name="textValue">   
-                <xsl:text>http://orcid.org/</xsl:text>
-                <xsl:value-of select="."/>       
-            </xsl:variable>
-            <field>
-                <xsl:attribute name="name">
-                    <xsl:value-of select="concat($this_prefix, $suffix)"/>
-                </xsl:attribute>
-                <xsl:value-of select="$textValue"/>
-            </field>  
+            <!-- Evaluate the mods:nameIdentifier element...-->
+            <xsl:choose>
+                <!-- And when that element is NOT empty (i.e. the person has given us an ORCID)... -->
+                <xsl:when test="not(. = '')">
+                    <!-- Create the concatenated field on the page with a valid URL for their ORCID profile. -->
+                    <!-- Specifically, this line defines a new variable called "this_prefix", why call it that?-->
+                    <xsl:variable name="this_prefix">
+                        <!-- And this new variable is assigned a value of whatever is in the mods:nameIdentifier
+                             element. What does $prefix do? -->
+                        <xsl:value-of select="concat($prefix, 'orcid')"/>
+                    <!-- And we end our creation of the new variable -->
+                    </xsl:variable>
+                    <!-- Then we create a second new variable called "tesxtValue" -->
+                    <xsl:variable name="textValue">
+                        <!-- Raw string input for the ORCID URL -->
+                        <xsl:text>http://orcid.org/</xsl:text>
+                        <!-- Assign the second new variable the value of the text above. Why do it this way? 
+                             Why not just assign it the value in one line? -->
+                        <xsl:value-of select="."/>
+                    <!-- And we end our creation of the second new variable -->
+                    </xsl:variable>
+                    <!-- So now that we have out two variables created, we begin defining what the field should actually look like -->
+                    <field>
+                        <xsl:attribute name="name">
+                            <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="$textValue"/>
+                    </field>
+                <!-- Close out the test of whether the field is empty or not -->    
+                </xsl:when>
+                <!-- In the even -->
+                <xsl:otherwise/>
+            </xsl:choose> 
         </xsl:for-each>
         
     </xsl:template>
