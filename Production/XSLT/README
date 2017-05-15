@@ -1,0 +1,3 @@
+These XSLTs are run when a MODS record is updated via XML Forms.
+
+islandora_xml_forms/builder/self_transforms
