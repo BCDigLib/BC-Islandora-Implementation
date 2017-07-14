@@ -1,0 +1,1 @@
+Destination directory: islandora_scholar/modules/islandora_google_scholar
