@@ -126,6 +126,7 @@
         <fo:block font-size="26pt" line-height="32pt" wrap-option="wrap" space-after="18pt">
             <xsl:if test="mods:titleInfo[not (@type)]/mods:nonSort">
                 <xsl:value-of select="mods:titleInfo[not (@type)]/mods:nonSort"/>
+                <xsl:text> </xsl:text>
             </xsl:if>
             <xsl:value-of select="mods:titleInfo[not (@type)]/mods:title"/>
             <xsl:if test="mods:titleInfo[not (@type)]/mods:subTitle">
