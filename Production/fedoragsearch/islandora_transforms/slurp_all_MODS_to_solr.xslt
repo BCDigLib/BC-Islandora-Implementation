@@ -850,12 +850,9 @@
                         <xsl:attribute name="name">
                             <xsl:value-of select="concat($this_prefix, $suffix)"/>
                         </xsl:attribute>
-                        <xsl:element name="a">
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="$textValue"/>
-                            </xsl:attribute>
+                        <xsl:text>&#60;a href="</xsl:text><xsl:value-of select="$textValue"/><xsl:text>"&#62;</xsl:text>
                             <xsl:value-of select="$textValue"/>
-                        </xsl:element>
+                        <xsl:text>&#60;/a&#62;</xsl:text>
                     </field>
                 </xsl:when>
                 <xsl:otherwise/>
