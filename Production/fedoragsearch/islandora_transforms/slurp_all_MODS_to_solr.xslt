@@ -850,6 +850,7 @@
                         <xsl:attribute name="name">
                             <xsl:value-of select="concat($this_prefix, $suffix)"/>
                         </xsl:attribute>
+                        <!-- Need to use xsl:text here because xsl:element breaks Solr -->
                         <xsl:text>&#60;a href="</xsl:text><xsl:value-of select="$textValue"/><xsl:text>" target="_blank"&#62;</xsl:text>
                             <xsl:value-of select="$textValue"/>
                         <xsl:text>&#60;/a&#62;</xsl:text>
