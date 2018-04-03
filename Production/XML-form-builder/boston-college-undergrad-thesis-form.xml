@@ -153,7 +153,7 @@
               <access>TRUE</access>
               <collapsed>FALSE</collapsed>
               <collapsible>FALSE</collapsible>
-              <description>The title of your thesis</description>
+              <description>The title of your thesis (everything before the colon)</description>
               <disabled>FALSE</disabled>
               <executes_submit_callback>FALSE</executes_submit_callback>
               <multiple>FALSE</multiple>
@@ -190,7 +190,7 @@
               <access>TRUE</access>
               <collapsed>FALSE</collapsed>
               <collapsible>FALSE</collapsible>
-              <description>The subtitle of your thesis (if applicable)</description>
+              <description>The subtitle of your thesis (everything after the colon). Don't worry, we'll make sure the full title displays correctly!</description>
               <disabled>FALSE</disabled>
               <executes_submit_callback>FALSE</executes_submit_callback>
               <multiple>FALSE</multiple>
