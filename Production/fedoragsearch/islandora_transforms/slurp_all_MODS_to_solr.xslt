@@ -853,8 +853,9 @@
                         <!-- Need to use xsl:text here because xsl:element breaks Solr -->
                         <xsl:text>&#60;a href="</xsl:text><xsl:value-of select="$textValue"/><xsl:text>" target="_blank"&#62;</xsl:text>
                             <xsl:value-of select="following-sibling::mods:displayForm"/>
-                            <xsl:text>&#9;</xsl:text>
+                            <xsl:text>&#160;</xsl:text>
                             <xsl:text>&#60;img src="/sites/default/files/orcid_16x16.gif"&#62;</xsl:text>
+                            <xsl:text>&#160;</xsl:text>
                             <xsl:value-of select="$textValue"/>
                         <xsl:text>&#60;/a&#62;</xsl:text>
                     </field>
