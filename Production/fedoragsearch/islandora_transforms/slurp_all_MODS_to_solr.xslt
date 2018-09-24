@@ -4,9 +4,6 @@
     xmlns:foxml="info:fedora/fedora-system:def/foxml#" xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/" version="1.0"
     exclude-result-prefixes="mods etdms">
-    <!--
- <xsl:include href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/config/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
--->
     <xsl:include
         href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
     <xsl:template match="foxml:datastream[@ID = 'MODS']/foxml:datastreamVersion[last()]"
