@@ -849,9 +849,16 @@
                         </xsl:attribute>
                         <!-- Need to use xsl:text here because xsl:element breaks Solr -->
                         <xsl:text>&#60;a href="</xsl:text><xsl:value-of select="$textValue"/><xsl:text>" target="_blank"&#62;</xsl:text>
-                            <xsl:value-of select="preceding-sibling::mods:namePart[@type='given']/text()"/>
-                            <xsl:text>&#160;</xsl:text>
-                            <xsl:value-of select="preceding-sibling::mods:namePart[@type='family']/text()"/>
+                            <xsl:if test="preceding-sibling::mods:namePart[@type='given']">
+                                <xsl:value-of select="preceding-sibling::mods:namePart[@type='given']/text()"/>
+                                <xsl:text>&#160;</xsl:text>
+                                <xsl:value-of select="preceding-sibling::mods:namePart[@type='family']/text()"/>
+                            </xsl:if>
+                            <xsl:if test="following-sibling::mods:namePart[@type='given']">
+                                <xsl:value-of select="following-sibling::mods:namePart[@type='given']/text()"/>
+                                <xsl:text>&#160;</xsl:text>
+                                <xsl:value-of select="following-sibling::mods:namePart[@type='family']/text()"/>
+                            </xsl:if>
                             <xsl:text>'s</xsl:text>
                             <xsl:text>&#160;</xsl:text>
                             <xsl:text>ORCID:</xsl:text>
