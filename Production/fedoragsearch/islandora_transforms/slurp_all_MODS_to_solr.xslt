@@ -853,14 +853,16 @@
                                 <xsl:value-of select="preceding-sibling::mods:namePart[@type='given']/text()"/>
                                 <xsl:text>&#160;</xsl:text>
                                 <xsl:value-of select="preceding-sibling::mods:namePart[@type='family']/text()"/>
+                                <xsl:text>'s</xsl:text>
+                                <xsl:text>&#160;</xsl:text>
                             </xsl:if>
                             <xsl:if test="following-sibling::mods:namePart[@type='given']">
                                 <xsl:value-of select="following-sibling::mods:namePart[@type='given']/text()"/>
                                 <xsl:text>&#160;</xsl:text>
                                 <xsl:value-of select="following-sibling::mods:namePart[@type='family']/text()"/>
+                                <xsl:text>'s</xsl:text>
+                                <xsl:text>&#160;</xsl:text>
                             </xsl:if>
-                            <xsl:text>'s</xsl:text>
-                            <xsl:text>&#160;</xsl:text>
                             <xsl:text>ORCID:</xsl:text>
                             <xsl:text>&#160;</xsl:text>
                             <xsl:text>&#60;img src="/sites/default/files/orcid_16x16.gif"&#62;</xsl:text>
