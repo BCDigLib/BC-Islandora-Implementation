@@ -865,7 +865,7 @@
                             </xsl:if>
                             <xsl:text>ORCID:</xsl:text>
                             <xsl:text>&#160;</xsl:text>
-                            <xsl:text>&#60;img src="/sites/default/files/orcid_16x16.gif"&#62;</xsl:text>
+                            <xsl:text>&#60;img style="border:none;padding:0;background:none;" src="/sites/default/files/orcid_16x16.gif"&#62;</xsl:text>
                             <xsl:text>&#160;</xsl:text>
                             <xsl:value-of select="$textValue"/>
                         <xsl:text>&#60;/a&#62;</xsl:text>
