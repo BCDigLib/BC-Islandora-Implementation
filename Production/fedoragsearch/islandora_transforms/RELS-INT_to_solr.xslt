@@ -40,7 +40,7 @@
                         <xsl:attribute name="name">
                             <xsl:value-of select="concat('Embargo', $suffix)"/>
                         </xsl:attribute>
-                        <xsl:text>The full-text of this item is unavailable on eScholarship@BC. Please see our Help section for more information.</xsl:text>
+                        <xsl:text>The content of this item is unavailable on eScholarship@BC. Please see our Help section for more information.</xsl:text>
                     </field>
                 </xsl:when>
                 <xsl:otherwise>
@@ -48,7 +48,7 @@
                         <xsl:attribute name="name">
                             <xsl:value-of select="concat('Embargo', $suffix)"/>
                         </xsl:attribute>
-                        <xsl:text>The full text of this item is under embargo and unavailable until: </xsl:text>
+                        <xsl:text>The content of this item is under embargo and unavailable until: </xsl:text>
                         <xsl:value-of select="substring(text(),1,10)"/>
                     </field>
                 </xsl:otherwise>
