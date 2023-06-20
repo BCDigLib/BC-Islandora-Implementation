@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
     xmlns:mods="http://www.loc.gov/mods/v3">
@@ -9,24 +9,14 @@
     <xsl:template match="/DISS_submission">
         <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" version="3.6" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-6.xsd http://www.ndltd.org/standards/metadata/etdms/1-0/ http://www.ndltd.org/standards/metadata/etdms/1-0/etdms.xsd">
             <xsl:apply-templates select="DISS_description/DISS_title"/>
-            <xsl:choose>
-                <xsl:when test="DISS_authorship/DISS_author[@type='primary']">
-                    <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_name">
-                        <xsl:with-param name="text">Author</xsl:with-param>
-                        <xsl:with-param name="code">aut</xsl:with-param>                
-                    </xsl:apply-templates>
-                </xsl:when>
-                <xsl:when test="DISS_authorship/DISS_author[@type='additional']">
-                    <xsl:apply-templates select="DISS_authorship/DISS_author[@type='additional']/DISS_name">
-                        <xsl:with-param name="text">Author</xsl:with-param>
-                        <xsl:with-param name="code">aut</xsl:with-param>                
-                    </xsl:apply-templates>
-                </xsl:when>
-            </xsl:choose>
+            <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_name">
+                <xsl:with-param name="text">Author</xsl:with-param>
+                <xsl:with-param name="code">aut</xsl:with-param>
+            </xsl:apply-templates>
             <xsl:apply-templates select="DISS_description/DISS_advisor/DISS_name">
                 <xsl:with-param name="text">Thesis advisor</xsl:with-param>
-                <xsl:with-param name="code">ths</xsl:with-param>   
-            </xsl:apply-templates>   
+                <xsl:with-param name="code">ths</xsl:with-param>
+            </xsl:apply-templates>
             <xsl:element name="mods:typeOfResource">text</xsl:element>
             <xsl:call-template name="genre"/>
             <xsl:apply-templates select="DISS_description/DISS_dates/DISS_comp_date"/>
@@ -34,7 +24,7 @@
                 <xsl:with-param name="element">mods:language</xsl:with-param>
             </xsl:apply-templates>
             <xsl:call-template name="physicalDescription"/>
-            <xsl:apply-templates select="DISS_content/DISS_abstract"/>   
+            <xsl:apply-templates select="DISS_content/DISS_abstract"/>
             <xsl:call-template name="processKW">
                 <xsl:with-param name="keywords" select="DISS_description/DISS_categorization/DISS_keyword"/>
             </xsl:call-template>
@@ -51,14 +41,14 @@
                         <xsl:attribute name="type">
                             <xsl:text>use and reproduction</xsl:text>
                         </xsl:attribute>
-                        <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>   
+                        <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
                     </xsl:element>
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:element name="mods:extension">
                 <xsl:element name="etdms:degree">
                     <xsl:apply-templates select="DISS_description/DISS_degree"/>
-                    <xsl:apply-templates select="DISS_description/DISS_institution"/>  
+                    <xsl:apply-templates select="DISS_description/DISS_institution"/>
                 </xsl:element>
             </xsl:element>
             <xsl:call-template name="recordInfo"/>
@@ -68,7 +58,7 @@
             </xsl:element>
         </mods:mods>
     </xsl:template>
-    <xsl:template match="DISS_title">        
+    <xsl:template match="DISS_title">
         <xsl:element name="mods:titleInfo">
         <xsl:attribute name="usage">primary</xsl:attribute>
         <xsl:choose>
@@ -158,8 +148,8 @@
         <xsl:element name="mods:name">
             <xsl:attribute name="type">personal</xsl:attribute>
             <xsl:if test="$code = 'aut'">
-                <xsl:attribute name="usage">primary</xsl:attribute>                    
-            </xsl:if> 
+                <xsl:attribute name="usage">primary</xsl:attribute>
+            </xsl:if>
             <xsl:element name="mods:namePart">
                 <xsl:attribute name="type">family</xsl:attribute>
                 <xsl:value-of select="DISS_surname"/>
@@ -215,7 +205,7 @@
             <xsl:attribute name="authority">ndltd</xsl:attribute>
             <xsl:attribute name="type">work type</xsl:attribute>
             <xsl:text>Electronic Thesis or Dissertation</xsl:text>
-        </xsl:element>            
+        </xsl:element>
         <xsl:element name="mods:genre">
             <xsl:attribute name="authority">dct</xsl:attribute>
             <xsl:attribute name="type">work type</xsl:attribute>
@@ -237,7 +227,7 @@
             <xsl:element name="mods:dateIssued">
                 <xsl:attribute name="encoding">w3cdtf</xsl:attribute>
                 <xsl:attribute name="keyDate">yes</xsl:attribute>
-                <xsl:value-of select="."/>            
+                <xsl:value-of select="."/>
             </xsl:element>
             <xsl:element name="mods:issuance">monographic</xsl:element>
         </xsl:element>
@@ -254,14 +244,14 @@
                 </xsl:attribute>
                 <xsl:attribute name="authority">iso639-2b</xsl:attribute>
                 <xsl:value-of select="$languageLookup/LanguageLookUp/DISS_language[@value=$varCode]/@code"/>
-            </xsl:element>             
+            </xsl:element>
             <xsl:element name="mods:languageTerm">
                 <xsl:attribute name="type">
                     <xsl:text>text</xsl:text>
                 </xsl:attribute>
                 <xsl:attribute name="authority">iso639-2b</xsl:attribute>
                 <xsl:value-of select="$languageLookup/LanguageLookUp/DISS_language[@value=$varCode]/@language"/>
-            </xsl:element>            
+            </xsl:element>
         </xsl:element>
     </xsl:template>
     <xsl:template name="physicalDescription">
@@ -275,7 +265,7 @@
             </xsl:element>
             <xsl:element name="mods:digitalOrigin">
                 <xsl:text>born digital</xsl:text>
-            </xsl:element>            
+            </xsl:element>
         </xsl:element>
     </xsl:template>
     <xsl:template match="DISS_abstract">
@@ -325,11 +315,11 @@
     <xsl:template match="DISS_degree">
         <xsl:variable name="degree" select="translate(translate(.,'.',''),'abdehmps','ABDEHMPST')"/>
         <xsl:element name="etdms:name">
-            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>   
-        </xsl:element>                  
+            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>
+        </xsl:element>
         <xsl:element name="etdms:level">
             <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
-        </xsl:element>                   
+        </xsl:element>
     </xsl:template>
     <xsl:template match="DISS_institution">
         <xsl:choose>
@@ -360,9 +350,9 @@
                     <xsl:text>Social Work</xsl:text>
                 </xsl:element>
                 <xsl:element name="etdms:grantor">
-                    <xsl:text>Boston College. Graduate School of Social Work</xsl:text>                
+                    <xsl:text>Boston College. Graduate School of Social Work</xsl:text>
                 </xsl:element>
-            </xsl:when>    
+            </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'LSOE')">
                 <xsl:element name="etdms:discipline">
                     <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
@@ -378,9 +368,9 @@
                 <xsl:element name="etdms:grantor">
                     <xsl:text>Boston College. School of Theology and Ministry</xsl:text>
                 </xsl:element>
-            </xsl:when>                    
-        </xsl:choose>        
-    </xsl:template>    
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
     <xsl:template name="processKW">
         <xsl:param name="keywords"/>
         <xsl:choose>
@@ -398,7 +388,7 @@
                 <xsl:element name="mods:subject">
                     <xsl:element name="mods:topic">
                         <xsl:value-of select="normalize-space($keywords)"/>
-                    </xsl:element>   
+                    </xsl:element>
                 </xsl:element>
             </xsl:otherwise>
         </xsl:choose>
