@@ -269,6 +269,34 @@
                     <xsl:value-of select="$textValue"/>
                 </field>
             </xsl:if>
+            <xsl:if test=". = 'BC_PUB'">
+                <xsl:variable name="this_prefix">
+                    <xsl:value-of select="concat($prefix, 'local_collection')"/>
+                </xsl:variable>
+                <xsl:variable name="textValue">
+                    <xsl:text>Boston College Publication</xsl:text>
+                </xsl:variable>
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
+            </xsl:if>
+            <xsl:if test=". = 'BC_STUDENT_PUB'">
+                <xsl:variable name="this_prefix">
+                    <xsl:value-of select="concat($prefix, 'local_collection')"/>
+                </xsl:variable>
+                <xsl:variable name="textValue">
+                    <xsl:text>Boston College Student Publication</xsl:text>
+                </xsl:variable>
+                <field>
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="concat($this_prefix, $suffix)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="$textValue"/>
+                </field>
+            </xsl:if>
             <xsl:if test=". = 'GISCONTEST'">
                 <xsl:variable name="this_prefix">
                     <xsl:value-of select="concat($prefix, 'local_collection')"/>
