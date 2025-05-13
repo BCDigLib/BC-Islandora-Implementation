@@ -1,0 +1,39 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+        {
+            "type": "xslt",
+            "label": "xslt: Saxon Transform DISS to CSV",
+            "saxonJar": "${config:XSLT.tasks.saxonJar}",
+            "xsltFile": "${command:xslt-xpath.pickXsltFile}",
+            "xmlSource": "${command:xslt-xpath.pickXmlSourceFile}",
+            "resultPath": "${workspaceFolder}/MetadataCrosswalks/Proquest/xsl-out/result1.csv",
+            "allowSyntaxExtensions40": "off",
+            "messageEscaping": "adaptive",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$saxon-xslt"
+            ]
+        },
+        {
+            "type": "xslt",
+            "label": "xslt: Saxon Transform DISS to MODS",
+            "saxonJar": "${config:XSLT.tasks.saxonJar}",
+            "xsltFile": "${command:xslt-xpath.pickXsltFile}",
+            "xmlSource": "${command:xslt-xpath.pickXmlSourceFile}",
+            "resultPath": "${workspaceFolder}/MetadataCrosswalks/Proquest/xsl-out/mods.xml",
+            "allowSyntaxExtensions40": "off",
+            "messageEscaping": "adaptive",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$saxon-xslt"
+            ]
+        }
+    ]
+}
