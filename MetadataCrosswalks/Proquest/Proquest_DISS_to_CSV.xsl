@@ -1,46 +1,206 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
     version="1.0"
+    xmlns:csv="csv:csv"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
     xmlns:mods="http://www.loc.gov/mods/v3">
 
     <xsl:param name="handle">UPDATE_HANDLE</xsl:param>
+
     <xsl:param name="new_line">&#10;</xsl:param>
-
-    <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
-    <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
-
-    <xsl:output method="text" version="1.0" encoding="UTF-8" indent="yes"/>
-
+    
+    <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
+    
     <xsl:strip-space elements="*"/>
 
-    <xsl:variable name="delimiter" select="'|'"/>
+    <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
 
-    <xsl:template match="/DISS_submission">
-        <xsl:text>id,field_linked_agent,field_subject,field_degree_discipline,field_collection,field_description_long,field_rights_long,field_degree_level,field_degree_name,field_genre,field_language,field_edtf_date,field_mode_of_issuance,field_publisher,field_digital_origin,field_physical_form	title,field_full_title,field_resource_type,field_scholarly_profile,field_model,field_degree_grantor,field_member_of,file,field_display_hints</xsl:text>
+    <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
+    
+    <xsl:variable name="subject_delimiter" select="'|'"/>
+
+    <xsl:variable name="delimiter" select="','"/>
+    
+    <!-- CSV headers -->
+    <csv:columns>
+        <column>id</column>
+        <column>parent_id</column>
+        <column>field_weight</column>
+        <column>title</column>
+        <column>field_subtitle</column>
+        <column>field_full_title</column>
+        <column>field_alternative_title</column>
+        <column>field_linked_agent</column>
+        <column>field_scholarly_profile</column>
+        <column>field_publisher</column>
+        <column>field_edtf_date</column>
+        <column>field_collection</column>
+        <column>field_degree_name</column>
+        <column>field_degree_level</column>
+        <column>field_degree_discipline</column>
+        <column>field_degree_grantor</column>
+        <column>field_embargo</column>
+        <column>field_rights</column>
+        <column>field_access_terms</column>
+        <column>field_rights_long</column>
+        <column>field_description_long</column>
+        <column>field_subject</column>
+        <column>field_note</column>
+        <column>field_genre</column>
+        <column>field_language</column>
+        <column>field_mode_of_issuance</column>
+        <column>field_digital_origin</column>
+        <column>field_physical_form</column>
+        <column>field_resource_type</column>
+        <column>field_model</column>
+        <column>field_member_of</column>
+        <column>file</column>
+        <column>field_display_hints</column>
+    </csv:columns>
+
+    <xsl:template match="/DISS_submission">        
+        <!-- Output the CSV header -->
+        <xsl:for-each select="document('')/*/csv:columns/*">
+            <xsl:value-of select="."/>
+            <xsl:if test="position() != last()">
+                <xsl:value-of select="$delimiter"/>
+            </xsl:if>
+        </xsl:for-each>
+
         <xsl:value-of select="$new_line"/>
-
-        <xsl:variable name="id">1</xsl:variable>
+        
         <!--
-            2. field_linked_agent
-            relators:aut:person:Lawlor, Melissa Roja|relators:ths:person:Cho, Vincent
+             All examples originate from MetadataCrosswalks/Proquest/sample_xml/Foo_D.xml
 
-            3. field_subject
-            culturally responsive leadership|equity|equity director|race|racial awareness| sustainability
-
-            4. field_degree_discipline
-            Education
-
-            5. field_collection
-            Graduate Theses and Dissertations
+             01. id
+             1
+             
+             02. parent_id
+             -
+             
+             03. field_weight
+             -
+             
+             04. title
+             Primary dissertation title
+             
+             05. field_subtitle
+             secondary title
+             
+             06. field_full_title
+             Primary dissertation title: secondary title
+             
+             07. field_alternative_title
+             -
+             
+             08. field_linked_agent
+             relators:aut:person:Foo, Danny|relators:ths:person:Wang, Jimmy
+             
+             09. field_scholarly_profile
+             https://orcid.org/0000-0002-2222-1111%%Danny Foo
+             
+             10. field_publisher
+             Boston College
+             
+             11. field_edtf_date
+             2024
+             
+             12. field_collection
+             Graduate Theses and Dissertations
+             
+             13. field_degree_name
+             PhD
+             
+             14. field_degree_level
+             Doctoral
+             
+             15. field_degree_discipline
+             Chemistry
+             
+             16. field_degree_grantor
+             Arts and Sciences
+             
+             17. field_embargo
+             2027-04-11T00:00:00Z
+             
+             18. field_rights
+             -
+             
+             19. field_access_terms
+             40
+             
+             20. field_rights_long
+             Copyright is held by the author, with all rights reserved, unless otherwise noted.
+             
+             21. field_description_long
+             This is a sample abstract.
+             
+             22. field_subject
+             Cats|Dogs|Tigers|Horses|Elephants
+             
+             23. field_note
+             -
+             
+             24. field_genre
+             thesis
+             
+             25. field_language
+             English
+             
+             26. field_mode_of_issuance
+             monographic
+             
+             27. field_digital_origin
+             born digital
+             
+             28. field_physical_form
+             electronic
+             
+             29. field_resource_type
+             Text
+             
+             30. field_model
+             Digital Document
+             
+             31. field_member_of
+             1445
+             
+             32. file
+             Foo_bc_0016D_90012867009.pdf
+             
+             33. field_display_hints
+             PDFjs
         -->
 
-        <!-- Parse: title -->
+        <!-- 1. id -->
+        <!-- TODO: automatically increment this value -->
+        <xsl:variable name="id">1</xsl:variable>
+
+        <!-- 2. parent_id -->
+        <!-- TODO: used for compound objects -->
+        <xsl:variable name="parent_id"></xsl:variable>
+
+        <!-- 3. field_weight -->
+        <!-- TODO: used for compound objects -->
+        <xsl:variable name="field_weight"></xsl:variable>
+
+        <!-- 
+             4. title
+             5. field_subtitle
+             6. Parse: field_full_title
+        -->
         <xsl:apply-templates select="DISS_description/DISS_title"/>
 
+        <!-- 7. field_alternative_title -->
+        <xsl:variable name="field_alternative_title"></xsl:variable>
+
+        <!-- 8. field_linked_agent -->
+        <!-- TODO: refactor -->
+        <xsl:variable name="field_linked_agent"></xsl:variable>
+
         <!-- Parse: author -->
-        <xsl:choose>
+        <!--xsl:choose>
             <xsl:when test="DISS_authorship/DISS_author[@type='primary']">
                 <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_name">
                     <xsl:with-param name="text">Author</xsl:with-param>
@@ -53,40 +213,62 @@
                     <xsl:with-param name="code">aut</xsl:with-param>
                 </xsl:apply-templates>
             </xsl:when>
-        </xsl:choose>
+        </xsl:choose-->
 
         <!-- Parse: name -->
-        <xsl:apply-templates select="DISS_description/DISS_advisor/DISS_name">
+        <!--xsl:apply-templates select="DISS_description/DISS_advisor/DISS_name">
             <xsl:with-param name="text">Thesis advisor</xsl:with-param>
             <xsl:with-param name="code">ths</xsl:with-param>
-        </xsl:apply-templates>
+        </xsl:apply-templates-->
 
-        <!-- Parse: type of resource -->
-        <xsl:element name="mods:typeOfResource">text</xsl:element>
+        <!-- 9. field_scholarly_profile -->
+        <!-- TODO: parse /DISS_orcid -->
+        <xsl:variable name="field_scholarly_profile"></xsl:variable>
 
-        <!-- Parse: genre -->
-        <xsl:call-template name="genre"/>
+        <!-- 10. field_publisher -->
+        <xsl:variable name="field_publisher">Boston College</xsl:variable>
 
-        <!-- Parse: comp date -->
+        <!-- 11. Parse: field_edtf_date -->
         <xsl:apply-templates select="DISS_description/DISS_dates/DISS_comp_date"/>
 
-        <!-- Parse: language -->
-        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language">
-            <xsl:with-param name="element">mods:language</xsl:with-param>
-        </xsl:apply-templates>
+        <!-- 12. field_collection -->
+        <!-- TODO: always assume this is "Graduate Theses and Dissertations" ? -->
+        <xsl:variable name="field_collection">Graduate Theses and Dissertations</xsl:variable>
 
-        <!-- Parse: physical desciption -->
-        <xsl:call-template name="physicalDescription"/>
+        <!-- 
+             13. field_degree_name
+             14. Parse: field_degree_level 
+        -->
+        <!-- TODO: refactor -->
+        <xsl:element name="mods:extension">
+            <xsl:element name="etdms:degree">
+                <xsl:apply-templates select="DISS_description/DISS_degree"/>
+                <xsl:apply-templates select="DISS_description/DISS_institution"/>
+            </xsl:element>
+        </xsl:element>
 
-        <!-- Parse: abstract -->
-        <xsl:apply-templates select="DISS_content/DISS_abstract"/>   
+        <!-- 15. field_degree_discipline -->
+        <!-- TODO: parse first instance from /DISS_categorization/DISS_category/DISS_cat_desc -->
+        <xsl:variable name="field_degree_discipline"></xsl:variable>
 
-        <!-- Parse: process keywords -->
-        <xsl:call-template name="processKW">
-            <xsl:with-param name="keywords" select="DISS_description/DISS_categorization/DISS_keyword"/>
-        </xsl:call-template>
+        <!-- 16. field_degree_grantor -->
+        <!-- TODO: parse /DISS_institution/DISS_inst_contact and create lookup to match official name -->
+        <xsl:variable name="field_degree_grantor"></xsl:variable>
 
-        <!-- Parse: acceptance -->
+        <!-- 17. field_embargo -->
+        <!-- TODO: parse /DISS_repository/DISS_delayed_release -->
+        <xsl:variable name="field_embargo"></xsl:variable>
+
+        <!-- 18. field_rights -->
+        <!-- TODO: fill this in when needed -->
+        <xsl:variable name="field_rights"></xsl:variable>
+
+        <!-- 19. field_access_terms -->
+        <!-- TODO: is this a hard-coded ID? -->
+        <xsl:variable name="field_access_terms">40</xsl:variable>
+
+        <!-- 20. Parse: field_rights_long -->
+        <!-- TODO: refactor -->
         <xsl:choose>
             <xsl:when test="DISS_repository/DISS_acceptance">
                 <xsl:apply-templates select="DISS_repository/DISS_acceptance">
@@ -105,109 +287,95 @@
             </xsl:otherwise>
         </xsl:choose>
 
-        <!-- Parse: extention -->
-        <xsl:element name="mods:extension">
-            <xsl:element name="etdms:degree">
-                <xsl:apply-templates select="DISS_description/DISS_degree"/>
-                <xsl:apply-templates select="DISS_description/DISS_institution"/>  
-            </xsl:element>
-        </xsl:element>
+        <!-- 21. Parse: field_description_long -->
+        <!-- TODO: use concat('&quot;', $value, '&quot;') to wrap string in quotes -->
+        <xsl:apply-templates select="DISS_content/DISS_abstract"/>   
 
-        <!-- Parse: record info -->
-        <xsl:call-template name="recordInfo"/>
+        <!-- 22. Parse: field_subject -->
+        <!-- TODO: Replace "," with "|" delimeter -->
+        <xsl:call-template name="processKW">
+            <xsl:with-param name="keywords" select="DISS_description/DISS_categorization/DISS_keyword"/>
+        </xsl:call-template>
 
-        <!-- Parse: handle/identifier -->
+        <!-- 23. field_note -->
+        <!-- TODO: fill this in when needed -->
+        <xsl:variable name="field_note"></xsl:variable>
+
+        <!-- 24. Parse: field_genre -->
+        <xsl:call-template name="genre"/>
+
+        <!-- 25. Parse: field_language -->
+        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language">
+            <xsl:with-param name="element">field_language</xsl:with-param>
+        </xsl:apply-templates>
+
+        <!-- 26. field_mode_of_issuance -->
+        <!-- TODO: is this a hard-coded value? -->
+        <xsl:variable name="field_mode_of_issuance">monographic</xsl:variable>
+
+        <!-- 27. field_digital_origin -->
+        <!-- TODO: is this a hard-coded value? -->
+        <xsl:variable name="field_digital_origin">born digital</xsl:variable>
+
+        <!-- 28. field_physical_form -->
+        <!-- TODO: is this a hard-coded value? -->
+        <xsl:variable name="field_physical_form">electronic</xsl:variable>
+
+        <!-- 29. field_resource_type -->
+        <xsl:element name="mods:typeOfResource">text</xsl:element>
+
+        <!-- 30. field_model -->
+        <!-- TODO: is this a hard-coded value? -->
+        <xsl:variable name="field_model">Digital Document</xsl:variable>
+
+        <!-- 31. field_member_of -->
+        <!-- TODO: map this ID to the collection type; always 1445? -->
+        <xsl:variable name="field_member_of">1445</xsl:variable>
+
+        <!-- 32. file -->
+        <!-- TODO: parse /DISS_content/DISS_binary -->
+        <xsl:variable name="file"></xsl:variable>
+
+        <!-- 33. field_display_hints -->
+        <!-- TODO: is this a hard-coded value? -->
+        <xsl:variable name="field_display_hints">PDFjs</xsl:variable>
+
+        <!-- 34. (NEW FIELD) Parse: field_local_identifier -->
         <xsl:element name="mods:identifier">
             <xsl:attribute name="type">hdl</xsl:attribute>
             <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
         </xsl:element>
+
+        <!-- ??? Parse: record info -->
+        <!--xsl:call-template name="recordInfo"/-->
+        
+        <!-- ??? Parse: physical desciption -->
+        <!--xsl:call-template name="physicalDescription"/-->
     </xsl:template>
 
     <!-- 
        Templates
      -->
+
     <xsl:template match="DISS_title">
-        <xsl:element name="mods:titleInfo">
-            <xsl:attribute name="usage">primary</xsl:attribute>
-            <xsl:choose>
-                <xsl:when test="starts-with(.,'A ')">
-                    <xsl:element name="mods:nonSort">
-                        <xsl:value-of select="substring(.,1,2)"/>
-                    </xsl:element>
-                    <xsl:choose>
-                        <xsl:when test="contains(.,':')">
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring(substring-before(., ':'),3)"/>
-                            </xsl:element>
-                            <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
-                            </xsl:element>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring(.,3)"/>
-                            </xsl:element>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:when>
-                <xsl:when test="starts-with(.,'An ' or 'La ')">
-                    <xsl:element name="mods:nonSort">
-                        <xsl:value-of select="substring(.,1,3)"/>
-                    </xsl:element>
-                    <xsl:choose>
-                        <xsl:when test="contains(.,':')">
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring(substring-before(., ':'),4)"/>
-                            </xsl:element>
-                            <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
-                            </xsl:element>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring(.,4)"/>
-                            </xsl:element>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:when>
-                <xsl:when test="starts-with(.,'The ')">
-                    <xsl:element name="mods:nonSort">
-                        <xsl:value-of select="substring(.,1,4)"/>
-                    </xsl:element>
-                    <xsl:choose>
-                        <xsl:when test="contains(.,':')">
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring(substring-before(., ':'),5)"/>
-                            </xsl:element>
-                            <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
-                            </xsl:element>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring(.,5)"/>
-                            </xsl:element>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:choose>
-                        <xsl:when test="contains(.,':')">
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="substring-before(., ':')"/>
-                            </xsl:element>
-                            <xsl:element name="mods:subTitle">
-                                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
-                            </xsl:element>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:element name="mods:title">
-                                <xsl:value-of select="."/>
-                            </xsl:element>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:otherwise>
-            </xsl:choose>
+        <xsl:choose>
+            <xsl:when test="contains(.,':')">
+                <xsl:element name="title">
+                    <xsl:value-of select="substring-before(., ':')"/>
+                </xsl:element>
+                <xsl:element name="field_subtitle">
+                    <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
+                </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:element name="title">
+                    <xsl:value-of select="."/>
+                </xsl:element>
+                <xsl:element name="field_subtitle"></xsl:element>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:element name="field_full_title">
+            <xsl:value-of select="."/>
         </xsl:element>
     </xsl:template>
 
@@ -392,11 +560,11 @@
     <xsl:template match="DISS_degree">
         <xsl:variable name="degree" select="translate(translate(.,'.',''),'abdehmps','ABDEHMPST')"/>
         <xsl:element name="etdms:name">
-            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>   
-        </xsl:element>                  
+            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>
+        </xsl:element>
         <xsl:element name="etdms:level">
             <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
-        </xsl:element>                   
+        </xsl:element>
     </xsl:template>
 
     <xsl:template match="DISS_institution">
