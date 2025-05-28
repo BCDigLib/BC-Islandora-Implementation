@@ -13,6 +13,7 @@
     <xsl:param name="quote" select="'&quot;'" />
     <xsl:param name="new_line" select="'&#xA;'" />
     <xsl:param name="empty_value" select="''" />
+    <xsl:param name="single_space" select="'&#x20;'" />
     
     <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
     
@@ -228,8 +229,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 9. field_scholarly_profile -->
-        <!-- TODO: parse /DISS_orcid -->
-        <xsl:value-of></xsl:value-of>
+        <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_orcid"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 10. field_publisher -->
@@ -438,6 +438,32 @@
                 <xsl:otherwise/>
             </xsl:choose>
         </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="DISS_orcid">
+        <!-- check if DISS_orcid has a value -->
+        <xsl:if test="not(. = '')">
+            <!-- get first name -->
+            <xsl:variable name="primary_first_name">
+                <xsl:apply-templates select="../DISS_name/DISS_fname"/>
+            </xsl:variable>
+
+            <!-- get last name -->
+            <xsl:variable name="primary_last_name">
+                <xsl:apply-templates select="../DISS_name/DISS_surname"/>
+            </xsl:variable>
+
+            <!-- construct Orchid URL -->
+            <xsl:value-of select="concat($quote, 'https://orcid.org/', ., '%%', $primary_first_name, $single_space, $primary_last_name, $quote)"/>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="DISS_authorship/DISS_author[@type='primary']/DISS_name/DISS_fname">
+        <xsl:value-of select="."/>
+    </xsl:template>
+
+    <xsl:template match="DISS_authorship/DISS_author[@type='primary']/DISS_name/DISS_surname">
+        <xsl:value-of select="."/>
     </xsl:template>
 
     <xsl:template name="genre">
