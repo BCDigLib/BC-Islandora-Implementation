@@ -194,6 +194,7 @@
              5. field_subtitle
              6. field_full_title
         -->
+        <!-- TODO: refactor and separate logic for each field -->
         <xsl:apply-templates select="DISS_description/DISS_title"/>
 
         <!-- 7. field_alternative_title -->
@@ -233,7 +234,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 10. field_publisher -->
-        <xsl:value-of>Boston College</xsl:value-of>
+        <xsl:apply-templates select="DISS_description/DISS_institution/DISS_inst_name"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 11. Parse: field_edtf_date -->
@@ -241,31 +242,30 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 12. field_collection -->
-        <!-- TODO: always assume this is "Graduate Theses and Dissertations" ? -->
+        <!-- TODO: this is hard-coded for all ETDs? -->
         <xsl:value-of>Graduate Theses and Dissertations</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 
-             13. field_degree_name
-             14. Parse: field_degree_level 
-        -->
-        <!-- TODO: refactor -->
-        <xsl:element name="mods:extension">
-            <xsl:element name="etdms:degree">
-                <xsl:apply-templates select="DISS_description/DISS_degree"/>
-                <xsl:apply-templates select="DISS_description/DISS_institution"/>
-            </xsl:element>
-        </xsl:element>
+        <!-- 13. field_degree_name -->
+        <xsl:apply-templates select="DISS_description/DISS_degree">
+            <xsl:with-param name="lookup_value">name</xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:value-of select="$delimiter" />
+
+        <!-- 14. Parse: field_degree_level -->
+        <xsl:apply-templates select="DISS_description/DISS_degree">
+            <xsl:with-param name="lookup_value">level</xsl:with-param>
+        </xsl:apply-templates>
         <xsl:value-of select="$delimiter" />
 
         <!-- 15. field_degree_discipline -->
-        <!-- TODO: parse first instance from /DISS_categorization/DISS_category/DISS_cat_desc -->
+        <!-- TODO: parse from DISS_description/DISS_institution and use string after "-" -->
         <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 16. field_degree_grantor -->
-        <!-- TODO: parse /DISS_institution/DISS_inst_contact and create lookup to match official name -->
-        <xsl:value-of></xsl:value-of>
+        <!-- TODO: is it 'Graduate School of Arts and Sciences' or 'Arts and Sciences' ? -->
+        <xsl:apply-templates select="DISS_description/DISS_institution"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 17. field_embargo -->
@@ -485,6 +485,10 @@
         </xsl:element>
     </xsl:template>
 
+    <xsl:template match="DISS_inst_name">
+        <xsl:value-of select="."/>
+    </xsl:template>
+
     <xsl:template match="DISS_comp_date">
         <xsl:value-of select="."/>
     </xsl:template>
@@ -574,62 +578,52 @@
     </xsl:template>
 
     <xsl:template match="DISS_degree">
-        <xsl:variable name="degree" select="translate(translate(.,'.',''),'abdehmps','ABDEHMPST')"/>
-        <xsl:element name="etdms:name">
-            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>
-        </xsl:element>
-        <xsl:element name="etdms:level">
-            <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
-        </xsl:element>
+        <xsl:param name="lookup_value"/>
+        <xsl:variable name="degree" select="translate(translate(., '.', ''), 'abdehmps', 'ABDEHMPST')"/>
+        <!-- use $lookup_value to determine which value from DegreeLoopup.xml to return -->
+        <xsl:choose>
+            <xsl:when test="$lookup_value='name'">
+                <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="DISS_inst_contact">
+        <xsl:variable name="degree">
+            <xsl:apply-templates select="../../DISS_degree"/>
+        </xsl:variable>
+        <xsl:variable name="degree_translated" select="translate(translate(., $degree, ''), 'abdehmps', 'ABDEHMPST')"/>
+        <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree_translated]/@level"/>
     </xsl:template>
 
     <xsl:template match="DISS_institution">
         <xsl:choose>
             <xsl:when test="starts-with(DISS_inst_contact, 'CSOM')">
-                <xsl:element name="etdms:discipline">
-                    <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
-                </xsl:element>
-                <xsl:element name="etdms:grantor">
-                    <xsl:text>Boston College. Carroll School of Management</xsl:text>
-                </xsl:element>
+                <!--xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/-->
+                <xsl:text>Carroll School of Management</xsl:text>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'CSON')">
-                <xsl:element name="etdms:discipline">
-                    <xsl:text>Nursing</xsl:text>
-                </xsl:element>
-                <xsl:element name="etdms:grantor">
-                    <xsl:text>Boston College. Connell School of Nursing</xsl:text>
-                </xsl:element>
+                <!--xsl:text>Nursing</xsl:text-->
+                <xsl:text>Connell School of Nursing</xsl:text>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'GSAS')">
-                <xsl:element name="etdms:discipline">
-                    <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
-                </xsl:element>
-                <xsl:element name="etdms:grantor">Boston College. Graduate School of Arts and Sciences</xsl:element>
+                <!--xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/-->
+                <xsl:text>Graduate School of Arts and Sciences</xsl:text>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'GSSW')">
-                <xsl:element name="etdms:discipline">
-                    <xsl:text>Social Work</xsl:text>
-                </xsl:element>
-                <xsl:element name="etdms:grantor">
-                    <xsl:text>Boston College. Graduate School of Social Work</xsl:text>                
-                </xsl:element>
+                <!--xsl:text>Social Work</xsl:text-->
+                <xsl:text>Graduate School of Social Work</xsl:text>
             </xsl:when>    
             <xsl:when test="starts-with(DISS_inst_contact, 'LSOE')">
-                <xsl:element name="etdms:discipline">
-                    <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
-                </xsl:element>
-                <xsl:element name="etdms:grantor">
-                    <xsl:text>Boston College. Lynch School of Education</xsl:text>
-                </xsl:element>
+                <!--xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/-->
+                <xsl:text>Lynch School of Education</xsl:text>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'STM')">
-                <xsl:element name="etdms:discipline">
-                    <xsl:text>Sacred Theology</xsl:text>
-                </xsl:element>
-                <xsl:element name="etdms:grantor">
-                    <xsl:text>Boston College. School of Theology and Ministry</xsl:text>
-                </xsl:element>
+                <!--xsl:text>Sacred Theology</xsl:text-->
+                <xsl:text>School of Theology and Ministry</xsl:text>
             </xsl:when>                    
         </xsl:choose>        
     </xsl:template>
