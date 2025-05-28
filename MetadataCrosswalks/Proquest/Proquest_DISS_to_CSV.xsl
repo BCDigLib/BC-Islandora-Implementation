@@ -486,18 +486,7 @@
     </xsl:template>
 
     <xsl:template match="DISS_comp_date">
-        <xsl:element name="mods:originInfo">
-            <xsl:element name="mods:publisher">Boston College</xsl:element>
-            <xsl:element name="mods:dateIssued">
-                <xsl:value-of select="."/>
-            </xsl:element>
-            <xsl:element name="mods:dateIssued">
-                <xsl:attribute name="encoding">w3cdtf</xsl:attribute>
-                <xsl:attribute name="keyDate">yes</xsl:attribute>
-                <xsl:value-of select="."/>            
-            </xsl:element>
-            <xsl:element name="mods:issuance">monographic</xsl:element>
-        </xsl:element>
+        <xsl:value-of select="."/>
     </xsl:template>
 
     <xsl:template match="DISS_language">
