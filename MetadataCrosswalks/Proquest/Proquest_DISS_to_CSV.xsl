@@ -259,14 +259,16 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 15. field_degree_discipline -->
-        <!-- Chemistry -->
-        <!-- TODO: parse from DISS_description/DISS_institution and use string after "-" -->
-        <xsl:value-of></xsl:value-of>
+        <xsl:apply-templates select="DISS_description/DISS_institution">
+            <xsl:with-param name="lookup_value">discipline</xsl:with-param>
+        </xsl:apply-templates>
         <xsl:value-of select="$delimiter" />
 
         <!-- 16. field_degree_grantor -->
         <!-- TODO: is it 'Graduate School of Arts and Sciences' or 'Arts and Sciences' ? -->
-        <xsl:apply-templates select="DISS_description/DISS_institution"/>
+        <xsl:apply-templates select="DISS_description/DISS_institution">
+            <xsl:with-param name="lookup_value">institution</xsl:with-param>
+        </xsl:apply-templates>
         <xsl:value-of select="$delimiter" />
 
         <!-- 17. field_embargo -->
@@ -593,32 +595,69 @@
     </xsl:template>
 
     <xsl:template match="DISS_institution">
+        <xsl:param name="lookup_value"/>
         <xsl:choose>
             <xsl:when test="starts-with(DISS_inst_contact, 'CSOM')">
-                <!--xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/-->
-                <xsl:text>Carroll School of Management</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$lookup_value='discipline'">
+                        <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
+                    </xsl:when>
+                    <xsl:when test="$lookup_value='institution'">
+                        <xsl:text>Carroll School of Management</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'CSON')">
-                <!--xsl:text>Nursing</xsl:text-->
-                <xsl:text>Connell School of Nursing</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$lookup_value='discipline'">
+                        <xsl:text>Nursing</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$lookup_value='institution'">
+                        <xsl:text>Connell School of Nursing</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'GSAS')">
-                <!--xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/-->
-                <xsl:text>Graduate School of Arts and Sciences</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$lookup_value='discipline'">
+                        <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
+                    </xsl:when>
+                    <xsl:when test="$lookup_value='institution'">
+                        <xsl:text>Graduate School of Arts and Sciences</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'GSSW')">
-                <!--xsl:text>Social Work</xsl:text-->
-                <xsl:text>Graduate School of Social Work</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$lookup_value='discipline'">
+                        <xsl:text>Social Work</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$lookup_value='institution'">
+                        <xsl:text>Graduate School of Social Work</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>    
             <xsl:when test="starts-with(DISS_inst_contact, 'LSOE')">
-                <!--xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/-->
-                <xsl:text>Lynch School of Education</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$lookup_value='discipline'">
+                        <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
+                    </xsl:when>
+                    <xsl:when test="$lookup_value='institution'">
+                        <xsl:text>Lynch School of Education</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
             <xsl:when test="starts-with(DISS_inst_contact, 'STM')">
-                <!--xsl:text>Sacred Theology</xsl:text-->
-                <xsl:text>School of Theology and Ministry</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$lookup_value='discipline'">
+                        <xsl:text>Sacred Theology</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$lookup_value='institution'">
+                        <xsl:text>School of Theology and Ministry</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>                    
-        </xsl:choose>        
+        </xsl:choose>     
     </xsl:template>
   
     <xsl:template name="processKW">
