@@ -259,6 +259,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 15. field_degree_discipline -->
+        <!-- Chemistry -->
         <!-- TODO: parse from DISS_description/DISS_institution and use string after "-" -->
         <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
@@ -589,14 +590,6 @@
                 <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@level"/>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
-
-    <xsl:template match="DISS_inst_contact">
-        <xsl:variable name="degree">
-            <xsl:apply-templates select="../../DISS_degree"/>
-        </xsl:variable>
-        <xsl:variable name="degree_translated" select="translate(translate(., $degree, ''), 'abdehmps', 'ABDEHMPST')"/>
-        <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree_translated]/@level"/>
     </xsl:template>
 
     <xsl:template match="DISS_institution">
