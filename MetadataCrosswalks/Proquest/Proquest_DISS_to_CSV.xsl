@@ -191,7 +191,7 @@
         <!-- 
              4. title
              5. field_subtitle
-             6. Parse: field_full_title
+             6. field_full_title
         -->
         <xsl:apply-templates select="DISS_description/DISS_title"/>
 
@@ -387,27 +387,32 @@
     <!-- 
        Templates
      -->
-
+    
+    <!-- TODO: wrap in quotes -->
+    <!-- TODO: clear out nonprintable chars -->
+    <!-- TODO: replace fancy quotes -->
     <xsl:template match="DISS_title">
         <xsl:choose>
-            <xsl:when test="contains(.,':')">
-                <xsl:element name="title">
-                    <xsl:value-of select="substring-before(., ':')"/>
-                </xsl:element>
-                <xsl:element name="field_subtitle">
-                    <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
-                </xsl:element>
+            <!-- split string if ":" char is found -->
+            <xsl:when test="contains(., ':')">
+                <!-- title -->
+                <xsl:value-of select="substring-before(., ':')"/>
+                <xsl:value-of select="$delimiter" />
+                <!-- field_subtitle -->
+                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:element name="title">
-                    <xsl:value-of select="."/>
-                </xsl:element>
-                <xsl:element name="field_subtitle"></xsl:element>
+                <!-- title -->
+                <xsl:value-of select="."/>
+                <xsl:value-of select="$delimiter" />
+                <!-- field_subtitle -->
+                <xsl:value-of select="$empty_value" />
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:element name="field_full_title">
-            <xsl:value-of select="."/>
-        </xsl:element>
+        <!-- field_full_title -->
+        <xsl:value-of select="$delimiter" />
+        <xsl:value-of select="."/>
+        <xsl:value-of select="$delimiter" />
     </xsl:template>
 
     <xsl:template match="DISS_name">
