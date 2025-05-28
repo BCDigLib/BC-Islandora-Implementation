@@ -273,7 +273,7 @@
 
         <!-- 17. field_embargo -->
         <!-- TODO: parse /DISS_repository/DISS_delayed_release -->
-        <xsl:value-of></xsl:value-of>
+        <xsl:apply-templates select="DISS_repository/DISS_delayed_release"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 18. field_rights -->
@@ -659,7 +659,15 @@
             </xsl:when>                    
         </xsl:choose>     
     </xsl:template>
-  
+    
+    <xsl:template match="DISS_delayed_release">
+        <!-- check if DISS_delayed_release has a value -->
+        <xsl:if test="not(. = '')">
+            <!-- convert string into proper date format -->
+            <xsl:value-of select="concat(translate(., ' ', 'T'), 'Z')"/>
+        </xsl:if>
+    </xsl:template>
+
     <xsl:template name="processKW">
         <xsl:param name="keywords"/>
         <xsl:choose>
