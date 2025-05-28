@@ -12,6 +12,7 @@
     <xsl:param name="delimiter" select="','" />
     <xsl:param name="quote" select="'&quot;'" />
     <xsl:param name="new_line" select="'&#xA;'" />
+    <xsl:param name="empty_value" select="''" />
     
     <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
     
@@ -174,17 +175,17 @@
 
         <!-- 1. id -->
         <!-- TODO: automatically increment this value -->
-        <xsl:variable name="id">1</xsl:variable>
+        <xsl:value-of>1</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 2. parent_id -->
         <!-- TODO: used for compound objects -->
-        <xsl:variable name="parent_id"></xsl:variable>
+        <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- 3. field_weight -->
         <!-- TODO: used for compound objects -->
-        <xsl:variable name="field_weight"></xsl:variable>
+        <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- 
@@ -195,12 +196,12 @@
         <xsl:apply-templates select="DISS_description/DISS_title"/>
 
         <!-- 7. field_alternative_title -->
-        <xsl:variable name="field_alternative_title"></xsl:variable>
+        <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- 8. field_linked_agent -->
         <!-- TODO: refactor -->
-        <xsl:variable name="field_linked_agent"></xsl:variable>
+        <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- Parse: author -->
@@ -227,11 +228,11 @@
 
         <!-- 9. field_scholarly_profile -->
         <!-- TODO: parse /DISS_orcid -->
-        <xsl:variable name="field_scholarly_profile"></xsl:variable>
+        <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 10. field_publisher -->
-        <xsl:variable name="field_publisher">Boston College</xsl:variable>
+        <xsl:value-of>Boston College</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 11. Parse: field_edtf_date -->
@@ -240,7 +241,7 @@
 
         <!-- 12. field_collection -->
         <!-- TODO: always assume this is "Graduate Theses and Dissertations" ? -->
-        <xsl:variable name="field_collection">Graduate Theses and Dissertations</xsl:variable>
+        <xsl:value-of>Graduate Theses and Dissertations</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 
@@ -258,27 +259,27 @@
 
         <!-- 15. field_degree_discipline -->
         <!-- TODO: parse first instance from /DISS_categorization/DISS_category/DISS_cat_desc -->
-        <xsl:variable name="field_degree_discipline"></xsl:variable>
+        <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 16. field_degree_grantor -->
         <!-- TODO: parse /DISS_institution/DISS_inst_contact and create lookup to match official name -->
-        <xsl:variable name="field_degree_grantor"></xsl:variable>
+        <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 17. field_embargo -->
         <!-- TODO: parse /DISS_repository/DISS_delayed_release -->
-        <xsl:variable name="field_embargo"></xsl:variable>
+        <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 18. field_rights -->
         <!-- TODO: fill this in when needed -->
-        <xsl:variable name="field_rights"></xsl:variable>
+        <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- 19. field_access_terms -->
         <!-- TODO: is this a hard-coded ID? -->
-        <xsl:variable name="field_access_terms">40</xsl:variable>
+        <xsl:value-of>40</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 20. Parse: field_rights_long -->
@@ -316,7 +317,7 @@
 
         <!-- 23. field_note -->
         <!-- TODO: fill this in when needed -->
-        <xsl:variable name="field_note"></xsl:variable>
+        <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- 24. Parse: field_genre -->
@@ -331,48 +332,48 @@
 
         <!-- 26. field_mode_of_issuance -->
         <!-- TODO: is this a hard-coded value? -->
-        <xsl:variable name="field_mode_of_issuance">monographic</xsl:variable>
+        <xsl:value-of>monographic</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 27. field_digital_origin -->
         <!-- TODO: is this a hard-coded value? -->
-        <xsl:variable name="field_digital_origin">born digital</xsl:variable>
+        <xsl:value-of>born digital</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 28. field_physical_form -->
         <!-- TODO: is this a hard-coded value? -->
-        <xsl:variable name="field_physical_form">electronic</xsl:variable>
+        <xsl:value-of>electronic</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 29. field_resource_type -->
-        <xsl:element name="mods:typeOfResource">text</xsl:element>
+        <xsl:value-of>text</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 30. field_model -->
         <!-- TODO: is this a hard-coded value? -->
-        <xsl:variable name="field_model">Digital Document</xsl:variable>
+        <xsl:value-of>Digital Document</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 31. field_member_of -->
         <!-- TODO: map this ID to the collection type; always 1445? -->
-        <xsl:variable name="field_member_of">1445</xsl:variable>
+        <xsl:value-of>1445</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 32. file -->
         <!-- TODO: parse /DISS_content/DISS_binary -->
-        <xsl:variable name="file"></xsl:variable>
+        <xsl:value-of></xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 33. field_display_hints -->
         <!-- TODO: is this a hard-coded value? -->
-        <xsl:variable name="field_display_hints">PDFjs</xsl:variable>
+        <xsl:value-of>PDFjs</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 34. (NEW FIELD) Parse: field_local_identifier -->
-        <xsl:element name="mods:identifier">
+        <!--xsl:element name="mods:identifier">
             <xsl:attribute name="type">hdl</xsl:attribute>
             <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
-        </xsl:element>
+        </xsl:element-->
 
         <!-- ??? Parse: record info -->
         <!--xsl:call-template name="recordInfo"/-->
