@@ -200,31 +200,32 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 8. field_linked_agent -->
-        <!-- TODO: refactor -->
-        <xsl:value-of select="$empty_value" />
-        <xsl:value-of select="$delimiter" />
+        <!-- wrap in quotes -->
+        <xsl:value-of select="$quote" />
 
-        <!-- Parse: author -->
-        <!--xsl:choose>
+        <xsl:choose>
             <xsl:when test="DISS_authorship/DISS_author[@type='primary']">
                 <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_name">
-                    <xsl:with-param name="text">Author</xsl:with-param>
-                    <xsl:with-param name="code">aut</xsl:with-param>
+                    <xsl:with-param name="prefix">relators:aut:person:</xsl:with-param>
                 </xsl:apply-templates>
             </xsl:when>
+
+            <!-- parse any additional author names -->
             <xsl:when test="DISS_authorship/DISS_author[@type='additional']">
                 <xsl:apply-templates select="DISS_authorship/DISS_author[@type='additional']/DISS_name">
-                    <xsl:with-param name="text">Author</xsl:with-param>
-                    <xsl:with-param name="code">aut</xsl:with-param>
+                    <xsl:with-param name="prefix">|relators:aut:person:</xsl:with-param>
                 </xsl:apply-templates>
             </xsl:when>
-        </xsl:choose-->
+        </xsl:choose>
 
-        <!-- Parse: name -->
-        <!--xsl:apply-templates select="DISS_description/DISS_advisor/DISS_name">
-            <xsl:with-param name="text">Thesis advisor</xsl:with-param>
-            <xsl:with-param name="code">ths</xsl:with-param>
-        </xsl:apply-templates-->
+        <!-- Thesis advisor name -->
+        <!-- only get first instance -->
+        <xsl:apply-templates select="DISS_description/DISS_advisor[1]/DISS_name">
+            <xsl:with-param name="prefix">|relators:ths:person:</xsl:with-param>
+        </xsl:apply-templates>
+
+        <xsl:value-of select="$quote" />
+        <xsl:value-of select="$delimiter" />
 
         <!-- 9. field_scholarly_profile -->
         <!-- TODO: parse /DISS_orcid -->
@@ -416,58 +417,26 @@
     </xsl:template>
 
     <xsl:template match="DISS_name">
-        <xsl:param name="text"/>
-        <xsl:param name="code"/>
+        <xsl:param name="prefix"/>
         <xsl:element name="mods:name">
-            <xsl:attribute name="type">personal</xsl:attribute>
-            <xsl:if test="$code = 'aut'">
-                <xsl:attribute name="usage">primary</xsl:attribute>                    
-            </xsl:if> 
-            <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">family</xsl:attribute>
-                <xsl:value-of select="DISS_surname"/>
-            </xsl:element>
-            <xsl:element name="mods:namePart">
-                <xsl:attribute name="type">given</xsl:attribute>
-                <xsl:value-of select="DISS_fname"/>
-                <xsl:apply-templates select="DISS_middle"/>
-            </xsl:element>
             <xsl:element name="mods:displayForm">
-                <xsl:value-of select="concat(DISS_surname,', ',DISS_fname)"/>
+                <xsl:value-of select="concat($prefix, DISS_surname, ', ', DISS_fname)"/>
                 <xsl:apply-templates select="DISS_middle"/>
             </xsl:element>
-            <xsl:element name="mods:role">
-                <xsl:element name="mods:roleTerm">
-                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                    <xsl:attribute name="type">text</xsl:attribute>
-                    <xsl:value-of select="$text"/>
-                </xsl:element>
-                <xsl:element name="mods:roleTerm">
-                    <xsl:attribute name="authority">marcrelator</xsl:attribute>
-                    <xsl:attribute name="type">code</xsl:attribute>
-                    <xsl:value-of select="$code"/>
-                </xsl:element>
-            </xsl:element>
-            <xsl:for-each select="../DISS_orcid">
-                <xsl:choose>
-                    <xsl:when test="not(. = '')">
-                        <xsl:element name="mods:nameIdentifier">
-                            <xsl:attribute name="type">orcid</xsl:attribute>
-                            <xsl:value-of select="."/>
-                        </xsl:element>
-                    </xsl:when>
-                    <xsl:otherwise/>
-                </xsl:choose>
-            </xsl:for-each>
         </xsl:element>
     </xsl:template>
 
     <xsl:template match="DISS_middle">
+        <!-- check if DISS_middle has a value -->
         <xsl:if test="not(. = '')">
-            <xsl:value-of select="concat(' ',.)"/>
+            <!-- prepend a single space before DISS_middle -->
+            <xsl:value-of select="concat(' ', .)"/>
             <xsl:choose>
-                <xsl:when test="substring(.,string-length(.)) = '.'"> </xsl:when>
-                <xsl:when test="string-length(.)='1'">
+                <!-- append a space char if the last char of DISS_middle is a "." -->
+                <xsl:when test="substring(., string-length(.)) = '.'"> </xsl:when>
+
+                <!-- append a period char if DISS_middle is a single char -->
+                <xsl:when test="string-length(.) = '1'">
                     <xsl:text>.</xsl:text>
                 </xsl:when>
                 <xsl:otherwise/>
