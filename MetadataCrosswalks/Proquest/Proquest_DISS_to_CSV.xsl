@@ -428,8 +428,8 @@
             <!-- prepend a single space before DISS_middle -->
             <xsl:value-of select="concat(' ', .)"/>
             <xsl:choose>
-                <!-- append a space char if the last char of DISS_middle is a "." -->
-                <xsl:when test="substring(., string-length(.)) = '.'"> </xsl:when>
+                <!-- don't do anything if the last char of DISS_middle is a "." -->
+                <xsl:when test="substring(., string-length(.)) = '.'"></xsl:when>
 
                 <!-- append a period char if DISS_middle is a single char -->
                 <xsl:when test="string-length(.) = '1'">
