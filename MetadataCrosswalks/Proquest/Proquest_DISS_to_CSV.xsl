@@ -418,12 +418,8 @@
 
     <xsl:template match="DISS_name">
         <xsl:param name="prefix"/>
-        <xsl:element name="mods:name">
-            <xsl:element name="mods:displayForm">
-                <xsl:value-of select="concat($prefix, DISS_surname, ', ', DISS_fname)"/>
-                <xsl:apply-templates select="DISS_middle"/>
-            </xsl:element>
-        </xsl:element>
+        <xsl:value-of select="concat($prefix, DISS_surname, ', ', DISS_fname)" />
+        <xsl:apply-templates select="DISS_middle"/>
     </xsl:template>
 
     <xsl:template match="DISS_middle">
