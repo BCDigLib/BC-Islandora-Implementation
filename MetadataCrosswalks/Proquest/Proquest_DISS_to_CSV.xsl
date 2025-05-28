@@ -544,7 +544,7 @@
     <xsl:template match="DISS_abstract">
         <xsl:element name="mods:abstract">
             <xsl:for-each select="DISS_para">
-                <xsl:value-of select="."/>
+                <xsl:value-of select="normalize-space(.)"/>
                 <xsl:if test="position() != last()"><xsl:text> </xsl:text></xsl:if>
             </xsl:for-each>
         </xsl:element>
