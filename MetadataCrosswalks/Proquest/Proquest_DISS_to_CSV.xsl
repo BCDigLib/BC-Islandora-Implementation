@@ -7,8 +7,11 @@
     xmlns:mods="http://www.loc.gov/mods/v3">
 
     <xsl:param name="handle">UPDATE_HANDLE</xsl:param>
-
-    <xsl:param name="new_line">&#10;</xsl:param>
+    
+    <xsl:param name="subject_delimiter" select="'|'" />
+    <xsl:param name="delimiter" select="','" />
+    <xsl:param name="quote" select="'&quot;'" />
+    <xsl:param name="new_line" select="'&#xA;'" />
     
     <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
     
@@ -17,10 +20,6 @@
     <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
 
     <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
-    
-    <xsl:variable name="subject_delimiter" select="'|'"/>
-
-    <xsl:variable name="delimiter" select="','"/>
     
     <!-- CSV headers -->
     <csv:columns>
@@ -68,8 +67,8 @@
             </xsl:if>
         </xsl:for-each>
 
-        <xsl:value-of select="$new_line"/>
-        
+        <xsl:value-of select="$new_line" />
+
         <!--
              All examples originate from MetadataCrosswalks/Proquest/sample_xml/Foo_D.xml
 
@@ -176,14 +175,17 @@
         <!-- 1. id -->
         <!-- TODO: automatically increment this value -->
         <xsl:variable name="id">1</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 2. parent_id -->
         <!-- TODO: used for compound objects -->
         <xsl:variable name="parent_id"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 3. field_weight -->
         <!-- TODO: used for compound objects -->
         <xsl:variable name="field_weight"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 
              4. title
@@ -194,10 +196,12 @@
 
         <!-- 7. field_alternative_title -->
         <xsl:variable name="field_alternative_title"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 8. field_linked_agent -->
         <!-- TODO: refactor -->
         <xsl:variable name="field_linked_agent"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- Parse: author -->
         <!--xsl:choose>
@@ -224,16 +228,20 @@
         <!-- 9. field_scholarly_profile -->
         <!-- TODO: parse /DISS_orcid -->
         <xsl:variable name="field_scholarly_profile"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 10. field_publisher -->
         <xsl:variable name="field_publisher">Boston College</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 11. Parse: field_edtf_date -->
         <xsl:apply-templates select="DISS_description/DISS_dates/DISS_comp_date"/>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 12. field_collection -->
         <!-- TODO: always assume this is "Graduate Theses and Dissertations" ? -->
         <xsl:variable name="field_collection">Graduate Theses and Dissertations</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 
              13. field_degree_name
@@ -246,26 +254,32 @@
                 <xsl:apply-templates select="DISS_description/DISS_institution"/>
             </xsl:element>
         </xsl:element>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 15. field_degree_discipline -->
         <!-- TODO: parse first instance from /DISS_categorization/DISS_category/DISS_cat_desc -->
         <xsl:variable name="field_degree_discipline"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 16. field_degree_grantor -->
         <!-- TODO: parse /DISS_institution/DISS_inst_contact and create lookup to match official name -->
         <xsl:variable name="field_degree_grantor"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 17. field_embargo -->
         <!-- TODO: parse /DISS_repository/DISS_delayed_release -->
         <xsl:variable name="field_embargo"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 18. field_rights -->
         <!-- TODO: fill this in when needed -->
         <xsl:variable name="field_rights"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 19. field_access_terms -->
         <!-- TODO: is this a hard-coded ID? -->
         <xsl:variable name="field_access_terms">40</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 20. Parse: field_rights_long -->
         <!-- TODO: refactor -->
@@ -286,59 +300,73 @@
                 </xsl:element>
             </xsl:otherwise>
         </xsl:choose>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 21. Parse: field_description_long -->
         <!-- TODO: use concat('&quot;', $value, '&quot;') to wrap string in quotes -->
-        <xsl:apply-templates select="DISS_content/DISS_abstract"/>   
+        <xsl:apply-templates select="DISS_content/DISS_abstract"/>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 22. Parse: field_subject -->
         <!-- TODO: Replace "," with "|" delimeter -->
         <xsl:call-template name="processKW">
             <xsl:with-param name="keywords" select="DISS_description/DISS_categorization/DISS_keyword"/>
         </xsl:call-template>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 23. field_note -->
         <!-- TODO: fill this in when needed -->
         <xsl:variable name="field_note"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 24. Parse: field_genre -->
         <xsl:call-template name="genre"/>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 25. Parse: field_language -->
         <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language">
             <xsl:with-param name="element">field_language</xsl:with-param>
         </xsl:apply-templates>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 26. field_mode_of_issuance -->
         <!-- TODO: is this a hard-coded value? -->
         <xsl:variable name="field_mode_of_issuance">monographic</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 27. field_digital_origin -->
         <!-- TODO: is this a hard-coded value? -->
         <xsl:variable name="field_digital_origin">born digital</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 28. field_physical_form -->
         <!-- TODO: is this a hard-coded value? -->
         <xsl:variable name="field_physical_form">electronic</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 29. field_resource_type -->
         <xsl:element name="mods:typeOfResource">text</xsl:element>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 30. field_model -->
         <!-- TODO: is this a hard-coded value? -->
         <xsl:variable name="field_model">Digital Document</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 31. field_member_of -->
         <!-- TODO: map this ID to the collection type; always 1445? -->
         <xsl:variable name="field_member_of">1445</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 32. file -->
         <!-- TODO: parse /DISS_content/DISS_binary -->
         <xsl:variable name="file"></xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 33. field_display_hints -->
         <!-- TODO: is this a hard-coded value? -->
         <xsl:variable name="field_display_hints">PDFjs</xsl:variable>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 34. (NEW FIELD) Parse: field_local_identifier -->
         <xsl:element name="mods:identifier">
@@ -351,6 +379,8 @@
         
         <!-- ??? Parse: physical desciption -->
         <!--xsl:call-template name="physicalDescription"/-->
+        
+        <xsl:value-of select="$new_line" />
     </xsl:template>
 
     <!-- 
