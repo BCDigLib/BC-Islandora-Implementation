@@ -630,7 +630,8 @@
     <xsl:template match="DISS_keyword">
         <!-- check if DISS_keyword has a value -->
         <xsl:if test="not(. = '')">
-            <xsl:value-of select="concat($quote, translate(., ', ', $subject_delimiter), $quote)"/>
+            <!-- replace ", " set of characters with "|" -->
+            <xsl:value-of select="concat($quote, normalize-space(replace(., ',\s', $subject_delimiter)), $quote)"/>
         </xsl:if>
     </xsl:template>
 </xsl:stylesheet>
