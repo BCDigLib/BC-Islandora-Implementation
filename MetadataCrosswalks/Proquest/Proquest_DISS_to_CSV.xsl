@@ -323,9 +323,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 25. field_language -->
-        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language">
-            <xsl:with-param name="element">field_language</xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 26. field_mode_of_issuance -->
@@ -485,7 +483,6 @@
     </xsl:template>
 
     <xsl:template match="DISS_language">
-        <xsl:param name="element"/>
         <xsl:variable name="varCode">
             <xsl:value-of select="translate(.,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
         </xsl:variable>
