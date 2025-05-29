@@ -378,8 +378,6 @@
         
         <!-- ??? Parse: physical desciption -->
         <!--xsl:call-template name="physicalDescription"/-->
-        
-        <xsl:value-of select="$new_line" />
     </xsl:template>
 
     <!-- 
