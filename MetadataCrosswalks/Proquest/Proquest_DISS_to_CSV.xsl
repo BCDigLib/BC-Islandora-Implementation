@@ -304,7 +304,6 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 21. Parse: field_description_long -->
-        <!-- TODO: use concat('&quot;', $value, '&quot;') to wrap string in quotes -->
         <xsl:apply-templates select="DISS_content/DISS_abstract"/>
         <xsl:value-of select="$delimiter" />
 
@@ -531,12 +530,17 @@
     </xsl:template>
 
     <xsl:template match="DISS_abstract">
-        <xsl:element name="mods:abstract">
+        <!-- check if DISS_abstract has a value -->
+        <xsl:if test="not(. = '')">
+            <xsl:value-of select="$quote" />
             <xsl:for-each select="DISS_para">
                 <xsl:value-of select="normalize-space(.)"/>
-                <xsl:if test="position() != last()"><xsl:text> </xsl:text></xsl:if>
+                <xsl:if test="position() != last()">
+                    <xsl:value-of select="$new_line" />
+                </xsl:if>
             </xsl:for-each>
-        </xsl:element>
+            <xsl:value-of select="$quote" />
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="DISS_acceptance">
