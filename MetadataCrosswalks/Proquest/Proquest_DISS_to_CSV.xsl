@@ -272,7 +272,6 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 17. field_embargo -->
-        <!-- TODO: parse /DISS_repository/DISS_delayed_release -->
         <xsl:apply-templates select="DISS_repository/DISS_delayed_release"/>
         <xsl:value-of select="$delimiter" />
 
@@ -287,9 +286,10 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 20. Parse: field_rights_long -->
-        <!-- TODO: refactor -->
         <xsl:choose>
+            <!-- check if the DISS_acceptance value is "1" or any truthy value -->
             <xsl:when test="DISS_repository/DISS_acceptance">
+                <!-- select which CC attribution to use -->
                 <xsl:apply-templates select="DISS_repository/DISS_acceptance">
                     <xsl:with-param name="ccAttr">
                         <xsl:value-of select="translate(DISS_creative_commons_license/DISS_abbreviation,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
@@ -297,12 +297,8 @@
                 </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:element name="mods:accessCondition">
-                    <xsl:attribute name="type">
-                        <xsl:text>use and reproduction</xsl:text>
-                    </xsl:attribute>
-                    <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>   
-                </xsl:element>
+                <!-- default attribution -->
+                <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
         <xsl:value-of select="$delimiter" />
@@ -545,39 +541,34 @@
 
     <xsl:template match="DISS_acceptance">
         <xsl:param name="ccAttr"/>
-        <xsl:element name="mods:accessCondition">
-            <xsl:attribute name="type">
-                <xsl:text>use and reproduction</xsl:text>
-            </xsl:attribute>
-            <xsl:choose>
-                <xsl:when test="$ccAttr = 'NONE' or $ccAttr = ''">
-                    <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:text>Copyright is held by the author. </xsl:text>
-                    <xsl:choose>
-                        <xsl:when test="$ccAttr = 'CC BY'">
-                            <xsl:text>This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0).</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="$ccAttr = 'CC BY-ND'">
-                            <xsl:text>This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nd/4.0).</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="$ccAttr = 'CC BY-NC-SA'">
-                            <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-nc-sa/4.0).</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="$ccAttr = 'CC BY-SA'">
-                            <xsl:text>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-sa/4.0).</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="$ccAttr = 'CC BY-NC'">
-                            <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License (http://creativecommons.org/licenses/by-nc/4.0).</xsl:text>
-                        </xsl:when>
-                        <xsl:when test="$ccAttr = 'CC BY-NC-ND'">
-                            <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nc-nd/4.0).</xsl:text>
-                        </xsl:when>
-                    </xsl:choose>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:element>
+        <xsl:choose>
+            <xsl:when test="$ccAttr = 'NONE' or $ccAttr = ''">
+                <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>Copyright is held by the author. </xsl:text>
+                <xsl:choose>
+                    <xsl:when test="$ccAttr = 'CC BY'">
+                        <xsl:text>This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0).</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$ccAttr = 'CC BY-ND'">
+                        <xsl:text>This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nd/4.0).</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$ccAttr = 'CC BY-NC-SA'">
+                        <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-nc-sa/4.0).</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$ccAttr = 'CC BY-SA'">
+                        <xsl:text>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-sa/4.0).</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$ccAttr = 'CC BY-NC'">
+                        <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License (http://creativecommons.org/licenses/by-nc/4.0).</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$ccAttr = 'CC BY-NC-ND'">
+                        <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nc-nd/4.0).</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="DISS_degree">
