@@ -358,12 +358,11 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 32. file -->
-        <!-- TODO: parse /DISS_content/DISS_binary -->
-        <xsl:value-of></xsl:value-of>
+        <xsl:apply-templates select="DISS_content/DISS_binary"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 33. field_display_hints -->
-        <!-- TODO: is this a hard-coded value? -->
+        <!-- TODO: read @type attribute from DISS_content/DISS_binary to determine file type -->
         <xsl:value-of>PDFjs</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
@@ -632,6 +631,14 @@
         <xsl:if test="not(. = '')">
             <!-- replace ", " set of characters with "|" -->
             <xsl:value-of select="concat($quote, normalize-space(replace(., ',\s', $subject_delimiter)), $quote)"/>
+        </xsl:if>
+    </xsl:template>
+
+    <!-- DISS_binary -->
+    <xsl:template match="DISS_binary">
+        <!-- check if DISS_binary has a value -->
+        <xsl:if test="not(. = '')">
+            <xsl:value-of select="."/>
         </xsl:if>
     </xsl:template>
 </xsl:stylesheet>
