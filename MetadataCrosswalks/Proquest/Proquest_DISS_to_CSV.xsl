@@ -308,10 +308,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 22. Parse: field_subject -->
-        <!-- TODO: Replace "," with "|" delimeter -->
-        <xsl:call-template name="processKW">
-            <xsl:with-param name="keywords" select="DISS_description/DISS_categorization/DISS_keyword"/>
-        </xsl:call-template>
+        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_keyword"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 23. field_note -->
@@ -663,27 +660,11 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template name="processKW">
-        <xsl:param name="keywords"/>
-        <xsl:choose>
-            <xsl:when test="contains($keywords,',')">
-                <xsl:element name="mods:subject">
-                    <xsl:element name="mods:topic">
-                        <xsl:value-of select="normalize-space(substring-before($keywords,','))"/>
-                    </xsl:element>
-                </xsl:element>
-                <xsl:call-template name="processKW">
-                    <xsl:with-param name="keywords" select="substring-after($keywords,',')"/>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:element name="mods:subject">
-                    <xsl:element name="mods:topic">
-                        <xsl:value-of select="normalize-space($keywords)"/>
-                    </xsl:element>   
-                </xsl:element>
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:template match="DISS_keyword">
+        <!-- check if DISS_keyword has a value -->
+        <xsl:if test="not(. = '')">
+            <xsl:value-of select="concat($quote, translate(., ', ', $subject_delimiter), $quote)"/>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="recordInfo">
