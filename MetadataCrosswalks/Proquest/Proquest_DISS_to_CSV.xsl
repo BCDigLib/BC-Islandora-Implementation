@@ -372,12 +372,6 @@
             <xsl:attribute name="type">hdl</xsl:attribute>
             <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
         </xsl:element-->
-
-        <!-- ??? Parse: record info -->
-        <!--xsl:call-template name="recordInfo"/-->
-        
-        <!-- ??? Parse: physical desciption -->
-        <!--xsl:call-template name="physicalDescription"/-->
     </xsl:template>
 
     <!-- 
