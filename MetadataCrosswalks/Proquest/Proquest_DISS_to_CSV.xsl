@@ -180,12 +180,12 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 2. parent_id -->
-        <!-- TODO: used for compound objects -->
+        <!-- TODO: fill this in when needed -->
         <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
         <!-- 3. field_weight -->
-        <!-- TODO: used for compound objects -->
+        <!-- TODO: fill this in when needed -->
         <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
@@ -198,6 +198,7 @@
         <xsl:apply-templates select="DISS_description/DISS_title"/>
 
         <!-- 7. field_alternative_title -->
+        <!-- TODO: fill this in when needed -->
         <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
@@ -242,7 +243,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 12. field_collection -->
-        <!-- TODO: this is hard-coded for all ETDs? -->
+        <!-- TODO: is this a hard-coded value? -->
         <xsl:value-of>Graduate Theses and Dissertations</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
@@ -281,7 +282,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 19. field_access_terms -->
-        <!-- TODO: is this a hard-coded ID? -->
+        <!-- TODO: is this a hard-coded value? -->
         <xsl:value-of>40</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
@@ -342,6 +343,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 29. field_resource_type -->
+        <!-- TODO: is this a hard-coded value? -->
         <xsl:value-of>Text</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
