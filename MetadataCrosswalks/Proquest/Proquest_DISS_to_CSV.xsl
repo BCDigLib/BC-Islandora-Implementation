@@ -344,7 +344,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 29. field_resource_type -->
-        <xsl:value-of>text</xsl:value-of>
+        <xsl:value-of>Text</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 30. field_model -->
