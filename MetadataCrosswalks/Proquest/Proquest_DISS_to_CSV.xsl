@@ -237,7 +237,7 @@
         <xsl:apply-templates select="DISS_description/DISS_institution/DISS_inst_name"/>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 11. Parse: field_edtf_date -->
+        <!-- 11. field_edtf_date -->
         <xsl:apply-templates select="DISS_description/DISS_dates/DISS_comp_date"/>
         <xsl:value-of select="$delimiter" />
 
@@ -252,7 +252,7 @@
         </xsl:apply-templates>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 14. Parse: field_degree_level -->
+        <!-- 14. field_degree_level -->
         <xsl:apply-templates select="DISS_description/DISS_degree">
             <xsl:with-param name="lookup_value">level</xsl:with-param>
         </xsl:apply-templates>
@@ -285,7 +285,7 @@
         <xsl:value-of>40</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 20. Parse: field_rights_long -->
+        <!-- 20. field_rights_long -->
         <xsl:choose>
             <!-- check if the DISS_acceptance value is "1" or any truthy value -->
             <xsl:when test="DISS_repository/DISS_acceptance">
@@ -303,11 +303,11 @@
         </xsl:choose>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 21. Parse: field_description_long -->
+        <!-- 21. field_description_long -->
         <xsl:apply-templates select="DISS_content/DISS_abstract"/>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 22. Parse: field_subject -->
+        <!-- 22. field_subject -->
         <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_keyword"/>
         <xsl:value-of select="$delimiter" />
 
@@ -316,13 +316,13 @@
         <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
-        <!-- 24. Parse: field_genre -->
+        <!-- 24. field_genre -->
         <!--xsl:call-template name="genre"/-->
         <!-- TODO: is this a hard-coded value? -->
         <xsl:value-of>thesis</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 25. Parse: field_language -->
+        <!-- 25. field_language -->
         <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language">
             <xsl:with-param name="element">field_language</xsl:with-param>
         </xsl:apply-templates>
@@ -367,7 +367,7 @@
         <xsl:value-of>PDFjs</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
-        <!-- 34. (NEW FIELD) Parse: field_local_identifier -->
+        <!-- 34. (NEW FIELD) field_local_identifier -->
         <!--xsl:element name="mods:identifier">
             <xsl:attribute name="type">hdl</xsl:attribute>
             <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
@@ -377,10 +377,10 @@
     <!-- 
        Templates
      -->
-    
-    <!-- TODO: wrap in quotes -->
+
     <!-- TODO: clear out nonprintable chars -->
     <!-- TODO: replace fancy quotes -->
+
     <xsl:template match="DISS_title">
         <xsl:choose>
             <!-- split string if ":" char is found -->
