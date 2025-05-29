@@ -298,7 +298,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <!-- default attribution -->
-                <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
+                <xsl:text>"Copyright is held by the author, with all rights reserved, unless otherwise noted."</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
         <xsl:value-of select="$delimiter" />
@@ -507,6 +507,7 @@
 
     <xsl:template match="DISS_acceptance">
         <xsl:param name="ccAttr"/>
+        <xsl:value-of select="$quote" />
         <xsl:choose>
             <xsl:when test="$ccAttr = 'NONE' or $ccAttr = ''">
                 <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
@@ -535,6 +536,7 @@
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
+        <xsl:value-of select="$quote" />
     </xsl:template>
 
     <xsl:template match="DISS_degree">
