@@ -20,8 +20,8 @@
     <xsl:strip-space elements="*"/>
 
     <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
-
     <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
+    <xsl:variable name="displayHintLookup" select="document('displayHintLookup.xml')"/>
     
     <!-- CSV headers -->
     <csv:columns>
@@ -358,15 +358,18 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 32. file -->
-        <xsl:apply-templates select="DISS_content/DISS_binary"/>
+        <xsl:apply-templates select="DISS_content/DISS_binary">
+            <xsl:with-param name="lookup_value">file_name</xsl:with-param>
+        </xsl:apply-templates>
         <xsl:value-of select="$delimiter" />
 
         <!-- 33. field_display_hints -->
-        <!-- TODO: read @type attribute from DISS_content/DISS_binary to determine file type -->
-        <xsl:value-of>PDFjs</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+        <xsl:apply-templates select="DISS_content/DISS_binary">
+            <xsl:with-param name="lookup_value">file_type</xsl:with-param>
+        </xsl:apply-templates>
 
         <!-- 34. (NEW FIELD) field_local_identifier -->
+        <!--xsl:value-of select="$delimiter" /-->
         <!--xsl:element name="mods:identifier">
             <xsl:attribute name="type">hdl</xsl:attribute>
             <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
@@ -634,11 +637,23 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- DISS_binary -->
     <xsl:template match="DISS_binary">
+        <xsl:param name="lookup_value"/>
         <!-- check if DISS_binary has a value -->
         <xsl:if test="not(. = '')">
-            <xsl:value-of select="."/>
+            <xsl:choose>
+                <xsl:when test="$lookup_value='file_name'">
+                    <xsl:value-of select="."/>
+                </xsl:when>
+                <xsl:when test="$lookup_value='file_type'">
+                    <!-- convert value to lowercase -->
+                    <xsl:variable name="fileTypeCode">
+                        <xsl:value-of select="translate(./@type,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+                    </xsl:variable>
+                    <!-- use lookup table to get display hint value -->
+                    <xsl:value-of select="$displayHintLookup/DisplayHintLookUp/DISS_binary[@value=$fileTypeCode]/@hint"/>
+                </xsl:when>
+            </xsl:choose>
         </xsl:if>
     </xsl:template>
 </xsl:stylesheet>
