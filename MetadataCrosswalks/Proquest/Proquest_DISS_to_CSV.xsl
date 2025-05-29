@@ -317,7 +317,9 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 24. Parse: field_genre -->
-        <xsl:call-template name="genre"/>
+        <!--xsl:call-template name="genre"/-->
+        <!-- TODO: is this a hard-coded value? -->
+        <xsl:value-of>thesis</xsl:value-of>
         <xsl:value-of select="$delimiter" />
 
         <!-- 25. Parse: field_language -->
@@ -461,7 +463,7 @@
         <xsl:value-of select="."/>
     </xsl:template>
 
-    <xsl:template name="genre">
+    <!--xsl:template name="genre">
          <xsl:element name="mods:genre">
             <xsl:attribute name="authority">ndltd</xsl:attribute>
             <xsl:attribute name="type">work type</xsl:attribute>
@@ -478,7 +480,7 @@
             <xsl:attribute name="usage">primary</xsl:attribute>
             <xsl:text>thesis</xsl:text>
         </xsl:element>
-    </xsl:template>
+    </xsl:template-->
 
     <xsl:template match="DISS_inst_name">
         <xsl:value-of select="."/>
