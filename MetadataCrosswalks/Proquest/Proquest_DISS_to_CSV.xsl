@@ -499,21 +499,6 @@
         <xsl:value-of select="$languageLookup/LanguageLookUp/DISS_language[@value=$varCode]/@language"/>
     </xsl:template>
 
-    <xsl:template name="physicalDescription">
-        <xsl:element name="mods:physicalDescription">
-           <xsl:element name="mods:form">
-                <xsl:attribute name="authority">marcform</xsl:attribute>
-                <xsl:text>electronic</xsl:text>
-            </xsl:element>
-            <xsl:element name="mods:internetMediaType">
-                <xsl:text>application/pdf</xsl:text>
-            </xsl:element>
-            <xsl:element name="mods:digitalOrigin">
-                <xsl:text>born digital</xsl:text>
-            </xsl:element>            
-        </xsl:element>
-    </xsl:template>
-
     <xsl:template match="DISS_abstract">
         <!-- check if DISS_abstract has a value -->
         <xsl:if test="not(. = '')">
@@ -653,18 +638,5 @@
         <xsl:if test="not(. = '')">
             <xsl:value-of select="concat($quote, translate(., ', ', $subject_delimiter), $quote)"/>
         </xsl:if>
-    </xsl:template>
-
-    <xsl:template name="recordInfo">
-        <xsl:element name="mods:recordInfo">
-            <xsl:element name="mods:recordContentSource">
-                <xsl:attribute name="authority">marcorg</xsl:attribute>
-                <xsl:text>MChB</xsl:text>
-            </xsl:element>
-            <xsl:element name="mods:recordOrigin">Most grad thesis records are created by transforming ProQuest supplied xml and editing as needed.</xsl:element>
-            <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language">
-                <xsl:with-param name="element">mods:languageOfCataloging</xsl:with-param>
-            </xsl:apply-templates>
-        </xsl:element>
     </xsl:template>
 </xsl:stylesheet>
