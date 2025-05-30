@@ -213,31 +213,7 @@
         <xsl:value-of select="$delimiter" />
 
         <!-- 8. field_linked_agent -->
-        <!-- wrap in quotes -->
-        <xsl:value-of select="$quote" />
-
-        <xsl:choose>
-            <xsl:when test="DISS_authorship/DISS_author[@type='primary']">
-                <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_name">
-                    <xsl:with-param name="prefix">relators:aut:person:</xsl:with-param>
-                </xsl:apply-templates>
-            </xsl:when>
-
-            <!-- parse any additional author names -->
-            <xsl:when test="DISS_authorship/DISS_author[@type='additional']">
-                <xsl:apply-templates select="DISS_authorship/DISS_author[@type='additional']/DISS_name">
-                    <xsl:with-param name="prefix">|relators:aut:person:</xsl:with-param>
-                </xsl:apply-templates>
-            </xsl:when>
-        </xsl:choose>
-
-        <!-- Thesis advisor name -->
-        <!-- only get first instance -->
-        <xsl:apply-templates select="DISS_description/DISS_advisor[1]/DISS_name">
-            <xsl:with-param name="prefix">|relators:ths:person:</xsl:with-param>
-        </xsl:apply-templates>
-
-        <xsl:value-of select="$quote" />
+        <xsl:apply-templates select="DISS_authorship/DISS_author"/>
         <xsl:value-of select="$delimiter" />
 
         <!-- 9. field_scholarly_profile -->
@@ -428,6 +404,31 @@
                 <xsl:value-of select="concat($quote, ., $quote)"/>
             </xsl:when>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="DISS_authorship/DISS_author">
+        <xsl:value-of select="$quote" />
+        <xsl:choose>
+            <xsl:when test=".[@type='primary']">
+                <xsl:apply-templates select=".[@type='primary']/DISS_name">
+                    <xsl:with-param name="prefix">relators:aut:person:</xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:when>
+
+            <!-- parse any additional author names -->
+            <xsl:when test=".[@type='additional']">
+                <xsl:apply-templates select=".[@type='additional']/DISS_name">
+                    <xsl:with-param name="prefix">|relators:aut:person:</xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:when>
+        </xsl:choose>
+
+        <!-- Thesis advisor name -->
+        <!-- only get first instance -->
+        <xsl:apply-templates select="../../DISS_description/DISS_advisor[1]/DISS_name">
+            <xsl:with-param name="prefix">|relators:ths:person:</xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:value-of select="$quote" />
     </xsl:template>
 
     <xsl:template match="DISS_name">
