@@ -71,7 +71,9 @@
     </DISS_description>
     <DISS_content>
         <DISS_abstract>
-            <DISS_para>This is a sample dissertation. 
+            <DISS_para>This is a &#8216;sample&#8217; dissertation. 
+            </DISS_para>
+            <DISS_para>Here is &#8220;another&#8221; para&#8211;graph. And some&#xAD;more. 
             </DISS_para>
         </DISS_abstract>
         <DISS_binary type="PDF">Foobar_J.pdf</DISS_binary>

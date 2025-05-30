@@ -4,7 +4,8 @@
     xmlns:csv="csv:csv"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
-    xmlns:mods="http://www.loc.gov/mods/v3">
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:bc="http://library.bc.edu/bc">
 
     <xsl:param name="handle">UPDATE_HANDLE</xsl:param>
     
@@ -366,8 +367,70 @@
        Templates
      -->
 
-    <!-- TODO: clear out nonprintable chars -->
-    <!-- TODO: replace fancy quotes -->
+    <!-- custom function to clean up problematic encoded html entities -->
+    <xsl:function name="bc:cleanupString">
+        <xsl:param name="input"/>
+
+        <!-- 
+        # Replace the following chars (https://www.compart.com/en/unicode)
+        #       [\u00a0] [&#160;]  No-Break Space with > <
+        #       [\u00ad] [&#173;]  Soft Hyphen with >-<
+        #       [\u2013] [&#8211;] En Dash >–< with >-<
+        #       [\u2018] [&#8216;] Left Single Quotation Mark >‘< with >'<
+        #       [\u2019] [&#8217;] Right Single Quotation Mark >’< with >'<
+        #       [\u2028] [&#8232;] Line Separator with ><
+        #       [\u2029] [&#8233;] Paragraph Separator with ><
+        #       [\u201c] [&#8220;] Left Double Quotation Mark >“< with >\"<
+        #       [\u201d] [&#8221;] Right Double Quotation Mark >”<  with >\"<
+        -->
+
+        <xsl:variable name="hypen" select="'-'"/>
+        <xsl:variable name="apos" select="''''"/>
+        <xsl:variable name="escapedDoubleQuotes" select='concat($quote, "", $quote)'/>
+
+        <xsl:variable name="removeNoBreakSpace">
+            <xsl:value-of select="translate($input, '&#160;', ' ')"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeSoftHypen">
+            <xsl:value-of select="translate($removeNoBreakSpace, '&#173;', $hypen)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeEnDash">
+            <xsl:value-of select="translate($removeSoftHypen, '&#8211;', $hypen)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeLeftSingleQuote">
+            <xsl:value-of select="translate($removeEnDash, '&#8216;', $apos)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeRightSingleQuote">
+            <xsl:value-of select="translate($removeLeftSingleQuote, '&#8217;', $apos)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeLineSeperator">
+            <xsl:value-of select="translate($removeRightSingleQuote, '&#8233;', $empty_value)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeParaSeperator">
+            <xsl:value-of select="translate($removeLineSeperator, '&#8232;', $empty_value)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeLeftDoubleQuote">
+            <xsl:value-of select="translate($removeParaSeperator, '&#8220;', $quote)"/>
+        </xsl:variable>
+
+        <xsl:variable name="removeRightDoubleQuote">
+            <xsl:value-of select="translate($removeLeftDoubleQuote, '&#8221;', $quote)"/>
+        </xsl:variable>
+
+        <!-- TODO: this doesn't work -->
+        <xsl:variable name="escapeDoubleQuotes">
+            <xsl:value-of select="translate($removeRightDoubleQuote, $quote, $escapedDoubleQuotes)"/>
+        </xsl:variable>
+
+        <xsl:value-of select="$escapeDoubleQuotes"/>
+    </xsl:function>
 
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
@@ -521,7 +584,7 @@
         <xsl:if test="not(. = '')">
             <xsl:value-of select="$quote" />
             <xsl:for-each select="DISS_para">
-                <xsl:value-of select="normalize-space(.)"/>
+                <xsl:value-of select="normalize-space(bc:cleanupString(.))"/>
                 <xsl:if test="position() != last()">
                     <xsl:value-of select="$new_line" />
                 </xsl:if>
