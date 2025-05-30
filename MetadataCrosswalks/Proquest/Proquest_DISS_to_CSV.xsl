@@ -189,13 +189,23 @@
         <xsl:value-of select="$empty_value" />
         <xsl:value-of select="$delimiter" />
 
-        <!-- 
-             4. title
-             5. field_subtitle
-             6. field_full_title
-        -->
-        <!-- TODO: refactor and separate logic for each field -->
-        <xsl:apply-templates select="DISS_description/DISS_title"/>
+        <!-- 4. title -->
+        <xsl:apply-templates select="DISS_description/DISS_title">
+            <xsl:with-param name="lookup_value">title</xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:value-of select="$delimiter" />
+
+        <!-- 5. field_subtitle -->
+        <xsl:apply-templates select="DISS_description/DISS_title">
+            <xsl:with-param name="lookup_value">field_subtitle</xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:value-of select="$delimiter" />
+
+        <!-- 6. field_full_title -->
+        <xsl:apply-templates select="DISS_description/DISS_title">
+            <xsl:with-param name="lookup_value">field_full_title</xsl:with-param>
+        </xsl:apply-templates>
+        <xsl:value-of select="$delimiter" />
 
         <!-- 7. field_alternative_title -->
         <!-- TODO: fill this in when needed -->
@@ -384,27 +394,40 @@
     <!-- TODO: replace fancy quotes -->
 
     <xsl:template match="DISS_title">
+        <xsl:param name="lookup_value"/>
         <xsl:choose>
             <!-- split string if ":" char is found -->
             <xsl:when test="contains(., ':')">
-                <!-- title -->
-                <xsl:value-of select="substring-before(., ':')"/>
-                <xsl:value-of select="$delimiter" />
-                <!-- field_subtitle -->
-                <xsl:value-of select="normalize-space(substring-after(., ':'))"/>
+                <xsl:choose>
+                    <!-- title -->
+                    <xsl:when test="$lookup_value='title'">
+                        <xsl:value-of select="concat($quote, substring-before(., ':'), $quote)"/>
+                    </xsl:when>
+                    <!-- field_subtitle -->
+                    <xsl:when test="$lookup_value='field_subtitle'">
+                        <xsl:value-of select="concat($quote, normalize-space(substring-after(., ':')), $quote)"/>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <!-- title -->
-                <xsl:value-of select="."/>
-                <xsl:value-of select="$delimiter" />
-                <!-- field_subtitle -->
-                <xsl:value-of select="$empty_value" />
+                <xsl:choose>
+                    <!-- title -->
+                    <xsl:when test="$lookup_value='title'">
+                        <xsl:value-of select="concat($quote, ., $quote)"/>
+                    </xsl:when>
+                    <!-- field_subtitle; this is an empty value -->
+                    <xsl:when test="$lookup_value='field_subtitle'">
+                        <xsl:value-of select="$empty_value" />
+                    </xsl:when>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
-        <!-- field_full_title -->
-        <xsl:value-of select="$delimiter" />
-        <xsl:value-of select="."/>
-        <xsl:value-of select="$delimiter" />
+        <xsl:choose>
+            <!-- field_full_title -->
+            <xsl:when test="$lookup_value='field_full_title'">
+                <xsl:value-of select="concat($quote, ., $quote)"/>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="DISS_name">
