@@ -7,8 +7,11 @@
     xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:bc="http://library.bc.edu/bc">
 
+    <!-- Placeholder text for handle URL -->
     <xsl:param name="handle">UPDATE_HANDLE</xsl:param>
     
+    <!-- Common characters -->
+    <!-- A mix of Unicode hex  character codes, and HTML encoded entities. -->
     <xsl:param name="subject_delimiter" select="'|'" />
     <xsl:param name="delimiter" select="','" />
     <xsl:param name="quote" select="'&quot;'" />
@@ -20,11 +23,13 @@
     
     <xsl:strip-space elements="*"/>
 
+    <!-- Lookup tables -->
     <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
     <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
     <xsl:variable name="displayHintLookup" select="document('displayHintLookup.xml')"/>
     
     <!-- CSV headers -->
+    <!-- The column order in this structure determines the CSV columns output order. -->
     <csv:columns>
         <column>id</column>
         <column>parent_id</column>
@@ -67,6 +72,7 @@
         <xsl:variable name="DISS_root" select="."/>
 
         <!-- Output the CSV header -->
+        <!-- This for-each instruction loops through the csv:columns structure and prints out each value once. -->
         <xsl:for-each select="document('')/*/csv:columns/*">
             <xsl:value-of select="."/>
             <xsl:if test="position() != last()">
@@ -77,10 +83,14 @@
         <xsl:value-of select="$new_line" />
 
         <!-- Parse through xml document based on order of csv:columns -->
+        <!-- This code uses a large xsl:choose instruction block to match against the csv:column value. -->
+        <!-- There is a mix of hard-coded values, empty values (where appropriate), and xsl instructions. -->
+        <!-- The apply-templates instructions call on separate templates to parse and transform values. -->
         <xsl:for-each select="document('')/*/csv:columns/*">
             <xsl:variable name="col_name" select="."/>
             <xsl:choose>
                 <xsl:when test="$col_name = 'id'">
+                    <!-- Hardcoded value -->
                     <xsl:value-of>1</xsl:value-of>
                 </xsl:when>
 
@@ -281,7 +291,7 @@
        Templates
      -->
 
-    <!-- custom function to clean up problematic encoded html entities -->
+    <!-- Custom function to clean up problematic encoded html entities. -->
     <xsl:function name="bc:cleanupString">
         <xsl:param name="input"/>
 
@@ -338,7 +348,7 @@
             <xsl:value-of select="translate($removeLeftDoubleQuote, '&#8221;', $quote)"/>
         </xsl:variable>
 
-        <!-- TODO: this doesn't work -->
+        <!-- INFO: double quotes don't appear in the output, but still produces valid CSV values. -->
         <xsl:variable name="escapeDoubleQuotes">
             <xsl:value-of select="translate($removeRightDoubleQuote, $quote, $escapedDoubleQuotes)"/>
         </xsl:variable>
@@ -346,6 +356,7 @@
         <xsl:value-of select="$escapeDoubleQuotes"/>
     </xsl:function>
 
+    <!-- TODO: apply bc:cleanupString() function against title -->
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
         <xsl:choose>
@@ -479,7 +490,10 @@
         <xsl:if test="not(. = '')">
             <xsl:value-of select="$quote" />
             <xsl:for-each select="DISS_para">
+                <!-- Call on our custom bc:cleanupString() function. -->
                 <xsl:value-of select="normalize-space(bc:cleanupString(.))"/>
+
+                <!-- Add a new line char in between every DISS_para value. -->
                 <xsl:if test="position() != last()">
                     <xsl:value-of select="$new_line" />
                 </xsl:if>
