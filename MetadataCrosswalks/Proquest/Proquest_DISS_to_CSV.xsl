@@ -458,25 +458,6 @@
         <xsl:value-of select="."/>
     </xsl:template>
 
-    <!--xsl:template name="genre">
-         <xsl:element name="mods:genre">
-            <xsl:attribute name="authority">ndltd</xsl:attribute>
-            <xsl:attribute name="type">work type</xsl:attribute>
-            <xsl:text>Electronic Thesis or Dissertation</xsl:text>
-        </xsl:element>            
-        <xsl:element name="mods:genre">
-            <xsl:attribute name="authority">dct</xsl:attribute>
-            <xsl:attribute name="type">work type</xsl:attribute>
-            <xsl:text>Text</xsl:text>
-        </xsl:element>
-        <xsl:element name="mods:genre">
-            <xsl:attribute name="authority">marcgt</xsl:attribute>
-            <xsl:attribute name="type">work type</xsl:attribute>
-            <xsl:attribute name="usage">primary</xsl:attribute>
-            <xsl:text>thesis</xsl:text>
-        </xsl:element>
-    </xsl:template-->
-
     <xsl:template match="DISS_inst_name">
         <xsl:value-of select="."/>
     </xsl:template>
