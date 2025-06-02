@@ -538,6 +538,7 @@
 
     <xsl:template match="DISS_institution">
         <xsl:param name="lookup_value"/>
+        <xsl:value-of select="$quote" />
         <xsl:choose>
             <xsl:when test="starts-with(DISS_inst_contact, 'CSOM')">
                 <xsl:choose>
@@ -599,7 +600,8 @@
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>                    
-        </xsl:choose>     
+        </xsl:choose>
+        <xsl:value-of select="$quote" />
     </xsl:template>
     
     <xsl:template match="DISS_delayed_release">
