@@ -30,38 +30,42 @@
         <column>parent_id</column>
         <column>field_weight</column>
         <column>title</column>
-        <column>field_subtitle</column>
+        <column>field_subtitle</column>             <!-- 5 -->
         <column>field_full_title</column>
         <column>field_alternative_title</column>
         <column>field_linked_agent</column>
         <column>field_scholarly_profile</column>
-        <column>field_publisher</column>
+        <column>field_publisher</column>            <!-- 10 -->
         <column>field_edtf_date</column>
         <column>field_collection</column>
         <column>field_degree_name</column>
         <column>field_degree_level</column>
-        <column>field_degree_discipline</column>
+        <column>field_degree_discipline</column>    <!-- 15 -->
         <column>field_degree_grantor</column>
         <column>field_embargo</column>
         <column>field_rights</column>
         <column>field_access_terms</column>
-        <column>field_rights_long</column>
+        <column>field_rights_long</column>          <!-- 20 -->
         <column>field_description_long</column>
         <column>field_subject</column>
         <column>field_note</column>
         <column>field_genre</column>
-        <column>field_language</column>
+        <column>field_language</column>             <!-- 25 -->
         <column>field_mode_of_issuance</column>
         <column>field_digital_origin</column>
         <column>field_physical_form</column>
         <column>field_resource_type</column>
-        <column>field_model</column>
+        <column>field_model</column>                <!-- 30 -->
         <column>field_member_of</column>
         <column>file</column>
         <column>field_display_hints</column>
     </csv:columns>
 
-    <xsl:template match="/DISS_submission">        
+    <xsl:template match="/DISS_submission">
+        <!-- HACK: We keep track of this current context node since we change context when reading the CSV header block. -->
+        <!--       This is necessary for applying various apply-templates instructions throughout the xsl:choose function. -->
+        <xsl:variable name="DISS_root" select="."/>
+
         <!-- Output the CSV header -->
         <xsl:for-each select="document('')/*/csv:columns/*">
             <xsl:value-of select="."/>
@@ -72,295 +76,205 @@
 
         <xsl:value-of select="$new_line" />
 
-        <!--
-             All examples originate from MetadataCrosswalks/Proquest/sample_xml/Foo_D.xml
+        <!-- Parse through xml document based on order of csv:columns -->
+        <xsl:for-each select="document('')/*/csv:columns/*">
+            <xsl:variable name="col_name" select="."/>
+            <xsl:choose>
+                <xsl:when test="$col_name = 'id'">
+                    <xsl:value-of>1</xsl:value-of>
+                </xsl:when>
 
-             01. id
-             1
-             
-             02. parent_id
-             -
-             
-             03. field_weight
-             -
-             
-             04. title
-             Primary dissertation title
-             
-             05. field_subtitle
-             secondary title
-             
-             06. field_full_title
-             Primary dissertation title: secondary title
-             
-             07. field_alternative_title
-             -
-             
-             08. field_linked_agent
-             relators:aut:person:Foo, Danny|relators:ths:person:Wang, Jimmy
-             
-             09. field_scholarly_profile
-             https://orcid.org/0000-0002-2222-1111%%Danny Foo
-             
-             10. field_publisher
-             Boston College
-             
-             11. field_edtf_date
-             2024
-             
-             12. field_collection
-             Graduate Theses and Dissertations
-             
-             13. field_degree_name
-             PhD
-             
-             14. field_degree_level
-             Doctoral
-             
-             15. field_degree_discipline
-             Chemistry
-             
-             16. field_degree_grantor
-             Arts and Sciences
-             
-             17. field_embargo
-             2027-04-11T00:00:00Z
-             
-             18. field_rights
-             -
-             
-             19. field_access_terms
-             40
-             
-             20. field_rights_long
-             Copyright is held by the author, with all rights reserved, unless otherwise noted.
-             
-             21. field_description_long
-             This is a sample abstract.
-             
-             22. field_subject
-             Cats|Dogs|Tigers|Horses|Elephants
-             
-             23. field_note
-             -
-             
-             24. field_genre
-             thesis
-             
-             25. field_language
-             English
-             
-             26. field_mode_of_issuance
-             monographic
-             
-             27. field_digital_origin
-             born digital
-             
-             28. field_physical_form
-             electronic
-             
-             29. field_resource_type
-             Text
-             
-             30. field_model
-             Digital Document
-             
-             31. field_member_of
-             1445
-             
-             32. file
-             Foo_bc_0016D_90012867009.pdf
-             
-             33. field_display_hints
-             PDFjs
-        -->
+                <xsl:when test="$col_name = 'parent_id'">
+                    <!-- TODO: fill this in when needed -->
+                    <xsl:value-of select="$empty_value" />
+                </xsl:when>
 
-        <!-- 1. id -->
-        <!-- TODO: automatically increment this value -->
-        <xsl:value-of>1</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_weight'">
+                    <!-- TODO: fill this in when needed -->
+                    <xsl:value-of select="$empty_value" />
+                </xsl:when>
 
-        <!-- 2. parent_id -->
-        <!-- TODO: fill this in when needed -->
-        <xsl:value-of select="$empty_value" />
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'title'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_title">
+                        <xsl:with-param name="lookup_value">title</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 3. field_weight -->
-        <!-- TODO: fill this in when needed -->
-        <xsl:value-of select="$empty_value" />
-        <xsl:value-of select="$delimiter" />
+                <!-- 05 -->
+                <xsl:when test="$col_name = 'field_subtitle'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_title">
+                        <xsl:with-param name="lookup_value">field_subtitle</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 4. title -->
-        <xsl:apply-templates select="DISS_description/DISS_title">
-            <xsl:with-param name="lookup_value">title</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_full_title'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_title">
+                        <xsl:with-param name="lookup_value">field_full_title</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 5. field_subtitle -->
-        <xsl:apply-templates select="DISS_description/DISS_title">
-            <xsl:with-param name="lookup_value">field_subtitle</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_alternative_title'">
+                    <!-- TODO: fill this in when needed -->
+                    <xsl:value-of select="$empty_value" />
+                </xsl:when>
 
-        <!-- 6. field_full_title -->
-        <xsl:apply-templates select="DISS_description/DISS_title">
-            <xsl:with-param name="lookup_value">field_full_title</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_linked_agent'">
+                    <xsl:apply-templates select="$DISS_root/DISS_authorship/DISS_author"/>
+                </xsl:when>
 
-        <!-- 7. field_alternative_title -->
-        <!-- TODO: fill this in when needed -->
-        <xsl:value-of select="$empty_value" />
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_scholarly_profile'">
+                    <xsl:apply-templates select="$DISS_root/DISS_authorship/DISS_author[@type='primary']/DISS_orcid"/>
+                </xsl:when>
 
-        <!-- 8. field_linked_agent -->
-        <xsl:apply-templates select="DISS_authorship/DISS_author"/>
-        <xsl:value-of select="$delimiter" />
+                <!-- 10 -->
+                <xsl:when test="$col_name = 'field_publisher'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_institution/DISS_inst_name"/>
+                </xsl:when>
 
-        <!-- 9. field_scholarly_profile -->
-        <xsl:apply-templates select="DISS_authorship/DISS_author[@type='primary']/DISS_orcid"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_edtf_date'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_dates/DISS_comp_date"/>
+                </xsl:when>
 
-        <!-- 10. field_publisher -->
-        <xsl:apply-templates select="DISS_description/DISS_institution/DISS_inst_name"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_collection'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>Graduate Theses and Dissertations</xsl:value-of>
+                </xsl:when>
 
-        <!-- 11. field_edtf_date -->
-        <xsl:apply-templates select="DISS_description/DISS_dates/DISS_comp_date"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_degree_name'">
+                     <xsl:apply-templates select="$DISS_root/DISS_description/DISS_degree">
+                        <xsl:with-param name="lookup_value">name</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 12. field_collection -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>Graduate Theses and Dissertations</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_degree_level'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_degree">
+                        <xsl:with-param name="lookup_value">level</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 13. field_degree_name -->
-        <xsl:apply-templates select="DISS_description/DISS_degree">
-            <xsl:with-param name="lookup_value">name</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <!-- 15 -->
+                <xsl:when test="$col_name = 'field_degree_discipline'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_institution">
+                        <xsl:with-param name="lookup_value">discipline</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 14. field_degree_level -->
-        <xsl:apply-templates select="DISS_description/DISS_degree">
-            <xsl:with-param name="lookup_value">level</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_degree_grantor'">
+                    <!-- TODO: is it 'Graduate School of Arts and Sciences' or 'Arts and Sciences' ? -->
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_institution">
+                        <xsl:with-param name="lookup_value">institution</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 15. field_degree_discipline -->
-        <xsl:apply-templates select="DISS_description/DISS_institution">
-            <xsl:with-param name="lookup_value">discipline</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_embargo'">
+                    <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_delayed_release"/>
+                </xsl:when>
 
-        <!-- 16. field_degree_grantor -->
-        <!-- TODO: is it 'Graduate School of Arts and Sciences' or 'Arts and Sciences' ? -->
-        <xsl:apply-templates select="DISS_description/DISS_institution">
-            <xsl:with-param name="lookup_value">institution</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_rights'">
+                    <!-- TODO: fill this in when needed -->
+                    <xsl:value-of select="$empty_value" />
+                </xsl:when>
 
-        <!-- 17. field_embargo -->
-        <xsl:apply-templates select="DISS_repository/DISS_delayed_release"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_access_terms'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>40</xsl:value-of>
+                </xsl:when>
 
-        <!-- 18. field_rights -->
-        <!-- TODO: fill this in when needed -->
-        <xsl:value-of select="$empty_value" />
-        <xsl:value-of select="$delimiter" />
+                <!-- 20 -->
+                <xsl:when test="$col_name = 'field_rights_long'">
+                    <xsl:choose>
+                        <!-- check if the DISS_acceptance value is "1" or any truthy value -->
+                        <xsl:when test="$DISS_root/DISS_repository/DISS_acceptance">
+                            <!-- select which CC attribution to use -->
+                            <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_acceptance">
+                                <xsl:with-param name="ccAttr">
+                                    <xsl:value-of select="translate(DISS_creative_commons_license/DISS_abbreviation,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+                                </xsl:with-param>
+                            </xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <!-- default attribution -->
+                            <xsl:text>"Copyright is held by the author, with all rights reserved, unless otherwise noted."</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
 
-        <!-- 19. field_access_terms -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>40</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_description_long'">
+                    <xsl:apply-templates select="$DISS_root/DISS_content/DISS_abstract"/>
+                </xsl:when>
 
-        <!-- 20. field_rights_long -->
-        <xsl:choose>
-            <!-- check if the DISS_acceptance value is "1" or any truthy value -->
-            <xsl:when test="DISS_repository/DISS_acceptance">
-                <!-- select which CC attribution to use -->
-                <xsl:apply-templates select="DISS_repository/DISS_acceptance">
-                    <xsl:with-param name="ccAttr">
-                        <xsl:value-of select="translate(DISS_creative_commons_license/DISS_abbreviation,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
-                    </xsl:with-param>
-                </xsl:apply-templates>
-            </xsl:when>
-            <xsl:otherwise>
-                <!-- default attribution -->
-                <xsl:text>"Copyright is held by the author, with all rights reserved, unless otherwise noted."</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_subject'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_categorization/DISS_keyword"/>
+                </xsl:when>
 
-        <!-- 21. field_description_long -->
-        <xsl:apply-templates select="DISS_content/DISS_abstract"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_note'">
+                    <!-- TODO: fill this in when needed -->
+                    <xsl:value-of select="$empty_value" />
+                </xsl:when>
 
-        <!-- 22. field_subject -->
-        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_keyword"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_genre'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>thesis</xsl:value-of>
+                </xsl:when>
 
-        <!-- 23. field_note -->
-        <!-- TODO: fill this in when needed -->
-        <xsl:value-of select="$empty_value" />
-        <xsl:value-of select="$delimiter" />
+                <!-- 25 -->
+                <xsl:when test="$col_name = 'field_language'">
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_categorization/DISS_language"/>
+                </xsl:when>
 
-        <!-- 24. field_genre -->
-        <!--xsl:call-template name="genre"/-->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>thesis</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_mode_of_issuance'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>monographic</xsl:value-of>
+                </xsl:when>
 
-        <!-- 25. field_language -->
-        <xsl:apply-templates select="DISS_description/DISS_categorization/DISS_language"/>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_digital_origin'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>born digital</xsl:value-of>
+                </xsl:when>
 
-        <!-- 26. field_mode_of_issuance -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>monographic</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_physical_form'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>electronic</xsl:value-of>
+                </xsl:when>
 
-        <!-- 27. field_digital_origin -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>born digital</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_resource_type'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>Text</xsl:value-of>
+                </xsl:when>
 
-        <!-- 28. field_physical_form -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>electronic</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <!-- 30 -->
+                <xsl:when test="$col_name = 'field_model'">
+                    <!-- TODO: is this a hard-coded value? -->
+                    <xsl:value-of>Digital Document</xsl:value-of>
+                </xsl:when>
 
-        <!-- 29. field_resource_type -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>Text</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_member_of'">
+                    <!-- TODO: map this ID to the collection type; always 1445? -->
+                    <xsl:value-of>1445</xsl:value-of>
+                </xsl:when>
 
-        <!-- 30. field_model -->
-        <!-- TODO: is this a hard-coded value? -->
-        <xsl:value-of>Digital Document</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'file'">
+                    <xsl:apply-templates select="$DISS_root/DISS_content/DISS_binary">
+                        <xsl:with-param name="lookup_value">file_name</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 31. field_member_of -->
-        <!-- TODO: map this ID to the collection type; always 1445? -->
-        <xsl:value-of>1445</xsl:value-of>
-        <xsl:value-of select="$delimiter" />
+                <xsl:when test="$col_name = 'field_display_hints'">
+                    <xsl:apply-templates select="$DISS_root/DISS_content/DISS_binary">
+                        <xsl:with-param name="lookup_value">file_type</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
 
-        <!-- 32. file -->
-        <xsl:apply-templates select="DISS_content/DISS_binary">
-            <xsl:with-param name="lookup_value">file_name</xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:value-of select="$delimiter" />
+                <!-- (NEW UNUSED FIELD) -->
+                <xsl:when test="$col_name = 'field_local_identifier'">
+                    <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
+                </xsl:when>
+            </xsl:choose>
 
-        <!-- 33. field_display_hints -->
-        <xsl:apply-templates select="DISS_content/DISS_binary">
-            <xsl:with-param name="lookup_value">file_type</xsl:with-param>
-        </xsl:apply-templates>
-
-        <!-- 34. (NEW FIELD) field_local_identifier -->
-        <!--xsl:value-of select="$delimiter" /-->
-        <!--xsl:element name="mods:identifier">
-            <xsl:attribute name="type">hdl</xsl:attribute>
-            <xsl:value-of select="concat('http://hdl.handle.net/2345/',$handle)"/>
-        </xsl:element-->
+            <xsl:if test="position() != last()">
+                <xsl:value-of select="$delimiter"/>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     <!-- 
