@@ -360,13 +360,14 @@
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
         <xsl:choose>
-            <!-- split string if ":" char is found -->
+            <!-- Split string if ":" char is found -->
             <xsl:when test="contains(., ':')">
                 <xsl:choose>
                     <!-- title -->
                     <xsl:when test="$lookup_value='title'">
                         <xsl:value-of select="concat($quote, substring-before(., ':'), $quote)"/>
                     </xsl:when>
+
                     <!-- field_subtitle -->
                     <xsl:when test="$lookup_value='field_subtitle'">
                         <xsl:value-of select="concat($quote, normalize-space(substring-after(., ':')), $quote)"/>
@@ -379,6 +380,7 @@
                     <xsl:when test="$lookup_value='title'">
                         <xsl:value-of select="concat($quote, ., $quote)"/>
                     </xsl:when>
+
                     <!-- field_subtitle; this is an empty value -->
                     <xsl:when test="$lookup_value='field_subtitle'">
                         <xsl:value-of select="$empty_value" />
@@ -403,7 +405,7 @@
                 </xsl:apply-templates>
             </xsl:when>
 
-            <!-- parse any additional author names -->
+            <!-- Parse any additional author's names -->
             <xsl:when test=".[@type='additional']">
                 <xsl:apply-templates select=".[@type='additional']/DISS_name">
                     <xsl:with-param name="prefix">|relators:aut:person:</xsl:with-param>
@@ -412,7 +414,7 @@
         </xsl:choose>
 
         <!-- Thesis advisor name -->
-        <!-- only get first instance -->
+        <!-- Only get the first instance -->
         <xsl:apply-templates select="../../DISS_description/DISS_advisor[1]/DISS_name">
             <xsl:with-param name="prefix">|relators:ths:person:</xsl:with-param>
         </xsl:apply-templates>
@@ -421,20 +423,23 @@
 
     <xsl:template match="DISS_name">
         <xsl:param name="prefix"/>
+        <!-- Construct name string -->
         <xsl:value-of select="concat($prefix, DISS_surname, ', ', DISS_fname)" />
+
+        <!-- Append middle name is present -->
         <xsl:apply-templates select="DISS_middle"/>
     </xsl:template>
 
     <xsl:template match="DISS_middle">
-        <!-- check if DISS_middle has a value -->
+        <!-- Check if DISS_middle has a value -->
         <xsl:if test="not(. = '')">
-            <!-- prepend a single space before DISS_middle -->
+            <!-- Prepend a single space before DISS_middle -->
             <xsl:value-of select="concat(' ', .)"/>
             <xsl:choose>
-                <!-- don't do anything if the last char of DISS_middle is a "." -->
+                <!-- Don't do anything if the last char of DISS_middle is a "." -->
                 <xsl:when test="substring(., string-length(.)) = '.'"></xsl:when>
 
-                <!-- append a period char if DISS_middle is a single char -->
+                <!-- Append a period char if DISS_middle is a single char -->
                 <xsl:when test="string-length(.) = '1'">
                     <xsl:text>.</xsl:text>
                 </xsl:when>
@@ -444,19 +449,19 @@
     </xsl:template>
 
     <xsl:template match="DISS_orcid">
-        <!-- check if DISS_orcid has a value -->
+        <!-- Check if DISS_orcid has a value -->
         <xsl:if test="not(. = '')">
-            <!-- get first name -->
+            <!-- Get author's first name -->
             <xsl:variable name="primary_first_name">
                 <xsl:apply-templates select="../DISS_name/DISS_fname"/>
             </xsl:variable>
 
-            <!-- get last name -->
+            <!-- Get author's last name -->
             <xsl:variable name="primary_last_name">
                 <xsl:apply-templates select="../DISS_name/DISS_surname"/>
             </xsl:variable>
 
-            <!-- construct Orchid URL -->
+            <!-- Construct Orchid URL -->
             <xsl:value-of select="concat($quote, 'https://orcid.org/', ., '%%', $primary_first_name, $single_space, $primary_last_name, $quote)"/>
         </xsl:if>
     </xsl:template>
@@ -486,7 +491,7 @@
     </xsl:template>
 
     <xsl:template match="DISS_abstract">
-        <!-- check if DISS_abstract has a value -->
+        <!-- Check if DISS_abstract has a value -->
         <xsl:if test="not(. = '')">
             <xsl:value-of select="$quote" />
             <xsl:for-each select="DISS_para">
@@ -502,6 +507,7 @@
         </xsl:if>
     </xsl:template>
 
+    <!-- TODO: move strings to lookup file -->
     <xsl:template match="DISS_acceptance">
         <xsl:param name="ccAttr"/>
         <xsl:value-of select="$quote" />
@@ -539,7 +545,7 @@
     <xsl:template match="DISS_degree">
         <xsl:param name="lookup_value"/>
         <xsl:variable name="degree" select="translate(translate(., '.', ''), 'abdehmps', 'ABDEHMPST')"/>
-        <!-- use $lookup_value to determine which value from DegreeLoopup.xml to return -->
+        <!-- Use $lookup_value to determine which value from DegreeLoopup.xml to return -->
         <xsl:choose>
             <xsl:when test="$lookup_value='name'">
                 <xsl:value-of select="$degreeLookup/DegreeLookUp/DISS_degree[@degree=$degree]/@name"/>
@@ -550,6 +556,7 @@
         </xsl:choose>
     </xsl:template>
 
+    <!-- TODO: move strings to lookup file -->
     <xsl:template match="DISS_institution">
         <xsl:param name="lookup_value"/>
         <xsl:value-of select="$quote" />
@@ -619,35 +626,36 @@
     </xsl:template>
     
     <xsl:template match="DISS_delayed_release">
-        <!-- check if DISS_delayed_release has a value -->
+        <!-- Check if DISS_delayed_release has a value -->
         <xsl:if test="not(. = '')">
-            <!-- convert string into proper date format -->
+            <!-- Convert string into proper date format -->
+            <!-- From "2015-11-19 09:50:44" to "2015-11-19T09:50:44Z" -->
             <xsl:value-of select="concat(translate(., ' ', 'T'), 'Z')"/>
         </xsl:if>
     </xsl:template>
 
     <xsl:template match="DISS_keyword">
-        <!-- check if DISS_keyword has a value -->
+        <!-- Check if DISS_keyword has a value -->
         <xsl:if test="not(. = '')">
-            <!-- replace ", " set of characters with "|" -->
+            <!-- Replace ", " set of characters with "|" -->
             <xsl:value-of select="concat($quote, normalize-space(replace(., ',\s', $subject_delimiter)), $quote)"/>
         </xsl:if>
     </xsl:template>
 
     <xsl:template match="DISS_binary">
         <xsl:param name="lookup_value"/>
-        <!-- check if DISS_binary has a value -->
+        <!-- Check if DISS_binary has a value -->
         <xsl:if test="not(. = '')">
             <xsl:choose>
                 <xsl:when test="$lookup_value='file_name'">
                     <xsl:value-of select="."/>
                 </xsl:when>
                 <xsl:when test="$lookup_value='file_type'">
-                    <!-- convert value to lowercase -->
+                    <!-- Convert value to lowercase -->
                     <xsl:variable name="fileTypeCode">
                         <xsl:value-of select="translate(./@type,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                     </xsl:variable>
-                    <!-- use lookup table to get display hint value -->
+                    <!-- Use lookup table to get display hint value -->
                     <xsl:value-of select="$displayHintLookup/DisplayHintLookUp/DISS_binary[@value=$fileTypeCode]/@hint"/>
                 </xsl:when>
             </xsl:choose>
