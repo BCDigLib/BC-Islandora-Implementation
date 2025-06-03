@@ -278,7 +278,7 @@
     </xsl:template>
 
     <!-- 
-       Templates
+       Custom functions
      -->
     
     <!-- Custom function to wrap a string in literal quotes -->
@@ -351,6 +351,10 @@
 
         <xsl:value-of select="$escapeDoubleQuotes"/>
     </xsl:function>
+    
+    <!-- 
+        Templates
+    -->
 
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
