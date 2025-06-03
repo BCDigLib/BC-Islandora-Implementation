@@ -290,6 +290,12 @@
     <!-- 
        Templates
      -->
+    
+    <!-- Custom function to wrap a string in literal quotes -->
+    <xsl:function name="bc:wrapInQuotes">
+        <xsl:param name="inputString"/>
+        <xsl:value-of select="concat($quote, $inputString, $quote)"/>
+    </xsl:function>
 
     <!-- Custom function to clean up problematic encoded html entities. -->
     <xsl:function name="bc:cleanupString">
@@ -310,7 +316,7 @@
 
         <xsl:variable name="hypen" select="'-'"/>
         <xsl:variable name="apos" select="''''"/>
-        <xsl:variable name="escapedDoubleQuotes" select='concat($quote, "", $quote)'/>
+        <xsl:variable name="escapedDoubleQuotes" select='bc:wrapInQuotes($empty_value)'/>
 
         <xsl:variable name="removeNoBreakSpace">
             <xsl:value-of select="translate($input, '&#160;', ' ')"/>
@@ -367,12 +373,12 @@
                 <xsl:choose>
                     <!-- title -->
                     <xsl:when test="$lookup_value='title'">
-                        <xsl:value-of select="concat($quote, substring-before($title_clean, ':'), $quote)"/>
+                        <xsl:value-of select="bc:wrapInQuotes(substring-before($title_clean, ':'))"/>
                     </xsl:when>
 
                     <!-- field_subtitle -->
                     <xsl:when test="$lookup_value='field_subtitle'">
-                        <xsl:value-of select="concat($quote, substring-after($title_clean, ':'), $quote)"/>
+                        <xsl:value-of select="bc:wrapInQuotes(substring-after($title_clean, ':'))"/>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
@@ -380,7 +386,7 @@
                 <xsl:choose>
                     <!-- title -->
                     <xsl:when test="$lookup_value='title'">
-                        <xsl:value-of select="concat($quote, $title_clean, $quote)"/>
+                        <xsl:value-of select="bc:wrapInQuotes($title_clean)"/>
                     </xsl:when>
 
                     <!-- field_subtitle; this is an empty value -->
@@ -393,7 +399,7 @@
         <xsl:choose>
             <!-- field_full_title -->
             <xsl:when test="$lookup_value='field_full_title'">
-                <xsl:value-of select="concat($quote, $title_clean, $quote)"/>
+                <xsl:value-of select="bc:wrapInQuotes($title_clean)"/>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -639,8 +645,8 @@
     <xsl:template match="DISS_keyword">
         <!-- Check if DISS_keyword has a value -->
         <xsl:if test="not(. = '')">
-            <!-- Replace ", " set of characters with "|" -->
-            <xsl:value-of select="concat($quote, normalize-space(replace(., ',\s', $subject_delimiter)), $quote)"/>
+            <!-- Replace ", " string with "|" delimiter -->
+            <xsl:value-of select="bc:wrapInQuotes(normalize-space(replace(., ',\s', $subject_delimiter)))"/>
         </xsl:if>
     </xsl:template>
 
