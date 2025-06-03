@@ -356,21 +356,23 @@
         <xsl:value-of select="$escapeDoubleQuotes"/>
     </xsl:function>
 
-    <!-- TODO: apply bc:cleanupString() function against title -->
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
+
+        <!-- Clean title string using custom bc:cleanupString() function -->
+        <xsl:variable name="title_clean" select="normalize-space(bc:cleanupString(.))"/>
         <xsl:choose>
             <!-- Split string if ":" char is found -->
-            <xsl:when test="contains(., ':')">
+            <xsl:when test="contains($title_clean, ':')">
                 <xsl:choose>
                     <!-- title -->
                     <xsl:when test="$lookup_value='title'">
-                        <xsl:value-of select="concat($quote, substring-before(., ':'), $quote)"/>
+                        <xsl:value-of select="concat($quote, substring-before($title_clean, ':'), $quote)"/>
                     </xsl:when>
 
                     <!-- field_subtitle -->
                     <xsl:when test="$lookup_value='field_subtitle'">
-                        <xsl:value-of select="concat($quote, normalize-space(substring-after(., ':')), $quote)"/>
+                        <xsl:value-of select="concat($quote, substring-after($title_clean, ':'), $quote)"/>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
@@ -378,7 +380,7 @@
                 <xsl:choose>
                     <!-- title -->
                     <xsl:when test="$lookup_value='title'">
-                        <xsl:value-of select="concat($quote, ., $quote)"/>
+                        <xsl:value-of select="concat($quote, $title_clean, $quote)"/>
                     </xsl:when>
 
                     <!-- field_subtitle; this is an empty value -->
@@ -391,7 +393,7 @@
         <xsl:choose>
             <!-- field_full_title -->
             <xsl:when test="$lookup_value='field_full_title'">
-                <xsl:value-of select="concat($quote, ., $quote)"/>
+                <xsl:value-of select="concat($quote, $title_clean, $quote)"/>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
