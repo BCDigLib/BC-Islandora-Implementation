@@ -19,6 +19,9 @@
     <xsl:param name="empty_value" select="''" />
     <xsl:param name="single_space" select="'&#x20;'" />
     
+    <!-- Default strings -->
+    <xsl:param name="default_attribution_string" select='"""Copyright is held by the author, with all rights reserved, unless otherwise noted."""'/>
+    
     <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
     
     <xsl:strip-space elements="*"/>
@@ -27,6 +30,7 @@
     <xsl:variable name="degreeLookup" select="document('degreeLookup.xml')"/>
     <xsl:variable name="languageLookup" select="document('languageLookup.xml')"/>
     <xsl:variable name="displayHintLookup" select="document('displayHintLookup.xml')"/>
+    <xsl:variable name="ccAttributionLookup" select="document('ccAttributionLookup.xml')"/>
     
     <!-- CSV headers -->
     <!-- The column order in this structure determines the CSV columns output order. -->
@@ -192,21 +196,7 @@
 
                 <!-- 20 -->
                 <xsl:when test="$col_name = 'field_rights_long'">
-                    <xsl:choose>
-                        <!-- check if the DISS_acceptance value is "1" or any truthy value -->
-                        <xsl:when test="$DISS_root/DISS_repository/DISS_acceptance">
-                            <!-- select which CC attribution to use -->
-                            <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_acceptance">
-                                <xsl:with-param name="ccAttr">
-                                    <xsl:value-of select="translate(DISS_creative_commons_license/DISS_abbreviation,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
-                                </xsl:with-param>
-                            </xsl:apply-templates>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <!-- default attribution -->
-                            <xsl:text>"Copyright is held by the author, with all rights reserved, unless otherwise noted."</xsl:text>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_acceptance"/>
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_description_long'">
@@ -515,39 +505,21 @@
         </xsl:if>
     </xsl:template>
 
-    <!-- TODO: move strings to lookup file -->
     <xsl:template match="DISS_acceptance">
-        <xsl:param name="ccAttr"/>
-        <xsl:value-of select="$quote" />
+        <!-- Parse DISS_abbreviation relative node. -->
+        <xsl:variable name="ccAttributeAbbreviation" select="../../DISS_creative_commons_license/DISS_abbreviation"/>
+
         <xsl:choose>
-            <xsl:when test="$ccAttr = 'NONE' or $ccAttr = ''">
-                <xsl:text>Copyright is held by the author, with all rights reserved, unless otherwise noted.</xsl:text>
+            <!-- Check if DISS_acceptance is an empty value, or if the CC attribution is 'NONE' or empty. -->
+            <xsl:when test=". = '' or $ccAttributeAbbreviation = 'NONE' or $ccAttributeAbbreviation = ''">
+                <!-- Use the default attribution string if there isn't a defined CC attribution present. -->
+                <xsl:value-of select="$default_attribution_string"/>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:text>Copyright is held by the author. </xsl:text>
-                <xsl:choose>
-                    <xsl:when test="$ccAttr = 'CC BY'">
-                        <xsl:text>This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0).</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="$ccAttr = 'CC BY-ND'">
-                        <xsl:text>This work is licensed under a Creative Commons Attribution-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nd/4.0).</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="$ccAttr = 'CC BY-NC-SA'">
-                        <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-nc-sa/4.0).</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="$ccAttr = 'CC BY-SA'">
-                        <xsl:text>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-sa/4.0).</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="$ccAttr = 'CC BY-NC'">
-                        <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License (http://creativecommons.org/licenses/by-nc/4.0).</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="$ccAttr = 'CC BY-NC-ND'">
-                        <xsl:text>This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (http://creativecommons.org/licenses/by-nc-nd/4.0).</xsl:text>
-                    </xsl:when>
-                </xsl:choose>
+                <!-- Fetch CC attribution string from lookup file. -->
+                <xsl:value-of select="bc:wrapInQuotes($ccAttributionLookup/CCAttribution/DISS_acceptance[@attr=$ccAttributeAbbreviation]/@value)"/>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:value-of select="$quote" />
     </xsl:template>
 
     <xsl:template match="DISS_degree">
