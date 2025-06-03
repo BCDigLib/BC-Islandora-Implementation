@@ -21,9 +21,18 @@
     
     <!-- Default strings -->
     <xsl:param name="default_attribution_string" select='"""Copyright is held by the author, with all rights reserved, unless otherwise noted."""'/>
-    
+    <xsl:param name="default_field_collection" select="'Graduate Theses and Dissertations'"/>
+    <xsl:param name="default_field_access_terms" select="40"/>
+    <xsl:param name="default_field_genre" select="'thesis'"/>
+    <xsl:param name="default_field_mode_of_issuance" select="'monographic'"/>
+    <xsl:param name="default_field_digital_origin" select="'born digital'"/>
+    <xsl:param name="default_field_physical_form" select="'electronic'"/>
+    <xsl:param name="default_field_resource_type" select="'Text'"/>
+    <xsl:param name="default_field_model" select="'Digital Document'"/>
+    <xsl:param name="default_field_member_of" select="1445"/>
+
     <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
-    
+
     <xsl:strip-space elements="*"/>
 
     <!-- Lookup tables -->
@@ -151,7 +160,8 @@
 
                 <xsl:when test="$col_name = 'field_collection'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>Graduate Theses and Dissertations</xsl:value-of>
+                    <!--xsl:value-of>Graduate Theses and Dissertations</xsl:value-of-->
+                    <xsl:value-of select="$default_field_collection" />
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_degree_name'">
@@ -191,7 +201,8 @@
 
                 <xsl:when test="$col_name = 'field_access_terms'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>40</xsl:value-of>
+                    <!--xsl:value-of>40</xsl:value-of-->
+                    <xsl:value-of select="$default_field_access_terms" />
                 </xsl:when>
 
                 <!-- 20 -->
@@ -214,7 +225,8 @@
 
                 <xsl:when test="$col_name = 'field_genre'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>thesis</xsl:value-of>
+                    <!--xsl:value-of>thesis</xsl:value-of-->
+                    <xsl:value-of select="$default_field_genre" />
                 </xsl:when>
 
                 <!-- 25 -->
@@ -224,33 +236,39 @@
 
                 <xsl:when test="$col_name = 'field_mode_of_issuance'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>monographic</xsl:value-of>
+                    <!--xsl:value-of>monographic</xsl:value-of-->
+                    <xsl:value-of select="$default_field_mode_of_issuance" />
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_digital_origin'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>born digital</xsl:value-of>
+                    <!--xsl:value-of>born digital</xsl:value-of-->
+                    <xsl:value-of select="$default_field_digital_origin" />
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_physical_form'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>electronic</xsl:value-of>
+                    <!--xsl:value-of>electronic</xsl:value-of-->
+                    <xsl:value-of select="$default_field_physical_form" />
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_resource_type'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>Text</xsl:value-of>
+                    <!--xsl:value-of>Text</xsl:value-of-->
+                    <xsl:value-of select="$default_field_resource_type" />
                 </xsl:when>
 
                 <!-- 30 -->
                 <xsl:when test="$col_name = 'field_model'">
                     <!-- TODO: is this a hard-coded value? -->
-                    <xsl:value-of>Digital Document</xsl:value-of>
+                    <!--xsl:value-of>Digital Document</xsl:value-of-->
+                    <xsl:value-of select="$default_field_model" />
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_member_of'">
                     <!-- TODO: map this ID to the collection type; always 1445? -->
-                    <xsl:value-of>1445</xsl:value-of>
+                    <!--xsl:value-of>1445</xsl:value-of-->
+                    <xsl:value-of select="$default_field_member_of" />
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'file'">
