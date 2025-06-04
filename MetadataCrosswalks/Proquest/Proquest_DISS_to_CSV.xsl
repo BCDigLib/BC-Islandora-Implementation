@@ -390,7 +390,7 @@
 
                     <!-- field_subtitle -->
                     <xsl:when test="$lookup_value='field_subtitle'">
-                        <xsl:value-of select="bc:wrapInQuotes(substring-after($title_clean, ':'))"/>
+                        <xsl:value-of select="bc:wrapInQuotes(normalize-space(substring-after($title_clean, ':')))"/>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
