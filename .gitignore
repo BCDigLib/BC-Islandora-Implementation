@@ -4,5 +4,6 @@
 MetadataCrosswalks/Proquest/sample_xml/*
 !MetadataCrosswalks/Proquest/sample_xml/.keep
 !MetadataCrosswalks/Proquest/sample_xml/Foobar_J.xml
+!MetadataCrosswalks/Proquest/sample_xml/Foo_D.xml
 MetadataCrosswalks/Proquest/xsl-out/*
 !MetadataCrosswalks/Proquest/xsl-out/.keep
