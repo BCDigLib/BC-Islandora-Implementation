@@ -80,6 +80,7 @@
     <DISS_content>
         <DISS_abstract>
             <DISS_para>This is a sample abstract.
+                &#8216;Here is some more content.&#8217;
             </DISS_para>
             <DISS_para>Here is a second paragraph.
             </DISS_para>
