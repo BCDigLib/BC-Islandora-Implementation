@@ -3,8 +3,6 @@
     version="1.0"
     xmlns:csv="csv:csv"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:etdms="http://www.ndltd.org/standards/metadata/etdms/1.0/"
-    xmlns:mods="http://www.loc.gov/mods/v3"
     xmlns:bc="http://library.bc.edu/bc">
 
     <!-- Placeholder text for handle URL -->
