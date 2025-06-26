@@ -529,10 +529,13 @@
     <xsl:template match="DISS_acceptance">
         <!-- Parse DISS_abbreviation relative node. -->
         <xsl:variable name="ccAttributeAbbreviation" select="../../DISS_creative_commons_license/DISS_abbreviation"/>
+        <xsl:variable name="ccAttributeAbbreviationLower">
+            <xsl:value-of select="translate($ccAttributeAbbreviation,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+        </xsl:variable>
 
         <xsl:choose>
             <!-- Check if DISS_acceptance is an empty value, or if the CC attribution is 'NONE' or empty. -->
-            <xsl:when test=". = '' or $ccAttributeAbbreviation = 'NONE' or $ccAttributeAbbreviation = ''">
+            <xsl:when test=". = '' or $ccAttributeAbbreviationLower = 'none' or $ccAttributeAbbreviationLower = ''">
                 <!-- Use the default attribution string if there isn't a defined CC attribution present. -->
                 <xsl:value-of select="$default_attribution_string"/>
             </xsl:when>
