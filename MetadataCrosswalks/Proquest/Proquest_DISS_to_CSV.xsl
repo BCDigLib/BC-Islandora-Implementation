@@ -20,7 +20,6 @@
     <!-- Default strings -->
     <xsl:param name="default_attribution_string" select='"""Copyright is held by the author, with all rights reserved, unless otherwise noted."""'/>
     <xsl:param name="default_field_collection" select="'Graduate Theses and Dissertations'"/>
-    <xsl:param name="default_field_access_terms" select="40"/>
     <xsl:param name="default_field_genre" select="'thesis'"/>
     <xsl:param name="default_field_mode_of_issuance" select="'monographic'"/>
     <xsl:param name="default_field_digital_origin" select="'born digital'"/>
@@ -189,7 +188,9 @@
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_embargo'">
-                    <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_delayed_release"/>
+                    <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_delayed_release">
+                        <xsl:with-param name="lookup_value">date</xsl:with-param>
+                    </xsl:apply-templates>
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_rights'">
@@ -198,9 +199,9 @@
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_access_terms'">
-                    <!-- TODO: is this a hard-coded value? -->
-                    <!--xsl:value-of>40</xsl:value-of-->
-                    <xsl:value-of select="$default_field_access_terms" />
+                    <xsl:apply-templates select="$DISS_root/DISS_repository/DISS_delayed_release">
+                        <xsl:with-param name="lookup_value">code</xsl:with-param>
+                    </xsl:apply-templates>
                 </xsl:when>
 
                 <!-- 20 -->
@@ -626,12 +627,22 @@
     </xsl:template>
     
     <xsl:template match="DISS_delayed_release">
+        <xsl:param name="lookup_value"/>
         <!-- Check if DISS_delayed_release has a value -->
-        <xsl:if test="not(. = '')">
-            <!-- Convert string into proper date format -->
-            <!-- From "2015-11-19 09:50:44" to "2015-11-19T09:50:44Z" -->
-            <xsl:value-of select="concat(translate(., ' ', 'T'), 'Z')"/>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="$lookup_value='date'">
+                <xsl:if test="not(. = '')">
+                    <!-- Convert string into proper date format -->
+                    <!-- From "2015-11-19 09:50:44" to "2015-11-19T09:50:44Z" -->
+                    <xsl:value-of select="concat(translate(., ' ', 'T'), 'Z')"/>
+                </xsl:if>
+            </xsl:when>
+            <xsl:when test="$lookup_value='code'">
+                <xsl:if test="not(. = '')">
+                    <xsl:value-of select="40"/>
+                </xsl:if>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="DISS_keyword">
