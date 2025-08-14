@@ -218,8 +218,7 @@
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_note'">
-                    <!-- TODO: fill this in when needed -->
-                    <xsl:value-of select="$empty_value" />
+                    <xsl:apply-templates select="$DISS_root/DISS_description/DISS_advisor[1]"/>
                 </xsl:when>
 
                 <xsl:when test="$col_name = 'field_genre'">
@@ -420,6 +419,7 @@
         <xsl:choose>
             <xsl:when test=".[@type='primary']">
                 <xsl:apply-templates select=".[@type='primary']/DISS_name">
+                    <xsl:with-param name="lookup_value">LastFirst</xsl:with-param>
                     <xsl:with-param name="prefix">relators:aut:person:</xsl:with-param>
                 </xsl:apply-templates>
             </xsl:when>
@@ -427,6 +427,7 @@
             <!-- Parse any additional author's names -->
             <xsl:when test=".[@type='additional']">
                 <xsl:apply-templates select=".[@type='additional']/DISS_name">
+                    <xsl:with-param name="lookup_value">LastFirst</xsl:with-param>
                     <xsl:with-param name="prefix">|relators:aut:person:</xsl:with-param>
                 </xsl:apply-templates>
             </xsl:when>
@@ -434,19 +435,39 @@
 
         <!-- Thesis advisor name -->
         <!-- Only get the first instance -->
-        <xsl:apply-templates select="../../DISS_description/DISS_advisor[1]/DISS_name">
+        <!--xsl:apply-templates select="../../DISS_description/DISS_advisor[1]/DISS_name">
             <xsl:with-param name="prefix">|relators:ths:person:</xsl:with-param>
+        </xsl:apply-templates-->
+        <xsl:value-of select="$quote" />
+    </xsl:template>
+
+    <xsl:template match="DISS_description/DISS_advisor[1]">
+        <xsl:value-of select="$quote" />
+        <xsl:apply-templates select="./DISS_name">
+            <xsl:with-param name="lookup_value">FirstLast</xsl:with-param>
+            <xsl:with-param name="prefix">Thesis Advisor: </xsl:with-param>
         </xsl:apply-templates>
         <xsl:value-of select="$quote" />
     </xsl:template>
 
     <xsl:template match="DISS_name">
+        <xsl:param name="lookup_value"/>
         <xsl:param name="prefix"/>
-        <!-- Construct name string -->
-        <xsl:value-of select="concat($prefix, DISS_surname, ', ', DISS_fname)" />
+        <!-- Check if DISS_delayed_release has a value -->
+        <xsl:choose>
+            <xsl:when test="$lookup_value='LastFirst'">
+                <!-- Construct name string -->
+                <xsl:value-of select="concat($prefix, DISS_surname, ', ', DISS_fname)" />
 
-        <!-- Append middle name is present -->
-        <xsl:apply-templates select="DISS_middle"/>
+                <!-- Append middle name is present -->
+                <xsl:apply-templates select="DISS_middle"/>
+            </xsl:when>
+            <xsl:when test="$lookup_value='FirstLast'">
+                <!-- Construct name string -->
+                <!-- TODO: call DISS_MIDDLE template and save as local variable -->
+                <xsl:value-of select="concat($prefix, DISS_fname, ' ', DISS_surname)" />
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="DISS_middle">
