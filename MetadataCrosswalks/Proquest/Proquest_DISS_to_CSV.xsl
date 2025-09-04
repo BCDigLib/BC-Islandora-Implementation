@@ -612,7 +612,7 @@
                         <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
                     </xsl:when>
                     <xsl:when test="$lookup_value='institution'">
-                        <xsl:text>Graduate School of Arts and Sciences</xsl:text>
+                        <xsl:text>Morrissey College of Arts and Sciences</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
@@ -622,7 +622,7 @@
                         <xsl:text>Social Work</xsl:text>
                     </xsl:when>
                     <xsl:when test="$lookup_value='institution'">
-                        <xsl:text>Graduate School of Social Work</xsl:text>
+                        <xsl:text>School of Social Work</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>    
@@ -632,7 +632,7 @@
                         <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
                     </xsl:when>
                     <xsl:when test="$lookup_value='institution'">
-                        <xsl:text>Lynch School of Education</xsl:text>
+                        <xsl:text>Lynch School of Education and Human Development</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
@@ -642,7 +642,7 @@
                         <xsl:text>Sacred Theology</xsl:text>
                     </xsl:when>
                     <xsl:when test="$lookup_value='institution'">
-                        <xsl:text>School of Theology and Ministry</xsl:text>
+                        <xsl:text>Clough School of Theology and Ministry</xsl:text>
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>                    
