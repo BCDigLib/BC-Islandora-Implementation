@@ -17,6 +17,32 @@
     <xsl:param name="empty_value" select="''" />
     <xsl:param name="single_space" select="'&#x20;'" />
     
+    <!-- 
+         # Replace the following chars (https://www.compart.com/en/unicode)
+         #       [\u00a0] [&#160;]  No-Break Space with > <
+         #       [\u00ad] [&#173;]  Soft Hyphen with >-<
+         #       [\u2013] [&#8211;] En Dash >–< with >-<
+         #       [\u2014] [&#8212;] Em Dash >—< with >—<
+         #       [\u2018] [&#8216;] Left Single Quotation Mark >‘< with >'<
+         #       [\u2019] [&#8217;] Right Single Quotation Mark >’< with >'<
+         #       [\u201c] [&#8220;] Left Double Quotation Mark >“< with >\"<
+         #       [\u201d] [&#8221;] Right Double Quotation Mark >”<  with >\"<
+         #       [\u2028] [&#8232;] Line Separator with ><
+         #       [\u2029] [&#8233;] Paragraph Separator with ><
+    -->
+    <xsl:character-map name="cleanup-chars">
+        <xsl:output-character character="&#160;" string=" "/>
+        <xsl:output-character character="&#173;" string="-"/>
+        <xsl:output-character character="&#8211;" string="-"/>
+        <xsl:output-character character="&#8216;" string="'"/>
+        <xsl:output-character character="&#8217;" string="'"/>
+        <!-- Double quotes are a special case -->
+        <!--xsl:output-character character="&#8220;" string='"'/-->
+        <!--xsl:output-character character="&#8221;" string='"'/-->
+        <xsl:output-character character="&#8232;" string=""/>
+        <xsl:output-character character="&#8233;" string=""/>
+    </xsl:character-map>
+    
     <!-- Default strings -->
     <xsl:param name="default_attribution_string" select='"""Copyright is held by the author, with all rights reserved, unless otherwise noted."""'/>
     <xsl:param name="default_field_collection" select="'Graduate Theses and Dissertations'"/>
@@ -304,68 +330,24 @@
     </xsl:function>
 
     <!-- Custom function to clean up problematic encoded html entities. -->
-    <xsl:function name="bc:cleanupString">
+    <xsl:function name="bc:replaceDoubleQuotes">
         <xsl:param name="input"/>
 
         <!-- 
         # Replace the following chars (https://www.compart.com/en/unicode)
-        #       [\u00a0] [&#160;]  No-Break Space with > <
-        #       [\u00ad] [&#173;]  Soft Hyphen with >-<
-        #       [\u2013] [&#8211;] En Dash >–< with >-<
-        #       [\u2018] [&#8216;] Left Single Quotation Mark >‘< with >'<
-        #       [\u2019] [&#8217;] Right Single Quotation Mark >’< with >'<
-        #       [\u2028] [&#8232;] Line Separator with ><
-        #       [\u2029] [&#8233;] Paragraph Separator with ><
-        #       [\u201c] [&#8220;] Left Double Quotation Mark >“< with >\"<
-        #       [\u201d] [&#8221;] Right Double Quotation Mark >”<  with >\"<
+        #       [\u201c] [&#8220;] Left Double Quotation Mark >“< with >&quot;&quot;<
+        #       [\u201d] [&#8221;] Right Double Quotation Mark >”<  with >&quot;&quot;<
         -->
 
-        <xsl:variable name="hypen" select="'-'"/>
-        <xsl:variable name="apos" select="''''"/>
-        <xsl:variable name="escapedDoubleQuotes" select='bc:wrapInQuotes($empty_value)'/>
-
-        <xsl:variable name="removeNoBreakSpace">
-            <xsl:value-of select="translate($input, '&#160;', ' ')"/>
+        <xsl:variable name="replaceLeftDoubleQuote">
+            <xsl:value-of select="replace($input, '&#8220;', concat($quote, $quote))"/>
         </xsl:variable>
 
-        <xsl:variable name="removeSoftHypen">
-            <xsl:value-of select="translate($removeNoBreakSpace, '&#173;', $hypen)"/>
+        <xsl:variable name="replaceRightDoubleQuote">
+            <xsl:value-of select="replace($replaceLeftDoubleQuote, '&#8221;', concat($quote, $quote))"/>
         </xsl:variable>
 
-        <xsl:variable name="removeEnDash">
-            <xsl:value-of select="translate($removeSoftHypen, '&#8211;', $hypen)"/>
-        </xsl:variable>
-
-        <xsl:variable name="removeLeftSingleQuote">
-            <xsl:value-of select="translate($removeEnDash, '&#8216;', $apos)"/>
-        </xsl:variable>
-
-        <xsl:variable name="removeRightSingleQuote">
-            <xsl:value-of select="translate($removeLeftSingleQuote, '&#8217;', $apos)"/>
-        </xsl:variable>
-
-        <xsl:variable name="removeLineSeperator">
-            <xsl:value-of select="translate($removeRightSingleQuote, '&#8233;', $empty_value)"/>
-        </xsl:variable>
-
-        <xsl:variable name="removeParaSeperator">
-            <xsl:value-of select="translate($removeLineSeperator, '&#8232;', $empty_value)"/>
-        </xsl:variable>
-
-        <xsl:variable name="removeLeftDoubleQuote">
-            <xsl:value-of select="translate($removeParaSeperator, '&#8220;', $quote)"/>
-        </xsl:variable>
-
-        <xsl:variable name="removeRightDoubleQuote">
-            <xsl:value-of select="translate($removeLeftDoubleQuote, '&#8221;', $quote)"/>
-        </xsl:variable>
-
-        <!-- INFO: double quotes don't appear in the output, but still produces valid CSV values. -->
-        <xsl:variable name="escapeDoubleQuotes">
-            <xsl:value-of select="translate($removeRightDoubleQuote, $quote, $escapedDoubleQuotes)"/>
-        </xsl:variable>
-
-        <xsl:value-of select="$escapeDoubleQuotes"/>
+        <xsl:value-of select="$replaceRightDoubleQuote"/>
     </xsl:function>
     
     <!-- 
@@ -375,8 +357,8 @@
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
 
-        <!-- Clean title string using custom bc:cleanupString() function -->
-        <xsl:variable name="title_clean" select="normalize-space(bc:cleanupString(.))"/>
+        <!-- Clean title string using custom bc:replaceDoubleQuotes() function -->
+        <xsl:variable name="title_clean" select="normalize-space(bc:replaceDoubleQuotes(.))"/>
         <xsl:choose>
             <!-- Split string if ":" char is found -->
             <xsl:when test="contains($title_clean, ':')">
@@ -535,8 +517,8 @@
         <xsl:if test="not(. = '')">
             <xsl:value-of select="$quote" />
             <xsl:for-each select="DISS_para">
-                <!-- Call on our custom bc:cleanupString() function. -->
-                <xsl:value-of select="normalize-space(bc:cleanupString(.))"/>
+                <!-- Call on our custom bc:replaceDoubleQuotes() function. -->
+                <xsl:value-of select="normalize-space(bc:replaceDoubleQuotes(.))"/>
 
                 <!-- Add a new line char in between every DISS_para value. -->
                 <xsl:if test="position() != last()">
