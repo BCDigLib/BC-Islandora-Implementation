@@ -18,15 +18,13 @@
     <xsl:param name="single_space" select="'&#x20;'" />
     
     <!-- 
-         # Replace the following chars (https://www.compart.com/en/unicode)
+         # Replace the following problematic chars with safe versions.
+         # See (https://www.compart.com/en/unicode)
          #       [\u00a0] [&#160;]  No-Break Space with > <
          #       [\u00ad] [&#173;]  Soft Hyphen with >-<
          #       [\u2013] [&#8211;] En Dash >–< with >-<
-         #       [\u2014] [&#8212;] Em Dash >—< with >—<
          #       [\u2018] [&#8216;] Left Single Quotation Mark >‘< with >'<
          #       [\u2019] [&#8217;] Right Single Quotation Mark >’< with >'<
-         #       [\u201c] [&#8220;] Left Double Quotation Mark >“< with >\"<
-         #       [\u201d] [&#8221;] Right Double Quotation Mark >”<  with >\"<
          #       [\u2028] [&#8232;] Line Separator with ><
          #       [\u2029] [&#8233;] Paragraph Separator with ><
     -->
@@ -36,13 +34,10 @@
         <xsl:output-character character="&#8211;" string="-"/>
         <xsl:output-character character="&#8216;" string="'"/>
         <xsl:output-character character="&#8217;" string="'"/>
-        <!-- Double quotes are a special case -->
-        <!--xsl:output-character character="&#8220;" string='"'/-->
-        <!--xsl:output-character character="&#8221;" string='"'/-->
         <xsl:output-character character="&#8232;" string=""/>
         <xsl:output-character character="&#8233;" string=""/>
     </xsl:character-map>
-    
+
     <!-- Default strings -->
     <xsl:param name="default_attribution_string" select='"""Copyright is held by the author, with all rights reserved, unless otherwise noted."""'/>
     <xsl:param name="default_field_collection" select="'Graduate Theses and Dissertations'"/>
@@ -54,7 +49,7 @@
     <xsl:param name="default_field_model" select="'Digital Document'"/>
     <xsl:param name="default_field_member_of" select="1445"/>
 
-    <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no"/>
+    <xsl:output method="text" version="1.0" encoding="UTF-8" indent="no" use-character-maps="cleanup-chars"/>
 
     <xsl:strip-space elements="*"/>
 
@@ -329,8 +324,10 @@
         <xsl:value-of select="concat($quote, $inputString, $quote)"/>
     </xsl:function>
 
-    <!-- Custom function to clean up problematic encoded html entities. -->
-    <xsl:function name="bc:replaceDoubleQuotes">
+    <!-- Custom function to escape double quote characters (&#8220; &#8221;)
+         by replacing them with "&quot;&quot;" HTML encoded tags.
+    -->
+    <xsl:function name="bc:escapeDoubleQuotes">
         <xsl:param name="input"/>
 
         <!-- 
@@ -357,8 +354,8 @@
     <xsl:template match="DISS_title">
         <xsl:param name="lookup_value"/>
 
-        <!-- Clean title string using custom bc:replaceDoubleQuotes() function -->
-        <xsl:variable name="title_clean" select="normalize-space(bc:replaceDoubleQuotes(.))"/>
+        <!-- Clean title string using custom bc:escapeDoubleQuotes() function -->
+        <xsl:variable name="title_clean" select="normalize-space(bc:escapeDoubleQuotes(.))"/>
         <xsl:choose>
             <!-- Split string if ":" char is found -->
             <xsl:when test="contains($title_clean, ':')">
@@ -517,8 +514,8 @@
         <xsl:if test="not(. = '')">
             <xsl:value-of select="$quote" />
             <xsl:for-each select="DISS_para">
-                <!-- Call on our custom bc:replaceDoubleQuotes() function. -->
-                <xsl:value-of select="normalize-space(bc:replaceDoubleQuotes(.))"/>
+                <!-- Call on our custom bc:escapeDoubleQuotes() function. -->
+                <xsl:value-of select="normalize-space(bc:escapeDoubleQuotes(.))"/>
 
                 <!-- Add a new line char in between every DISS_para value. -->
                 <xsl:if test="position() != last()">
