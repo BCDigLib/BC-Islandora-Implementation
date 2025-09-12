@@ -595,7 +595,7 @@
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
-            <xsl:when test="starts-with(DISS_inst_contact, 'GSSW')">
+            <xsl:when test="starts-with(DISS_inst_contact, 'GSSW') or starts-with(DISS_inst_contact, 'BCSSW')">
                 <xsl:choose>
                     <xsl:when test="$lookup_value='discipline'">
                         <xsl:text>Social Work</xsl:text>
