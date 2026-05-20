@@ -77,7 +77,7 @@
         <column>field_degree_name</column>
         <column>field_degree_level</column>
         <column>field_degree_discipline</column>    <!-- 15 -->
-        <column>field_degree_grantor</column>
+        <column>field_degree_grantor_v2</column>
         <column>field_embargo</column>
         <column>field_rights</column>
         <column>field_access_terms</column>
@@ -201,7 +201,7 @@
                     </xsl:apply-templates>
                 </xsl:when>
 
-                <xsl:when test="$col_name = 'field_degree_grantor'">
+                <xsl:when test="$col_name = 'field_degree_grantor_v2'">
                     <!-- TODO: is it 'Graduate School of Arts and Sciences' or 'Arts and Sciences' ? -->
                     <xsl:apply-templates select="$DISS_root/DISS_description/DISS_institution">
                         <xsl:with-param name="lookup_value">institution</xsl:with-param>
@@ -615,10 +615,10 @@
                     </xsl:when>
                 </xsl:choose>
             </xsl:when>
-            <xsl:when test="starts-with(DISS_inst_contact, 'STM')">
+            <xsl:when test="starts-with(DISS_inst_contact, 'CSTM')">
                 <xsl:choose>
                     <xsl:when test="$lookup_value='discipline'">
-                        <xsl:text>Sacred Theology</xsl:text>
+                        <xsl:value-of select="normalize-space(substring-after(DISS_inst_contact,'-'))"/>
                     </xsl:when>
                     <xsl:when test="$lookup_value='institution'">
                         <xsl:text>Clough School of Theology and Ministry</xsl:text>
